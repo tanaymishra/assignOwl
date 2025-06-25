@@ -1,5 +1,6 @@
 import React from 'react'
 import { BookOpen } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
@@ -7,12 +8,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
           <div className="flex items-center space-x-3 mb-4 md:mb-0">
-            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-green-700 rounded-xl flex items-center justify-center shadow-lg">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">
-              assignOwl
-            </span>
+            <Image src={'/logo.svg'} alt='AssignOwl' width={120} height={40} />
+
           </div>
 
           <div className="flex flex-wrap items-center justify-center space-x-4 sm:space-x-6 text-gray-300 text-sm">
