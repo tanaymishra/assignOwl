@@ -14,7 +14,7 @@ export default function HomePage() {
       <HeroSection />
       <FeaturesSection />
       <AdditionalFeaturesSection />
-      <StatsSection />
+      {/* <StatsSection /> */}
       <CTASection />
       <Footer />
     </div>
