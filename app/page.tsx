@@ -9,7 +9,7 @@ import Footer from './components/Footer'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-green-950">
       <Header />
       <HeroSection />
       <FeaturesSection />
