@@ -23,7 +23,7 @@ export default function HeroSection() {
             <span className="text-sm font-semibold text-blue-700">Powered by Advanced AI Technology</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-bold leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="text-gray-900">
               Transform Your
             </span>
@@ -33,7 +33,7 @@ export default function HeroSection() {
             </span>
           </h1>
 
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
             Experience the future of academic assistance with our AI-powered platform.
             Get personalized help, instant feedback, and expert guidance for all your assignments
             with unprecedented accuracy and speed.
@@ -48,14 +48,14 @@ export default function HeroSection() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="w-full pl-12 pr-6 py-4 bg-white border border-blue-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-lg text-lg"
+                  className="w-full pl-12 pr-6 py-3 bg-white border border-blue-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-lg text-base"
                 />
               </div>
               <button
                 type="submit"
-                className="group w-full px-10 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center justify-center space-x-3"
+                className="group w-full px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center justify-center space-x-3"
               >
-                <span className="text-lg">Request Early Access</span>
+                <span className="text-base">Request Early Access</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
