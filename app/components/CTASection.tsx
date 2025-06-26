@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Mail } from 'lucide-react'
 import { useWaitlistModal } from '@/lib/store'
+import { Button, Input } from '@/app/ui'
 
 export default function CTASection() {
   const [email, setEmail] = useState('')
@@ -27,22 +28,26 @@ export default function CTASection() {
           </p>
 
           <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 max-w-lg mx-auto">
-            <div className="relative flex-1 w-full">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
+            <div className="flex-1 w-full">
+              <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
-                className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent shadow-lg text-sm"
+                icon={Mail}
+                iconPosition="left"
+                variant="glow"
+                fullWidth={true}
               />
             </div>
-            <button
+            <Button
               type="submit"
-              className="whitespace-nowrap px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 text-sm"
+              variant="primary"
+              size="md"
+              className="whitespace-nowrap"
             >
               Get Started Free
-            </button>
+            </Button>
           </form>
 
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-green-200 text-xs">

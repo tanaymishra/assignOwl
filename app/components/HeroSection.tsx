@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Sparkles, ArrowRight, Mail } from 'lucide-react'
 import { useWaitlistModal } from '@/lib/store'
+import { Button, Input } from '@/app/ui'
 
 export default function HeroSection() {
   const [email, setEmail] = useState('')
@@ -39,23 +40,27 @@ export default function HeroSection() {
 
           <div className="max-w-md mx-auto pt-8">
             <form onSubmit={handleEarlyAccessSubmit} className="space-y-4">
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="w-full pl-12 pr-6 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-lg text-base"
-                />
-              </div>
-              <button
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                icon={Mail}
+                iconPosition="left"
+                variant="glow"
+                fullWidth={true}
+              />
+              <Button
                 type="submit"
-                className="group w-full px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center justify-center space-x-3"
+                variant="primary"
+                size="lg"
+                icon={ArrowRight}
+                iconPosition="right"
+                glow={true}
+                fullWidth={true}
               >
-                <span className="text-base">Request Early Access</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+                Request Early Access
+              </Button>
             </form>
           </div>
         </div>

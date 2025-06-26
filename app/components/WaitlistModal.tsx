@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { X, Mail, User, CheckCircle } from 'lucide-react'
 import { signupUser } from '@/lib/api'
+import { Button, Input } from '@/app/ui'
 
 interface WaitlistModalProps {
   isOpen: boolean
@@ -69,12 +70,13 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative w-full max-w-md transform rounded-2xl bg-gray-900 p-8 shadow-2xl transition-all">
           {/* Close button */}
-          <button
+          <Button
             onClick={onClose}
-            className="absolute right-4 top-4 text-gray-400 hover:text-gray-300 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
+            variant="ghost"
+            size="sm"
+            className="absolute right-4 top-4 text-gray-400 hover:text-gray-300 transition-colors p-1"
+            icon={X}
+          />
 
           {/* Header */}
           <div className="text-center mb-8">
@@ -104,32 +106,32 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
             /* Form */
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name Input */}
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your full name"
-                  className="w-full pl-12 pr-4 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent focus:bg-gray-700 transition-all duration-200"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+              <Input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your full name"
+                icon={User}
+                iconPosition="left"
+                variant="glow"
+                fullWidth={true}
+                required
+                disabled={isLoading}
+              />
 
               {/* Email Input */}
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="w-full pl-12 pr-4 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent focus:bg-gray-700 transition-all duration-200"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                icon={Mail}
+                iconPosition="left"
+                variant="glow"
+                fullWidth={true}
+                required
+                disabled={isLoading}
+              />
 
               {/* Error Message */}
               {error && (
@@ -139,20 +141,17 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
               )}
 
               {/* Submit Button */}
-              <button
+              <Button
                 type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth={true}
+                loading={isLoading}
                 disabled={isLoading}
-                className="w-full px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                glow={true}
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Joining Waitlist...</span>
-                  </div>
-                ) : (
-                  'Join Waitlist'
-                )}
-              </button>
+                Join Waitlist
+              </Button>
 
               {/* Footer */}
               <div className="text-center text-sm text-gray-400 space-y-2">
