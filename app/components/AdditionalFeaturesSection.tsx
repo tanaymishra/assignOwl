@@ -1,6 +1,5 @@
 import React from 'react'
-import { Shield, TrendingUp, Users, Zap } from 'lucide-react'
-
+import { Shield, TrendingUp, Users, Zap , Binoculars} from 'lucide-react';
 export default function AdditionalFeaturesSection() {
   return (
     <section className="py-16 bg-gradient-to-br from-black to-gray-900">
@@ -61,9 +60,11 @@ export default function AdditionalFeaturesSection() {
             <div className="w-full h-80 bg-gradient-to-br from-green-900/20 to-green-950/30 rounded-3xl backdrop-blur-sm border border-green-500/20 shadow-2xl">
               <div className="p-6 h-full flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="space-y-2">
-                    <div className="text-2xl sm:text-3xl font-bold text-green-400">90%</div>
-                    <div className="text-xs sm:text-sm text-gray-300">More Accurate</div>
+                  <div className="space-y-2 flex flex-col items-center">
+                    <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
+                      <Binoculars className="w-5 h-5 text-green-400" />
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-300">Works, not just looks</div>
                   </div>
                   <div className="space-y-2">
                     <div className="text-2xl sm:text-3xl font-bold text-green-400">5x</div>
