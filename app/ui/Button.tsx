@@ -26,13 +26,13 @@ export default function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed'
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden backdrop-blur-sm border'
   
   const variants = {
-    primary: `bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transform hover:scale-105 ${glow ? 'shadow-green-500/25 hover:shadow-green-500/40' : ''}`,
-    secondary: 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 hover:border-gray-600',
-    outline: 'border border-green-600 text-green-600 hover:bg-green-600 hover:text-white',
-    ghost: 'text-gray-300 hover:text-white hover:bg-gray-800'
+    primary: `bg-gradient-to-r from-green-600/80 to-green-700/80 hover:from-green-500/90 hover:to-green-600/90 text-white shadow-lg hover:shadow-xl transform hover:scale-105 border-green-500/30 hover:border-green-400/50 hover:shadow-[0_0_25px_rgba(34,197,94,0.5)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300 ${glow ? 'shadow-green-500/30 hover:shadow-green-400/60' : ''}`,
+    secondary: 'bg-gray-800/80 hover:bg-gray-700/90 text-white border-gray-700/50 hover:border-gray-600/70 backdrop-blur-md hover:shadow-lg',
+    outline: 'border-green-600/60 text-green-400 hover:bg-green-600/20 hover:text-green-300 backdrop-blur-md hover:shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:border-green-400/80',
+    ghost: 'text-gray-300 hover:text-white hover:bg-gray-800/50 border-transparent hover:border-gray-700/50 backdrop-blur-sm'
   }
   
   const sizes = {

@@ -8,7 +8,7 @@ export default function AdditionalFeaturesSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
-              For Modern Students of <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">Tommorow </span>
+              For Modern Students of <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">Tomorrow </span>
             </h2>
             <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
               Our platform combines cutting-edge AI technology with intuitive design to deliver an unparalleled academic experience.
@@ -58,12 +58,32 @@ export default function AdditionalFeaturesSection() {
           </div>
 
           <div className="relative">
-            <div className="w-full h-80 bg-gradient-to-br from-green-900 to-green-950 rounded-3xl flex items-center justify-center shadow-2xl">
-              <div className="text-center space-y-3">
-                <div className="w-16 h-16 bg-gray-900 rounded-2xl flex items-center justify-center mx-auto shadow-lg animate-float">
-                  <Zap className="w-8 h-8 text-green-400" />
+            <div className="w-full h-80 bg-gradient-to-br from-green-900/20 to-green-950/30 rounded-3xl backdrop-blur-sm border border-green-500/20 shadow-2xl">
+              <div className="p-6 h-full flex flex-col justify-center">
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div className="space-y-2">
+                    <div className="text-2xl sm:text-3xl font-bold text-green-400">90%</div>
+                    <div className="text-xs sm:text-sm text-gray-300">More Accurate</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-2xl sm:text-3xl font-bold text-green-400">5x</div>
+                    <div className="text-xs sm:text-sm text-gray-300">Faster Output</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-2xl sm:text-3xl font-bold text-green-400">80%</div>
+                    <div className="text-xs sm:text-sm text-gray-300">Work Handled</div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-2xl sm:text-3xl font-bold text-green-400">99%</div>
+                    <div className="text-xs sm:text-sm text-gray-300">Satisfaction</div>
+                  </div>
                 </div>
-                <p className="text-green-300 font-semibold text-base">AI-Powered Platform</p>
+                <div className="mt-6 text-center">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mx-auto shadow-lg animate-pulse border border-green-500/30">
+                    <Zap className="w-6 h-6 text-green-400" />
+                  </div>
+                  <p className="text-green-300 font-semibold text-sm mt-2">Powered by Advanced AI</p>
+                </div>
               </div>
             </div>
           </div>
