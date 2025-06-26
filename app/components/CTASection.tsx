@@ -19,12 +19,11 @@ export default function CTASection() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="space-y-6">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
-            Ready to Transform Your <br />
-            Academic Experience?
+            10,000+ Students Helped <br />
+            Now, It’s Automated.
           </h2>
           <p className="text-green-100 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
-            Join thousands of students who are already experiencing the future of academic assistance.
-            Be among the first to access our revolutionary AI platform.
+            AssignOwl takes years of real, hands-on support and turns it into an AI that’s ready to help anytime, anywhere.
           </p>
 
           <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 max-w-lg mx-auto">
