@@ -20,6 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <link rel="" href="favicon.ico" />
       <body className={inter.className}>
         {children}
         <ModalProvider />
