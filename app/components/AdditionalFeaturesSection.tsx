@@ -8,7 +8,7 @@ export default function AdditionalFeaturesSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
-              Advanced Features for <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">Modern Students</span>
+              For Modern Students of <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">Tommorow </span>
             </h2>
             <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
               Our platform combines cutting-edge AI technology with intuitive design to deliver an unparalleled academic experience.
