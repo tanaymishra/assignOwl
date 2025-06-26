@@ -26,11 +26,11 @@ export default function HeroSection() {
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="text-white">
-              Built on Experience. Powered by AI.
+              Built for assignments. Powered by AI.
             </span>
             <br />
             <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">
-              Ready to Help.
+              Ready to help you excel.
             </span>
           </h1>
 

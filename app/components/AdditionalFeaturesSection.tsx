@@ -1,5 +1,5 @@
 import React from 'react'
-import { Shield, TrendingUp, Users, Zap , Binoculars} from 'lucide-react';
+import { Shield, TrendingUp, Users, Zap, Binoculars } from 'lucide-react';
 export default function AdditionalFeaturesSection() {
   return (
     <section className="py-16 bg-gradient-to-br from-black to-gray-900">
@@ -26,7 +26,8 @@ export default function AdditionalFeaturesSection() {
               </div>
               <div className="flex items-start space-x-3">
                 <div className="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-5 h-5 text-green-400" />
+                  <Users className="w-5 h-5 text-green-400" />
+
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Smarter Prompts, Better Outputs</h3>
@@ -36,7 +37,9 @@ export default function AdditionalFeaturesSection() {
 
               <div className="flex items-start space-x-3">
                 <div className="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-5 h-5 text-green-400" />
+                  <Zap className="w-5 h-5 text-green-400" />
+
+
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Up to 80% of the Work—Handled</h3>
@@ -46,7 +49,7 @@ export default function AdditionalFeaturesSection() {
 
               <div className="flex items-start space-x-3">
                 <div className="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Users className="w-5 h-5 text-green-400" />
+                  <TrendingUp className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Built for Accuracy, Not Just Answers</h3>
@@ -61,8 +64,8 @@ export default function AdditionalFeaturesSection() {
               <div className="p-6 h-full flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div className="space-y-2 flex flex-col items-center">
-                    <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
-                      <Binoculars className="w-5 h-5 text-green-400" />
+                    <div className="w-15 h-12 bg-green-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
+                      <Binoculars className="w-20 h-5 text-green-400" />
                     </div>
                     <div className="text-xs sm:text-sm text-gray-300">Works, not just looks</div>
                   </div>
