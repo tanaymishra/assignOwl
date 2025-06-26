@@ -21,7 +21,7 @@ export default function FeaturesSection() {
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Crafted from Real Student Work</h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              Trained on thousands of actual assignments to understand exactly what educators expect.
+              Trained on thousands of actual quality assignments of different universities to understand exactly what educators expect.
             </p>
           </div>
 
@@ -31,7 +31,7 @@ export default function FeaturesSection() {
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Context‑Aware Assistance</h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              Our model knows your assignment structure, citation style, formatting needs, and more.
+              Our model knows your assignment structure, citation style, formatting needs,research sources, and more.
             </p>
           </div>
 
@@ -41,7 +41,7 @@ export default function FeaturesSection() {
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Beyond Generic LLMs</h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              Fine‑tuned to excel in academic tasks, unlike out-of-the-box models like Grok, Claude, or ChatGPT.
+              Fine‑tuned to excel in academic tasks-assignment help and exam prep, unlike out-of-the-box models like Grok, Claude, or ChatGPT.
             </p>
           </div>
         </div>

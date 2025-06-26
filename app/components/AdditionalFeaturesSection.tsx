@@ -21,7 +21,7 @@ export default function AdditionalFeaturesSection() {
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Trained on Real Assignments</h3>
                   <p className="text-gray-300 text-sm">We’ve fine-tuned our AI using thousands of actual, high-quality student submissions—so it understands what works, not just what sounds good.
-                    .</p>
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
