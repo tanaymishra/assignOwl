@@ -34,9 +34,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-base sm:text-lg text-gray-300 max-w-4xl mx-auto leading-relaxed">
-            Experience the future of academic assistance with our AI-powered platform.
-            Get personalized help, instant feedback, and expert guidance for all your assignments
-            with unprecedented accuracy and speed.
+            AssignOwl packs half a decade of experience into an AI assistant fine‑tuned on thousands of real assignments—so you get coursework help that hits the mark, every time.
           </p>
 
           <div className="max-w-md mx-auto pt-8">

@@ -19,9 +19,9 @@ export default function FeaturesSection() {
             <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-700 rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-lg group-hover:shadow-green-500/25 transition-all duration-300">
               <Brain className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">AI-Powered Intelligence</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Crafted from Real Student Work</h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              Advanced machine learning algorithms provide personalized assistance tailored to your unique learning style and academic requirements.
+              Trained on thousands of actual assignments to understand exactly what educators expect.
             </p>
           </div>
 
@@ -29,9 +29,9 @@ export default function FeaturesSection() {
             <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-700 rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-lg group-hover:shadow-green-500/25 transition-all duration-300">
               <Clock className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">24/7 Availability</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Context‑Aware Assistance</h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              Get help whenever you need it. Our AI assistant is available around the clock to support your academic journey without interruption.
+              Our model knows your assignment structure, citation style, formatting needs, and more.
             </p>
           </div>
 
@@ -39,9 +39,9 @@ export default function FeaturesSection() {
             <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-700 rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-lg group-hover:shadow-green-500/25 transition-all duration-300">
               <Target className="w-6 h-6 text-white" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Precision Accuracy</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Beyond Generic LLMs</h3>
             <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-              Get accurate, reliable assistance with advanced fact-checking and quality assurance built into every response and recommendation.
+              Fine‑tuned to excel in academic tasks, unlike out-of-the-box models like Grok, Claude, or ChatGPT.
             </p>
           </div>
         </div>
