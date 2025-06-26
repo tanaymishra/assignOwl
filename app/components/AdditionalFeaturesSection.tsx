@@ -20,8 +20,18 @@ export default function AdditionalFeaturesSection() {
                   <Shield className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Secure & Private</h3>
-                  <p className="text-gray-300 text-sm">Your data and assignments are protected with enterprise-grade security measures.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Trained on Real Assignments</h3>
+                  <p className="text-gray-300 text-sm">We’ve fine-tuned our AI using thousands of actual, high-quality student submissions—so it understands what works, not just what sounds good.
+                    .</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-green-900 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Smarter Prompts, Better Outputs</h3>
+                  <p className="text-gray-300 text-sm">No more trial and error. AssignOwl guides you with context-aware prompt suggestions to help you get the best possible results on the first try.</p>
                 </div>
               </div>
 
@@ -30,8 +40,8 @@ export default function AdditionalFeaturesSection() {
                   <TrendingUp className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Progress Tracking</h3>
-                  <p className="text-gray-300 text-sm">Monitor your academic improvement with detailed analytics and insights.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Up to 80% of the Work—Handled</h3>
+                  <p className="text-gray-300 text-sm">From research structuring to citations and formatting, AssignOwl can complete up to 80% of your assignment with precision. You just polish and submit.</p>
                 </div>
               </div>
 
@@ -40,8 +50,8 @@ export default function AdditionalFeaturesSection() {
                   <Users className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Collaborative Learning</h3>
-                  <p className="text-gray-300 text-sm">Connect with peers and share knowledge in a supportive environment.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-1">Built for Accuracy, Not Just Answers</h3>
+                  <p className="text-gray-300 text-sm">While generic AIs guess, AssignOwl delivers focused, relevant responses based on fine-tuned academic patterns and requirements.</p>
                 </div>
               </div>
             </div>
