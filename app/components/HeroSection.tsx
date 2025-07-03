@@ -26,16 +26,16 @@ export default function HeroSection() {
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="text-gray-900">
-              Built for assignments. Powered by AI.
+             Your Essay & Study Partner but ,
             </span>
             <br />
             <span className="bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">
-              Ready to help you excel.
+              Now with AI
             </span>
           </h1>
 
           <p className="text-base sm:text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            AssignOwl packs half a decade of experience into an AI assistant fine‑tuned on thousands of real assignments—so you get coursework help that hits the mark, every time.
+            AssignOwl packs half a decade of experience into an AI assistant, fine‑tuned on thousands of real academic assignments to help you write the perfect essays and reports that hits the mark, every time.
           </p>
 
           <div className="max-w-md mx-auto pt-8">

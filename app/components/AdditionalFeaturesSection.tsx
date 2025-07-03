@@ -31,7 +31,7 @@ export default function AdditionalFeaturesSection() {
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">Smarter Prompts, Better Outputs</h3>
-                  <p className="text-gray-600 text-sm">No more trial and error. AssignOwl guides you with context-aware prompt suggestions to help you get the best possible results on the first try.</p>
+                  <p className="text-gray-600 text-sm">No more trial and error. AssignOwl guides you with context-aware prompt suggestions to help you get the best possible assignments on the first try.</p>
                 </div>
               </div>
 
@@ -50,8 +50,8 @@ export default function AdditionalFeaturesSection() {
                   <TrendingUp className="w-5 h-5 text-green-600" />
                 </div>
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">Built for Accuracy, Not Just Answers</h3>
-                  <p className="text-gray-600 text-sm">While generic AIs guess, AssignOwl delivers focused, relevant responses based on fine-tuned academic patterns and requirements.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">All types of assignments handled</h3>
+                  <p className="text-gray-600 text-sm">Right from essays , reports , case studies to getting help for research proposals and research parpers , assignowl handles all types of assignment </p>
                 </div>
               </div>
             </div>
