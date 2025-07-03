@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export default function Footer() {
   return (
-    <footer className="py-12 bg-black border-t border-gray-800">
+    <footer className="py-12 bg-white border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
           <div className="flex items-center space-x-3 mb-4 md:mb-0">
@@ -12,7 +12,7 @@ export default function Footer() {
 
           </div>
 
-          <div className="flex flex-wrap items-center justify-center space-x-4 sm:space-x-6 text-gray-300 text-sm">
+          <div className="flex flex-wrap items-center justify-center space-x-4 sm:space-x-6 text-gray-600 text-sm">
             <a href="#" className="hover:text-green-400 transition-colors font-medium">Privacy Policy</a>
             <a href="#" className="hover:text-green-400 transition-colors font-medium">Terms of Service</a>
             <a href="#" className="hover:text-green-400 transition-colors font-medium">Contact Us</a>
@@ -20,8 +20,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-gray-800 text-center">
-          <p className="text-gray-400 text-sm">
+        <div className="pt-6 border-t border-gray-200 text-center">
+          <p className="text-gray-500 text-sm">
             &copy; 2025 assignOwl. All rights reserved. Revolutionizing education through artificial intelligence.
           </p>
         </div>

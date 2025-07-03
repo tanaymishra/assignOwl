@@ -25,11 +25,11 @@ export default function Input({
 }: InputProps) {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-')
   
-  const baseStyles = 'w-full px-4 py-3 bg-gray-900 border rounded-lg text-white placeholder-gray-400 focus:outline-none transition-all duration-200'
+  const baseStyles = 'w-full px-4 py-3 bg-white border rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200'
   
   const variants = {
-    default: 'border-gray-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20',
-    glow: 'border-gray-700 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:shadow-lg focus:shadow-green-500/25'
+    default: 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20',
+    glow: 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:shadow-lg focus:shadow-green-500/25'
   }
   
   const combinedClassName = `
@@ -44,7 +44,7 @@ export default function Input({
   return (
     <div className={fullWidth ? 'w-full' : ''}>
       {label && (
-        <label htmlFor={inputId} className="block text-sm font-medium text-gray-300 mb-2">
+        <label htmlFor={inputId} className="block text-sm font-medium text-gray-700 mb-2">
           {label}
         </label>
       )}
@@ -52,7 +52,7 @@ export default function Input({
       <div className="relative">
         {Icon && iconPosition === 'left' && (
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Icon className="w-5 h-5 text-gray-400" />
+            <Icon className="w-5 h-5 text-gray-500" />
           </div>
         )}
         
@@ -64,13 +64,13 @@ export default function Input({
         
         {Icon && iconPosition === 'right' && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <Icon className="w-5 h-5 text-gray-400" />
+            <Icon className="w-5 h-5 text-gray-500" />
           </div>
         )}
       </div>
       
       {error && (
-        <p className="mt-2 text-sm text-red-400">{error}</p>
+        <p className="mt-2 text-sm text-red-600">{error}</p>
       )}
     </div>
   )

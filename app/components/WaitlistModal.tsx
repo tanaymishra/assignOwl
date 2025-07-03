@@ -68,13 +68,13 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
       
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-md transform rounded-2xl bg-gray-900 p-8 shadow-2xl transition-all">
+        <div className="relative w-full max-w-md transform rounded-2xl bg-white p-8 shadow-2xl transition-all">
           {/* Close button */}
           <Button
             onClick={onClose}
             variant="ghost"
             size="sm"
-            className="absolute right-4 top-4 text-gray-400 hover:text-gray-300 transition-colors p-1"
+            className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 transition-colors p-1"
             icon={X}
           />
 
@@ -83,10 +83,10 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
             <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
               <Mail className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
               Join the Waitlist
             </h2>
-            <p className="text-gray-300">
+            <p className="text-gray-600">
               Be the first to experience the future of academic assistance
             </p>
           </div>
@@ -94,11 +94,11 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
           {/* Success State */}
           {isSubmitted ? (
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-green-900 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-8 h-8 text-green-400" />
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold text-white">Welcome aboard!</h3>
-              <p className="text-gray-300">
+              <h3 className="text-xl font-semibold text-gray-900">Welcome aboard!</h3>
+              <p className="text-gray-600">
                 You've successfully joined our waitlist. We'll notify you when early access is available.
               </p>
             </div>
@@ -135,7 +135,7 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
 
               {/* Error Message */}
               {error && (
-                <div className="text-red-400 text-sm text-center bg-red-900/20 p-3 rounded-lg border border-red-800">
+                <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
                   {error}
                 </div>
               )}
@@ -154,7 +154,7 @@ export default function WaitlistModal({ isOpen, onClose, prefilledEmail = '' }: 
               </Button>
 
               {/* Footer */}
-              <div className="text-center text-sm text-gray-400 space-y-2">
+              <div className="text-center text-sm text-gray-500 space-y-2">
                 <p>✓ Free to join • ✓ Early access benefits</p>
               </div>
             </form>

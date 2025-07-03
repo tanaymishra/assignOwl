@@ -9,12 +9,12 @@ import Footer from './components/Footer'
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-green-950">
+    <div className="min-h-screen bg-white">
       <Header />
       <HeroSection />
       <FeaturesSection />
       <AdditionalFeaturesSection />
-      {/* <StatsSection /> */}
+      <StatsSection />
       <CTASection />
       <Footer />
     </div>

@@ -15,15 +15,15 @@ export default function CTASection() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-green-900 to-green-950">
+    <section className="py-16 bg-gradient-to-br from-green-50 to-green-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="space-y-6">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
             10,000+ Students Helped <br />
-            Now, It’s Automated.
+            Now, It's Automated.
           </h2>
-          <p className="text-green-100 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
-            AssignOwl takes years of real, hands-on support and turns it into an AI that’s ready to help anytime, anywhere.
+          <p className="text-gray-700 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto">
+            AssignOwl takes years of real, hands-on support and turns it into an AI that's ready to help anytime, anywhere.
           </p>
 
           <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-3 max-w-lg mx-auto">
@@ -42,25 +42,30 @@ export default function CTASection() {
             <Button
               type="submit"
               variant="primary"
-              size="md"
-              className="whitespace-nowrap"
+              size="lg"
+              glow={true}
             >
-              Get Started Free
+              Join Waitlist
             </Button>
           </form>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-green-200 text-xs">
-            <div className="flex items-center space-x-1">
-              <span>✓</span>
-              <span>Free to join</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span>✓</span>
-              <span>No credit card required</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span>✓</span>
-              <span>Early access benefits</span>
+          <div className="text-center space-y-2 pt-4">
+            <p className="text-sm text-gray-600">
+              Be the first to experience the future of academic success.
+            </p>
+            <div className="flex items-center justify-center space-x-6 text-xs text-gray-500">
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>No spam, ever</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Early access perks</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>Exclusive updates</span>
+              </span>
             </div>
           </div>
         </div>
