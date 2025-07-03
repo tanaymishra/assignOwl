@@ -1,12 +1,22 @@
 'use client'
 
 import React from 'react'
-import { useWaitlistModal } from '@/lib/store'
 import Image from 'next/image'
 import { Button } from '@/app/ui'
+import { useLoginStore } from './loginModal/store/loginStore'
 
 export default function Header() {
-  const { openModal } = useWaitlistModal()
+  const { openModal, setMode } = useLoginStore()
+
+  const handleSignIn = () => {
+    setMode('signin')
+    openModal()
+  }
+
+  const handleSignUp = () => {
+    setMode('signup')
+    openModal()
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
@@ -18,12 +28,19 @@ export default function Header() {
 
           <div className="flex items-center space-x-3">
             <Button
-              onClick={() => openModal()}
+              onClick={handleSignIn}
+              variant="ghost"
+              size="md"
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={handleSignUp}
               variant="primary"
               size="md"
               glow={true}
             >
-              Join Waitlist
+              Sign Up
             </Button>
           </div>
         </div>
