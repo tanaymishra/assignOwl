@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '/app/styles//colors.scss';
 
 @layer base {
   html {
@@ -23,5 +24,13 @@
   
   .shadow-glow {
     box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+  }
+  
+  .theme-transition {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .theme-transition * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 }

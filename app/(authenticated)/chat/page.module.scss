@@ -3,26 +3,26 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #ffffff;
+  background-color: var(--color-background-primary);
 }
 
 // Header Section
 .header {
   padding: 2rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-background-accent);
 }
 
 .title {
   font-size: 2rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-text-primary);
   margin-bottom: 0.5rem;
 }
 
 .subtitle {
   font-size: 1.125rem;
-  color: #6b7280;
+  color: var(--color-text-tertiary);
   line-height: 1.6;
 }
 
@@ -39,7 +39,7 @@
   justify-content: center;
   height: 100%;
   font-size: 1.125rem;
-  color: #9ca3af;
+  color: var(--color-text-muted);
 }
 
 // Responsive Design

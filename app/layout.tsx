@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import './globals.scss'
 import ModalProvider from './components/ModalProvider'
 import LoginComp from './components/loginModal/login'
 

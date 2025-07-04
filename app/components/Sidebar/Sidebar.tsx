@@ -13,6 +13,8 @@ import {
   ChevronRight
 } from 'lucide-react'
 import { IconButton } from '@/app/ui'
+import ThemeToggle from '@/app/components/ThemeToggle'
+import { useTheme } from '@/app/contexts/ThemeContext'
 import styles from './Sidebar.module.scss'
 import Image from 'next/image'
 
@@ -26,6 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onToggle 
 }) => {
   const [activeItem, setActiveItem] = useState('chat')
+  const { theme } = useTheme()
 
   const menuItems = [
     { id: 'chat', label: 'New Chat', icon: Plus, isButton: true },
@@ -44,7 +47,12 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className={styles.header}>
         {!isCollapsed && (
           <div className={styles.logo}>
-            <Image src={'/logo.svg'} alt='AssignOwl' width={100} height={40}></Image>
+            <Image 
+              src={theme === 'dark' ? '/darkThemeLogo.svg' : '/logo.svg'} 
+              alt='AssignOwl' 
+              width={100} 
+              height={40}
+            />
           </div>
         )}
         
@@ -127,6 +135,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             title={isCollapsed ? item.label : undefined}
           />
         ))}
+        
+        {/* Theme Toggle */}
+        <ThemeToggle
+          variant="ghost"
+          size="md"
+          showLabel={!isCollapsed}
+          className={styles.navItem}
+        />
       </div>
     </div>
   )

@@ -7,6 +7,11 @@ export { default as AdditionalFeaturesSection } from './AdditionalFeaturesSectio
 export { default as CTASection } from './CTASection'
 export { default as StatsSection } from './StatsSection'
 
+// Layout Components
+export { default as Sidebar } from './Sidebar'
+export { default as AuthenticatedLayout } from './Layout/AuthenticatedLayout'
+export { default as ThemeToggle } from './ThemeToggle'
+
 // Modal Components
 export { Modal, ExampleModal } from './Modal'
 export { default as ModalProvider } from './ModalProvider'
