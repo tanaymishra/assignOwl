@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.chatInputContainer{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    padding: 50px 0;
+    background: linear-gradient(0deg, var(--color-background-primary), transparent);
+}

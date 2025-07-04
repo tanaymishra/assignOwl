@@ -1,7 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '/app/styles//colors.scss';
+@import '/app/styles/colors.scss';
+@import '/app/styles/scrollbar.scss';
 
 @layer base {
   html {

@@ -137,7 +137,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Chat History */}
       {(!isCollapsed || isMobile) && (
-        <div className={styles.chatHistory}>
+        <div className={`${styles.chatHistory} sidebar-scrollbar`}>
           <h3 className={styles.sectionTitle}>Recent Chats</h3>
           <div className={styles.chatList}>
             {/* Sample chat items */}

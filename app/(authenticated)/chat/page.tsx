@@ -6,13 +6,13 @@ import { EmptyState, ChatMessages, ChatInput } from './sections'
 import styles from './page.module.scss'
 
 export default function ChatPage() {
-  const { 
-    messages, 
-    inputValue, 
+  const {
+    messages,
+    inputValue,
     attachedFiles,
     addMessage,
     clearInput,
-    setIsLoading 
+    setIsLoading
   } = useChatStore()
 
   const handleSubmit = async () => {
@@ -50,11 +50,13 @@ export default function ChatPage() {
       ) : (
         <div className={styles.chatContainer}>
           <ChatMessages />
-          <ChatInput 
-            onSubmit={handleSubmit}
-            placeholder="Continue the conversation..."
-            className={styles.fixedInput}
-          />
+          <div className={styles.chatInputContainer}>
+            <ChatInput
+              onSubmit={handleSubmit}
+              placeholder="Continue the conversation..."
+              className={styles.fixedInput}
+            />
+          </div>
         </div>
       )}
     </div>

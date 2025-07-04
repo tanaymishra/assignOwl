@@ -8,7 +8,7 @@ const ChatMessages: React.FC = () => {
   const { messages, isLoading } = useChatStore()
 
   return (
-    <div className={styles.messagesArea}>
+    <div className={`${styles.messagesArea} chat-scrollbar`}>
       {messages.map((message) => (
         <div
           key={message.id}
