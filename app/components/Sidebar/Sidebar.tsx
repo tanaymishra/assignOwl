@@ -181,6 +181,28 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       )}
 
+      {/* Token Usage Section */}
+      {(!isCollapsed || isMobile) && (
+        <div className={styles.tokenUsage}>
+          <div className={styles.tokenHeader}>
+            <span className={styles.tokenTitle}>Token Usage</span>
+            <span className={styles.planBadge}>Free Plan</span>
+          </div>
+          <div className={styles.tokenStats}>
+            <div className={styles.tokenBar}>
+              <div className={styles.tokenProgress} style={{ width: '67%' }}></div>
+            </div>
+            <div className={styles.tokenText}>
+              <span>1,340 / 2,000</span>
+              <span className={styles.tokenPeriod}>tokens this month</span>
+            </div>
+          </div>
+          <button className={styles.upgradeButton}>
+            Upgrade to Pro 🚀
+          </button>
+        </div>
+      )}
+
       {/* Bottom Section */}
       <div className={styles.bottomSection}>
         {bottomItems.map((item) => (
