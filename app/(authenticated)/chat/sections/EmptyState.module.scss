@@ -1,0 +1,40 @@
+// Empty State Component Styles
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.welcomeSection {
+  margin-bottom: 3rem;
+  max-width: 600px;
+}
+
+.welcomeTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.welcomeSubtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .welcomeTitle {
+    font-size: 1.5rem;
+  }
+  
+  .welcomeSubtitle {
+    font-size: 1rem;
+  }
+}
