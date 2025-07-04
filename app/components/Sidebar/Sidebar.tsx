@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { IconButton } from '@/app/ui'
 import styles from './Sidebar.module.scss'
+import Image from 'next/image'
 
 interface SidebarProps {
   isCollapsed?: boolean
@@ -43,8 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className={styles.header}>
         {!isCollapsed && (
           <div className={styles.logo}>
-            <MessageSquare className={styles.logoIcon} />
-            <span className={styles.logoText}>AssignOwl AI</span>
+            <Image src={'/logo.svg'} alt='AssignOwl' width={100} height={40}></Image>
           </div>
         )}
         
