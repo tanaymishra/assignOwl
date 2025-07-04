@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
   MessageSquare, 
   Plus, 
@@ -10,7 +10,8 @@ import {
   FileText, 
   Search,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react'
 import { IconButton } from '@/app/ui'
 import ThemeToggle from '@/app/components/ThemeToggle'
@@ -20,15 +21,40 @@ import Image from 'next/image'
 
 interface SidebarProps {
   isCollapsed?: boolean
+  isMobileOpen?: boolean
   onToggle?: () => void
+  onMobileClose?: () => void
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ 
   isCollapsed = false, 
-  onToggle 
+  isMobileOpen = false,
+  onToggle,
+  onMobileClose 
 }) => {
   const [activeItem, setActiveItem] = useState('chat')
+  const [isMobile, setIsMobile] = useState(false)
   const { theme } = useTheme()
+
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const handleToggle = () => {
+    if (isMobile && onMobileClose) {
+      onMobileClose()
+    } else if (onToggle) {
+      onToggle()
+    }
+  }
 
   const menuItems = [
     { id: 'chat', label: 'New Chat', icon: Plus, isButton: true },
@@ -42,10 +68,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   ]
 
   return (
-    <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
+    <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''} ${isMobileOpen ? styles.open : ''}`}>
       {/* Header */}
       <div className={styles.header}>
-        {!isCollapsed && (
+        {(!isCollapsed || isMobile) && (
           <div className={styles.logo}>
             <Image 
               src={theme === 'dark' ? '/darkThemeLogo.svg' : '/logo.svg'} 
@@ -57,16 +83,22 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
         
         <button 
-          onClick={onToggle}
+          onClick={handleToggle}
           className={styles.toggleButton}
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={
+            isMobile 
+              ? 'Close sidebar' 
+              : isCollapsed 
+                ? 'Expand sidebar' 
+                : 'Collapse sidebar'
+          }
         >
-          {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
+          {isMobile ? <X /> : isCollapsed ? <ChevronRight /> : <ChevronLeft />}
         </button>
       </div>
 
       {/* Search */}
-      {!isCollapsed && (
+      {(!isCollapsed || isMobile) && (
         <div className={styles.searchSection}>
           <div className={styles.searchInput}>
             <Search className={styles.searchIcon} />
@@ -86,32 +118,62 @@ const Sidebar: React.FC<SidebarProps> = ({
             key={item.id}
             icon={item.icon}
             label={item.label}
-            onClick={() => setActiveItem(item.id)}
+            onClick={() => {
+              setActiveItem(item.id)
+              // Close mobile menu when selecting an item
+              if (isMobile && onMobileClose) {
+                onMobileClose()
+              }
+            }}
             variant={item.isButton ? 'primary' : 'default'}
             size="md"
             isActive={activeItem === item.id && !item.isButton}
-            showLabel={!isCollapsed}
+            showLabel={!isCollapsed || isMobile}
             className={styles.navItem}
-            title={isCollapsed ? item.label : undefined}
+            title={isCollapsed && !isMobile ? item.label : undefined}
           />
         ))}
       </nav>
 
       {/* Chat History */}
-      {!isCollapsed && (
+      {(!isCollapsed || isMobile) && (
         <div className={styles.chatHistory}>
           <h3 className={styles.sectionTitle}>Recent Chats</h3>
           <div className={styles.chatList}>
             {/* Sample chat items */}
-            <div className={styles.chatItem}>
+            <div 
+              className={styles.chatItem}
+              onClick={() => {
+                // Close mobile menu when selecting a chat
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+            >
               <div className={styles.chatTitle}>Math Assignment Help</div>
               <div className={styles.chatTime}>2 hours ago</div>
             </div>
-            <div className={styles.chatItem}>
+            <div 
+              className={styles.chatItem}
+              onClick={() => {
+                // Close mobile menu when selecting a chat
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+            >
               <div className={styles.chatTitle}>Essay Writing Tips</div>
               <div className={styles.chatTime}>Yesterday</div>
             </div>
-            <div className={styles.chatItem}>
+            <div 
+              className={styles.chatItem}
+              onClick={() => {
+                // Close mobile menu when selecting a chat
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+            >
               <div className={styles.chatTitle}>Physics Problem Solving</div>
               <div className={styles.chatTime}>2 days ago</div>
             </div>
@@ -126,13 +188,19 @@ const Sidebar: React.FC<SidebarProps> = ({
             key={item.id}
             icon={item.icon}
             label={item.label}
-            onClick={() => setActiveItem(item.id)}
+            onClick={() => {
+              setActiveItem(item.id)
+              // Close mobile menu when selecting an item
+              if (isMobile && onMobileClose) {
+                onMobileClose()
+              }
+            }}
             variant="default"
             size="md"
             isActive={activeItem === item.id}
-            showLabel={!isCollapsed}
+            showLabel={!isCollapsed || isMobile}
             className={styles.navItem}
-            title={isCollapsed ? item.label : undefined}
+            title={isCollapsed && !isMobile ? item.label : undefined}
           />
         ))}
         
@@ -140,7 +208,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <ThemeToggle
           variant="ghost"
           size="md"
-          showLabel={!isCollapsed}
+          showLabel={!isCollapsed || isMobile}
           className={styles.navItem}
         />
       </div>

@@ -220,6 +220,8 @@
     top: 0;
     z-index: 100;
     transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: var(--shadow-xl);
 
     &.open {
       transform: translateX(0);
@@ -228,6 +230,31 @@
     &.collapsed {
       width: 280px;
       transform: translateX(-100%);
+      
+      &.open {
+        transform: translateX(0);
+      }
+    }
+  }
+
+  // On mobile, always show full sidebar when open
+  .sidebar.open {
+    .header {
+      .logo {
+        display: flex;
+      }
+    }
+
+    .searchSection {
+      display: block;
+    }
+
+    .chatHistory {
+      display: block;
+    }
+
+    .toggleButton {
+      display: flex;
     }
   }
 }
