@@ -5,6 +5,9 @@
   height: 100%;
   background-color: var(--color-background-primary);
   position: relative;
+  max-width: 1200px; // Constrain content width
+  margin: 0 auto; // Center the content
+  width: 100%;
 }
 
 // Empty State - Input in Center
@@ -47,12 +50,19 @@
 .fixedInputForm {
   position: fixed;
   bottom: 0;
-  left: 280px; // Account for sidebar
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 800px; // Maximum width for the input
   padding: 1rem;
   background-color: var(--color-background-primary);
   border-top: 1px solid var(--color-border-primary);
   z-index: 10;
+  
+  // Adjust for sidebar on desktop
+  @media (min-width: 769px) {
+    margin-left: 140px; // Half of sidebar width to center properly
+  }
 }
 
 .inputContainer {
@@ -228,6 +238,9 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-width: 1200px; // Constrain messages width
+  margin: 0 auto; // Center the messages
+  width: 100%;
 }
 
 .message {
@@ -336,7 +349,10 @@
 // Responsive Design
 @media (max-width: 768px) {
   .fixedInputForm {
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: 0; // No margin offset on mobile
+    max-width: calc(100% - 2rem); // Account for padding
     padding: 1rem;
   }
   

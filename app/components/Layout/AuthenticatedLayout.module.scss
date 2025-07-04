@@ -130,16 +130,27 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  margin-left: 280px; // Default sidebar width
   transition: margin-left 0.3s ease;
   position: relative;
 
   &.expanded {
-    margin-left: 64px; // Collapsed sidebar width
+    margin-left: 76px; // Collapsed sidebar width
   }
 
   &.withMobileHeader {
     padding-top: 3.5rem; // Space for mobile header
   }
+}
+
+// Content wrapper for proper scrolling and max-width
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  max-width: 1200px; // Prevent content from going too wide
+  margin: 0 auto; // Center the content
+  width: 100%;
 }
 
 // Responsive Design
@@ -171,6 +182,12 @@
   }
 
   .main {
+    margin-left: 280px; // Default sidebar width on desktop
+    
+    &.expanded {
+      margin-left: 76px; // Collapsed sidebar width
+    }
+    
     &.withMobileHeader {
       padding-top: 0; // No mobile header padding on desktop
     }

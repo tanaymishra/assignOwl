@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { Send, Image as ImageIcon, Paperclip, Loader2 } from 'lucide-react'
+import { Send, Plus, Loader2 } from 'lucide-react'
 import styles from './page.module.scss'
 
 interface Message {
@@ -130,7 +130,7 @@ export default function ChatPage() {
                   className={styles.actionButton}
                   disabled={isLoading}
                 >
-                  <Paperclip size={20} />
+                  <Plus size={20} />
                 </button>
                 
                 <button
@@ -233,7 +233,7 @@ export default function ChatPage() {
                   className={styles.actionButton}
                   disabled={isLoading}
                 >
-                  <Paperclip size={20} />
+                  <Plus size={20} />
                 </button>
                 
                 <button
