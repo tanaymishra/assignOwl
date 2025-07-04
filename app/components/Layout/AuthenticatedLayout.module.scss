@@ -130,13 +130,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  margin-left: 280px; // Default sidebar width
   transition: margin-left 0.3s ease;
   position: relative;
-
-  &.expanded {
-    margin-left: 76px; // Collapsed sidebar width
-  }
 
   &.withMobileHeader {
     padding-top: 3.5rem; // Space for mobile header
@@ -182,12 +177,6 @@
   }
 
   .main {
-    margin-left: 280px; // Default sidebar width on desktop
-    
-    &.expanded {
-      margin-left: 76px; // Collapsed sidebar width
-    }
-    
     &.withMobileHeader {
       padding-top: 0; // No mobile header padding on desktop
     }
