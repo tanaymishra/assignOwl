@@ -32,19 +32,18 @@ const ChatMessages: React.FC = () => {
             </div>
           </div>
         ))}
-
-
-        {isLoading && (
-          <div className={`${styles.message} ${styles.assistantMessage} ${styles.loadingMessage}`}>
-            <div className={styles.messageContent}>
-              <div className={styles.loadingDots}>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+      {isLoading && (
+        <div className={`${styles.message} ${styles.assistantMessage} ${styles.loadingMessage}`}>
+          <div className={styles.messageContent}>
+            <div className={styles.typewriterText}>
+              <span className={styles.typingWord}>Analyzing</span>
+              <span className={styles.typingWord}>your</span>
+              <span className={styles.typingWord}>assignment...</span>
+              <span className={styles.typingCursor}>|</span>
             </div>
           </div>
-        )}
+        </div>
+      )}
       </div>
     </div>
   )
