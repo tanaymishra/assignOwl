@@ -1,0 +1,131 @@
+// Artifact Card Component Styles
+.artifactCard {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background-color: var(--color-background-tertiary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-accent-primary);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.artifactHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.artifactIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--color-accent-light);
+  color: var(--color-accent-primary);
+  border-radius: 0.5rem;
+}
+
+.artifactInfo {
+  flex: 1;
+}
+
+.artifactTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.artifactType {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.artifactPreview {
+  margin-bottom: 0.75rem;
+}
+
+.previewText {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.artifactActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 0.375rem;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+    color: white;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+}
+
+// Skeleton Loader for generating state
+.skeletonLoader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.skeletonLine {
+  height: 0.75rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-border-primary) 0%,
+    var(--color-background-secondary) 50%,
+    var(--color-border-primary) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 0.25rem;
+  animation: slideLoader 1.5s ease-in-out infinite;
+}
+
+@keyframes slideLoader {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .artifactActions {
+    flex-direction: column;
+  }
+  
+  .actionButton {
+    justify-content: center;
+  }
+}

@@ -7,6 +7,15 @@ export interface Message {
   content: string
   timestamp: Date
   attachments?: string[]
+  artifact?: Artifact
+}
+
+export interface Artifact {
+  id: string
+  title: string
+  type: 'document' | 'code' | 'text'
+  content: string
+  isGenerating?: boolean
 }
 
 interface ChatState {
@@ -25,6 +34,8 @@ interface ChatState {
   setAttachedFiles: (files: File[]) => void
   clearInput: () => void
   resetChat: () => void
+  updateMessageArtifact: (messageId: string, artifact: Artifact) => void
+  updateArtifactContent: (messageId: string, artifactId: string, content: string) => void
 }
 
 const useChatStore = create<ChatState>()(
@@ -80,6 +91,30 @@ const useChatStore = create<ChatState>()(
           { messages: [], inputValue: '', isLoading: false, attachedFiles: [] },
           false,
           'resetChat'
+        ),
+      
+      updateMessageArtifact: (messageId: string, artifact: Artifact) =>
+        set(
+          (state) => ({
+            messages: state.messages.map((message) =>
+              message.id === messageId ? { ...message, artifact } : message
+            )
+          }),
+          false,
+          'updateMessageArtifact'
+        ),
+      
+      updateArtifactContent: (messageId: string, artifactId: string, content: string) =>
+        set(
+          (state) => ({
+            messages: state.messages.map((message) =>
+              message.id === messageId && message.artifact?.id === artifactId
+                ? { ...message, artifact: { ...message.artifact, content } }
+                : message
+            )
+          }),
+          false,
+          'updateArtifactContent'
         ),
     }),
     {

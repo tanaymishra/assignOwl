@@ -1,0 +1,453 @@
+.editorOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.editorModal {
+  background: var(--color-background-secondary);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border-primary);
+  box-shadow: var(--shadow-xl);
+}
+
+.editorHeader {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editorTitle {
+  h3 {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+}
+
+.editorType {
+  display: inline-block;
+  background: var(--color-accent-primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--color-background-tertiary);
+    color: var(--color-text-primary);
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-background-tertiary);
+}
+
+.toolbarButton {
+  background: none;
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-accent-primary);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.toolbarSeparator {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border-primary);
+  margin: 0 0.5rem;
+}
+
+.editorContent {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  min-height: 300px;
+}
+
+.tinyMCEEditor {
+  border-radius: 8px;
+  overflow: hidden;
+
+  :global(.tox) {
+    .tox-editor-container {
+      border-radius: 8px;
+    }
+
+    .tox-toolbar {
+      background: var(--color-background-tertiary) !important;
+      border-color: var(--color-border-primary) !important;
+      border-bottom: 1px solid var(--color-border-primary) !important;
+    }
+
+    .tox-toolbar__group {
+      border-color: var(--color-border-primary) !important;
+    }
+
+    .tox-tbtn {
+      color: var(--color-text-secondary) !important;
+
+      &:hover {
+        background: var(--color-background-secondary) !important;
+        color: var(--color-text-primary) !important;
+      }
+
+      &.tox-tbtn--enabled {
+        background: var(--color-accent-primary) !important;
+        color: white !important;
+      }
+    }
+
+    .tox-split-button {
+      .tox-tbtn {
+        color: var(--color-text-secondary) !important;
+
+        &:hover {
+          background: var(--color-background-secondary) !important;
+          color: var(--color-text-primary) !important;
+        }
+      }
+    }
+
+    .tox-edit-area {
+      border-color: var(--color-border-primary) !important;
+      background: var(--color-background-primary) !important;
+    }
+
+    .tox-edit-area iframe {
+      background: var(--color-background-primary) !important;
+    }
+
+    .tox-statusbar {
+      background: var(--color-background-tertiary) !important;
+      border-color: var(--color-border-primary) !important;
+      color: var(--color-text-secondary) !important;
+    }
+
+    .tox-collection__item {
+      color: var(--color-text-primary) !important;
+
+      &:hover {
+        background: var(--color-background-tertiary) !important;
+      }
+
+      &.tox-collection__item--active {
+        background: var(--color-accent-primary) !important;
+        color: white !important;
+      }
+    }
+
+    .tox-menu {
+      background: var(--color-background-secondary) !important;
+      border-color: var(--color-border-primary) !important;
+      box-shadow: var(--shadow-lg) !important;
+    }
+
+    .tox-textfield {
+      background: var(--color-background-primary) !important;
+      border-color: var(--color-border-primary) !important;
+      color: var(--color-text-primary) !important;
+
+      &:focus {
+        border-color: var(--color-accent-primary) !important;
+      }
+    }
+  }
+}
+
+.richEditor {
+  width: 100%;
+  min-height: 300px;
+  padding: 1rem;
+  border: 2px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: var(--color-accent-primary);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-text-primary);
+    margin: 1rem 0 0.5rem 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0.5rem 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin: 0.25rem 0;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+  }
+}
+
+.previewContent {
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-text-primary);
+    margin: 1.5rem 0 0.75rem 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0.75rem 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ul,
+  ol {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin: 0.5rem 0;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+  }
+}
+
+.editorActions {
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border-primary);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  background: var(--color-background-tertiary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background: var(--color-background-secondary);
+    border-color: var(--color-accent-primary);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.saveButton {
+    background: var(--color-accent-primary);
+    color: white;
+    border-color: var(--color-accent-primary);
+
+    &:hover {
+      background: var(--color-accent-secondary);
+      border-color: var(--color-accent-secondary);
+    }
+  }
+
+  &.downloadButton {
+    background: var(--color-success);
+    color: white;
+    border-color: var(--color-success);
+
+    &:hover {
+      background: var(--color-accent-secondary);
+      border-color: var(--color-accent-secondary);
+    }
+  }
+}
+
+.editorPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  background: var(--color-background-primary);
+  border: 2px solid var(--color-border-primary);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .editorOverlay {
+    padding: 0.5rem;
+  }
+
+  .editorModal {
+    max-height: 95vh;
+    border-radius: 12px;
+  }
+
+  .editorHeader {
+    padding: 1rem;
+  }
+
+  .toolbar {
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .toolbarButton {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .editorContent {
+    padding: 1rem;
+  }
+
+  .richEditor {
+    min-height: 200px;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .editorActions {
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .actionButton {
+    justify-content: center;
+  }
+}
