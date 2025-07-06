@@ -271,32 +271,30 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                   />
                 </div>
               </div>
-            </div>
 
-            {/* Changes/Comments Input Area */}
-            <div className={styles.changesInputArea}>
-              <div className={styles.changesInputContainer}>
-                <div className={styles.changesInputHeader}>
-                  <label htmlFor="changesInput" className={styles.changesInputLabel}>
-                    Request Changes or Add Comments
-                  </label>
-                </div>
-                <div className={styles.changesInputWrapper}>
-                  <textarea
-                    id="changesInput"
-                    className={styles.changesInput}
-                    placeholder="Describe the changes you'd like to make to this document..."
-                    value={changesRequest}
-                    onChange={(e) => setChangesRequest(e.target.value)}
-                    rows={3}
-                  />
-                  <button
-                    className={styles.submitChangesButton}
-                    onClick={handleRequestChanges}
-                    disabled={!changesRequest.trim()}
-                  >
-                    Submit Changes
-                  </button>
+              {/* Floating Changes Input Panel */}
+              <div className={styles.floatingChangesPanel}>
+                <div className={styles.floatingPanelContent}>
+                  <div className={styles.floatingPanelHeader}>
+                    <span className={styles.floatingPanelTitle}>💬 Request Changes</span>
+                  </div>
+                  <div className={styles.floatingInputWrapper}>
+                    <textarea
+                      className={styles.floatingChangesInput}
+                      placeholder="Describe the changes you'd like to make..."
+                      value={changesRequest}
+                      onChange={(e) => setChangesRequest(e.target.value)}
+                      rows={2}
+                    />
+                    <button
+                      className={styles.floatingSubmitButton}
+                      onClick={handleRequestChanges}
+                      disabled={!changesRequest.trim()}
+                      title="Submit change request"
+                    >
+                      ✨ Submit
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
