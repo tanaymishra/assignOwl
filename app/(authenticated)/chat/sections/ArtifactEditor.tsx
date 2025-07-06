@@ -9,6 +9,19 @@ import {
 } from 'lucide-react'
 import { Artifact } from '../store/chatStore'
 import styles from './ArtifactEditor.module.scss'
+import {
+  cleanHtml,
+  executeCommand,
+  insertHeading,
+  isCommandActive,
+  handleKeyboardShortcuts,
+  applyTextAlignment,
+  insertList,
+  formatBlock,
+  createAnimationHandlers,
+  createEditorHandlers,
+  type EditorAnimationState
+} from './functions'
 
 interface ArtifactEditorProps {
   artifact: Artifact
@@ -24,134 +37,40 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
   onDownload 
 }) => {
   const [content, setContent] = useState(artifact.content)
-  const [isEditing, setIsEditing] = useState(true) // Start directly in editing mode
-  const [showEditor, setShowEditor] = useState(false) // Controls animation
-  const [isClosing, setIsClosing] = useState(false)
+  const [animationState, setAnimationState] = useState<EditorAnimationState>({
+    isEditing: true,
+    showEditor: false,
+    isClosing: false
+  })
   const editorRef = useRef<HTMLDivElement>(null)
   const fullscreenRef = useRef<HTMLDivElement>(null)
 
-  // Trigger opening animation on mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowEditor(true)
-    }, 50) // Small delay to ensure animation triggers
-    
-    return () => clearTimeout(timer)
-  }, [])
-
-  const handleClose = () => {
-    setIsClosing(true)
-    setShowEditor(false)
-    // Delay the actual close to allow animation
-    setTimeout(() => {
-      setIsEditing(false)
-      setIsClosing(false)
-      onClose()
-    }, 300) // Match animation duration
-  }
-
-  const handleSave = () => {
-    if (editorRef.current) {
-      // Clean up the content by removing extra spaces and normalizing HTML
-      const cleanContent = cleanHtml(editorRef.current.innerHTML)
+  // Animation handlers
+  const { handleClose, initializeEditor } = createAnimationHandlers(setAnimationState, onClose)
+  
+  // Editor handlers
+  const { handleSave, handleInput } = createEditorHandlers(
+    editorRef,
+    (cleanContent) => {
       setContent(cleanContent)
       onSave(cleanContent)
-    }
-    handleClose() // Use animated close
-  }
+    },
+    cleanHtml,
+    handleClose
+  )
 
-  const cleanHtml = (html: string): string => {
-    // Remove extra spaces, normalize line breaks, and clean up formatting
-    return html
-      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .replace(/>\s+</g, '><') // Remove spaces between tags
-      .replace(/<div><br><\/div>/g, '<br>') // Replace empty divs with br
-      .replace(/<div>/g, '<p>') // Convert divs to paragraphs
-      .replace(/<\/div>/g, '</p>')
-      .replace(/<br\s*\/?>\s*<br\s*\/?>/g, '</p><p>') // Convert double br to paragraph breaks
-      .replace(/<p>\s*<\/p>/g, '') // Remove empty paragraphs
-      .replace(/(<p[^>]*>)\s*/g, '$1') // Remove leading spaces in paragraphs
-      .replace(/\s*(<\/p>)/g, '$1') // Remove trailing spaces in paragraphs
-      .replace(/<font[^>]*>/g, '') // Remove font tags
-      .replace(/<\/font>/g, '') // Remove closing font tags
-      .replace(/<span[^>]*>\s*<\/span>/g, '') // Remove empty spans
-      .trim()
-  }
+  // Initialize editor with animation
+  useEffect(() => {
+    const cleanup = initializeEditor()
+    return cleanup
+  }, [])
 
-  const executeCommand = (command: string, value: string = '') => {
-    document.execCommand(command, false, value)
-    editorRef.current?.focus()
-    
-    // Clean up after command execution
-    setTimeout(() => {
-      if (editorRef.current) {
-        const selection = window.getSelection()
-        const range = selection?.getRangeAt(0)
-        if (range) {
-          // Normalize the content around the cursor
-          const container = range.commonAncestorContainer
-          if (container.nodeType === Node.TEXT_NODE && container.parentElement) {
-            const parent = container.parentElement
-            parent.normalize()
-          }
-        }
-      }
-    }, 10)
-  }
+  // Destructure animation state for easier access
+  const { showEditor, isClosing } = animationState
 
-  const insertHeading = (level: number) => {
-    executeCommand('formatBlock', `h${level}`)
-  }
-
-  const isCommandActive = (command: string): boolean => {
-    try {
-      return document.queryCommandState(command)
-    } catch {
-      return false
-    }
-  }
-
-  const handleInput = () => {
-    if (editorRef.current) {
-      // Prevent excessive nested elements and clean up on input
-      const content = editorRef.current.innerHTML
-      if (content.includes('<div><div>') || content.includes('<span><span>')) {
-        editorRef.current.innerHTML = cleanHtml(content)
-        
-        // Restore cursor position
-        const selection = window.getSelection()
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0)
-          range.collapse(false)
-          selection.removeAllRanges()
-          selection.addRange(range)
-        }
-      }
-    }
-  }
-
+  // Keyboard shortcuts handler
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Handle keyboard shortcuts
-    if (e.ctrlKey || e.metaKey) {
-      switch (e.key) {
-        case 'b':
-          e.preventDefault()
-          executeCommand('bold')
-          break
-        case 'i':
-          e.preventDefault()
-          executeCommand('italic')
-          break
-        case 'u':
-          e.preventDefault()
-          executeCommand('underline')
-          break
-        case 's':
-          e.preventDefault()
-          handleSave()
-          break
-      }
-    }
+    handleKeyboardShortcuts(e, handleSave, editorRef)
   }
 
   return (
@@ -213,21 +132,21 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                 <div className={styles.toolbarGroup}>
                   <button
                     className={`${styles.toolbarButton} ${isCommandActive('bold') ? styles.active : ''}`}
-                    onClick={() => executeCommand('bold')}
+                    onClick={() => executeCommand('bold', '', editorRef)}
                     title="Bold (Ctrl+B)"
                   >
                     <Bold size={16} />
                   </button>
                   <button
                     className={`${styles.toolbarButton} ${isCommandActive('italic') ? styles.active : ''}`}
-                    onClick={() => executeCommand('italic')}
+                    onClick={() => executeCommand('italic', '', editorRef)}
                     title="Italic (Ctrl+I)"
                   >
                     <Italic size={16} />
                   </button>
                   <button
                     className={`${styles.toolbarButton} ${isCommandActive('underline') ? styles.active : ''}`}
-                    onClick={() => executeCommand('underline')}
+                    onClick={() => executeCommand('underline', '', editorRef)}
                     title="Underline (Ctrl+U)"
                   >
                     <Underline size={16} />
@@ -239,21 +158,21 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                 <div className={styles.toolbarGroup}>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => insertHeading(1)}
+                    onClick={() => insertHeading(1, editorRef)}
                     title="Heading 1"
                   >
                     <Heading1 size={16} />
                   </button>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => insertHeading(2)}
+                    onClick={() => insertHeading(2, editorRef)}
                     title="Heading 2"
                   >
                     <Heading2 size={16} />
                   </button>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('formatBlock', 'p')}
+                    onClick={() => formatBlock('p', editorRef)}
                     title="Paragraph"
                   >
                     <Type size={16} />
@@ -265,21 +184,21 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                 <div className={styles.toolbarGroup}>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('justifyLeft')}
+                    onClick={() => applyTextAlignment('left', editorRef)}
                     title="Align Left"
                   >
                     <AlignLeft size={16} />
                   </button>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('justifyCenter')}
+                    onClick={() => applyTextAlignment('center', editorRef)}
                     title="Align Center"
                   >
                     <AlignCenter size={16} />
                   </button>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('justifyRight')}
+                    onClick={() => applyTextAlignment('right', editorRef)}
                     title="Align Right"
                   >
                     <AlignRight size={16} />
@@ -291,14 +210,14 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                 <div className={styles.toolbarGroup}>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('insertUnorderedList')}
+                    onClick={() => insertList('unordered', editorRef)}
                     title="Bullet List"
                   >
                     <List size={16} />
                   </button>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('insertOrderedList')}
+                    onClick={() => insertList('ordered', editorRef)}
                     title="Numbered List"
                   >
                     <ListOrdered size={16} />
@@ -310,14 +229,14 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                 <div className={styles.toolbarGroup}>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('formatBlock', 'blockquote')}
+                    onClick={() => formatBlock('blockquote', editorRef)}
                     title="Quote"
                   >
                     <Quote size={16} />
                   </button>
                   <button
                     className={styles.toolbarButton}
-                    onClick={() => executeCommand('formatBlock', 'pre')}
+                    onClick={() => formatBlock('pre', editorRef)}
                     title="Code Block"
                   >
                     <Code size={16} />
