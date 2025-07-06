@@ -36,6 +36,7 @@ interface ChatState {
   resetChat: () => void
   updateMessageArtifact: (messageId: string, artifact: Artifact) => void
   updateArtifactContent: (messageId: string, artifactId: string, content: string) => void
+  requestArtifactChanges: (artifactId: string, changes: string) => void
 }
 
 const useChatStore = create<ChatState>()(
@@ -116,6 +117,30 @@ const useChatStore = create<ChatState>()(
           false,
           'updateArtifactContent'
         ),
+
+      requestArtifactChanges: (artifactId: string, changes: string) => {
+        // Create a new user message with the change request
+        const changeMessage: Message = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: `Please update the document "${artifactId}" with the following changes: ${changes}`,
+          timestamp: new Date()
+        }
+        
+        // Add the message to the chat
+        set(
+          (state) => ({ 
+            messages: [...state.messages, changeMessage],
+            isLoading: true // Start loading state for AI response
+          }),
+          false,
+          'requestArtifactChanges'
+        )
+
+        // Here you would typically call your AI service to process the changes
+        // For now, we'll just simulate the start of processing
+        console.log('Change request submitted:', { artifactId, changes })
+      },
     }),
     {
       name: 'chat-store',

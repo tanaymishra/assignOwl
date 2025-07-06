@@ -733,3 +733,113 @@
     height: 16px;
   }
 }
+
+// Changes/Comments Input Area
+.changesInputArea {
+  border-top: 1px solid var(--color-border-primary);
+  background: var(--color-background-secondary);
+  padding: 1rem 1.5rem;
+  flex-shrink: 0;
+}
+
+.changesInputContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.changesInputHeader {
+  margin-bottom: 0.75rem;
+}
+
+.changesInputLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  display: block;
+}
+
+.changesInputWrapper {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.changesInput {
+  flex: 1;
+  min-height: 80px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-background-primary);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  resize: vertical;
+  min-height: 60px;
+  max-height: 120px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+}
+
+.submitChangesButton {
+  background: var(--color-accent-primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+
+  &:hover:not(:disabled) {
+    background: var(--color-accent-secondary);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background: var(--color-text-disabled);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Mobile responsive for changes input
+@media (max-width: 768px) {
+  .changesInputArea {
+    padding: 1rem;
+  }
+
+  .changesInputWrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .changesInput {
+    min-height: 60px;
+  }
+
+  .submitChangesButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

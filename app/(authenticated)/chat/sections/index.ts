@@ -1,5 +1,5 @@
 export { default as ChatInput } from './ChatInput'
 export { default as ChatMessages } from './ChatMessages'
 export { default as EmptyState } from './EmptyState'
-export { default as ArtifactCard } from './ArtifactCard'
-export { default as ArtifactEditor } from './ArtifactEditor'
+export { default as ArtifactCard } from './artifact/ArtifactCard'
+export { default as ArtifactEditor } from './artifact/ArtifactEditor'

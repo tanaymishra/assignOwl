@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react'
 import useChatStore, { Message, Artifact } from '../store/chatStore'
-import ArtifactCard from './ArtifactCard'
-import ArtifactEditor from './ArtifactEditor'
+import ArtifactCard from './artifact/ArtifactCard'
+import ArtifactEditor from './artifact/ArtifactEditor'
 import styles from './ChatMessages.module.scss'
 
 const ChatMessages: React.FC = () => {
-  const { messages, isLoading, updateArtifactContent } = useChatStore()
+  const { messages, isLoading, updateArtifactContent, requestArtifactChanges } = useChatStore()
   const [editingArtifact, setEditingArtifact] = useState<{ messageId: string; artifact: Artifact } | null>(null)
   const [isClient, setIsClient] = useState(false)
 
@@ -40,6 +40,13 @@ const ChatMessages: React.FC = () => {
     if (editingArtifact) {
       updateArtifactContent(editingArtifact.messageId, editingArtifact.artifact.id, content)
       setEditingArtifact(null)
+    }
+  }
+
+  const handleRequestChanges = (changes: string) => {
+    if (editingArtifact) {
+      requestArtifactChanges(editingArtifact.artifact.id, changes)
+      setEditingArtifact(null) // Close the editor after submitting changes
     }
   }
 
@@ -100,6 +107,7 @@ const ChatMessages: React.FC = () => {
           onClose={() => setEditingArtifact(null)}
           onSave={handleSaveArtifact}
           onDownload={() => handleDownloadArtifact(editingArtifact.artifact)}
+          onRequestChanges={handleRequestChanges}
         />
       )}
     </>

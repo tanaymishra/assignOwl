@@ -7,7 +7,7 @@ import {
   List, ListOrdered, AlignLeft, AlignCenter, AlignRight,
   Type, Heading1, Heading2, Code, Quote
 } from 'lucide-react'
-import { Artifact } from '../store/chatStore'
+import { Artifact } from '../../store/chatStore'
 import styles from './ArtifactEditor.module.scss'
 import {
   cleanHtml,
@@ -28,15 +28,18 @@ interface ArtifactEditorProps {
   onClose: () => void
   onSave: (content: string) => void
   onDownload: () => void
+  onRequestChanges?: (changes: string) => void
 }
 
 const ArtifactEditor: React.FC<ArtifactEditorProps> = ({ 
   artifact, 
   onClose, 
   onSave, 
-  onDownload 
+  onDownload,
+  onRequestChanges
 }) => {
   const [content, setContent] = useState(artifact.content)
+  const [changesRequest, setChangesRequest] = useState('')
   const [animationState, setAnimationState] = useState<EditorAnimationState>({
     isEditing: true,
     showEditor: false,
@@ -58,6 +61,14 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
     cleanHtml,
     handleClose
   )
+
+  // Handle changes request
+  const handleRequestChanges = () => {
+    if (changesRequest.trim() && onRequestChanges) {
+      onRequestChanges(changesRequest.trim())
+      setChangesRequest('') // Clear the input after submitting
+    }
+  }
 
   // Initialize editor with animation
   useEffect(() => {
@@ -258,6 +269,34 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
                     onKeyDown={handleKeyDown}
                     suppressContentEditableWarning={true}
                   />
+                </div>
+              </div>
+            </div>
+
+            {/* Changes/Comments Input Area */}
+            <div className={styles.changesInputArea}>
+              <div className={styles.changesInputContainer}>
+                <div className={styles.changesInputHeader}>
+                  <label htmlFor="changesInput" className={styles.changesInputLabel}>
+                    Request Changes or Add Comments
+                  </label>
+                </div>
+                <div className={styles.changesInputWrapper}>
+                  <textarea
+                    id="changesInput"
+                    className={styles.changesInput}
+                    placeholder="Describe the changes you'd like to make to this document..."
+                    value={changesRequest}
+                    onChange={(e) => setChangesRequest(e.target.value)}
+                    rows={3}
+                  />
+                  <button
+                    className={styles.submitChangesButton}
+                    onClick={handleRequestChanges}
+                    disabled={!changesRequest.trim()}
+                  >
+                    Submit Changes
+                  </button>
                 </div>
               </div>
             </div>

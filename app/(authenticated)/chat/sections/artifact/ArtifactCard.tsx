@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { FileText, Download, Edit3 } from 'lucide-react'
-import { Artifact } from '../store/chatStore'
+import { Artifact } from '../../store/chatStore'
 import styles from './ArtifactCard.module.scss'
 
 interface ArtifactCardProps {
