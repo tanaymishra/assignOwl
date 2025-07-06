@@ -25,12 +25,23 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
 }) => {
   const [content, setContent] = useState(artifact.content)
   const [isEditing, setIsEditing] = useState(true) // Start directly in editing mode
+  const [showEditor, setShowEditor] = useState(false) // Controls animation
   const [isClosing, setIsClosing] = useState(false)
   const editorRef = useRef<HTMLDivElement>(null)
   const fullscreenRef = useRef<HTMLDivElement>(null)
 
+  // Trigger opening animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowEditor(true)
+    }, 50) // Small delay to ensure animation triggers
+    
+    return () => clearTimeout(timer)
+  }, [])
+
   const handleClose = () => {
     setIsClosing(true)
+    setShowEditor(false)
     // Delay the actual close to allow animation
     setTimeout(() => {
       setIsEditing(false)
@@ -147,7 +158,7 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
     <>
       {/* Full Screen Editor Mode */}
       <CSSTransition
-        in={isEditing && !isClosing}
+        in={showEditor && !isClosing}
         timeout={300}
         classNames={{
           enter: styles.editorEnter,
