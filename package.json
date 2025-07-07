@@ -9,15 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "docx": "^9.5.1",
+    "html-to-docx": "^1.8.0",
     "lucide-react": "^0.523.0",
     "next": "^15.4.0-canary.95",
     "pg": "^8.11.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "sass": "^1.89.2",
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@types/html-to-docx": "^1.8.0",
     "@types/node": "^20.10.5",
     "@types/pg": "^8.10.9",
     "@types/react": "^18.2.45",

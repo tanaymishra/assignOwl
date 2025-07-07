@@ -7,6 +7,15 @@ export interface Message {
   content: string
   timestamp: Date
   attachments?: string[]
+  artifact?: Artifact
+}
+
+export interface Artifact {
+  id: string
+  title: string
+  type: 'document' | 'code' | 'text'
+  content: string
+  isGenerating?: boolean
 }
 
 interface ChatState {
@@ -25,6 +34,9 @@ interface ChatState {
   setAttachedFiles: (files: File[]) => void
   clearInput: () => void
   resetChat: () => void
+  updateMessageArtifact: (messageId: string, artifact: Artifact) => void
+  updateArtifactContent: (messageId: string, artifactId: string, content: string) => void
+  requestArtifactChanges: (artifactId: string, changes: string) => void
 }
 
 const useChatStore = create<ChatState>()(
@@ -81,6 +93,54 @@ const useChatStore = create<ChatState>()(
           false,
           'resetChat'
         ),
+      
+      updateMessageArtifact: (messageId: string, artifact: Artifact) =>
+        set(
+          (state) => ({
+            messages: state.messages.map((message) =>
+              message.id === messageId ? { ...message, artifact } : message
+            )
+          }),
+          false,
+          'updateMessageArtifact'
+        ),
+      
+      updateArtifactContent: (messageId: string, artifactId: string, content: string) =>
+        set(
+          (state) => ({
+            messages: state.messages.map((message) =>
+              message.id === messageId && message.artifact?.id === artifactId
+                ? { ...message, artifact: { ...message.artifact, content } }
+                : message
+            )
+          }),
+          false,
+          'updateArtifactContent'
+        ),
+
+      requestArtifactChanges: (artifactId: string, changes: string) => {
+        // Create a new user message with the change request
+        const changeMessage: Message = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: `Please update the document "${artifactId}" with the following changes: ${changes}`,
+          timestamp: new Date()
+        }
+        
+        // Add the message to the chat
+        set(
+          (state) => ({ 
+            messages: [...state.messages, changeMessage],
+            isLoading: true // Start loading state for AI response
+          }),
+          false,
+          'requestArtifactChanges'
+        )
+
+        // Here you would typically call your AI service to process the changes
+        // For now, we'll just simulate the start of processing
+        console.log('Change request submitted:', { artifactId, changes })
+      },
     }),
     {
       name: 'chat-store',
