@@ -13,7 +13,8 @@ import {
 import { 
   TopBar, 
   Toolbar, 
-  DocumentEditor 
+  DocumentEditor,
+  ChatBox 
 } from './sections'
 
 interface ArtifactEditorProps {
@@ -61,9 +62,15 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
   // Destructure animation state for easier access
   const { showEditor, isClosing } = animationState
 
+  // Handle document updates from ChatBox
+  const handleDocumentUpdate = (newContent: string) => {
+    setContent(newContent)
+    onSave(newContent)
+  }
+
   return (
     <>
-      {/* Full Screen Editor Mode */}
+      {/* Full Screen Editor Mode with Split Layout */}
       <CSSTransition
         in={showEditor && !isClosing}
         timeout={300}
@@ -89,16 +96,30 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
               onClose={handleClose}
             />
 
-            {/* Toolbar with Formatting Options */}
-            <Toolbar editorRef={editorRef} />
+            {/* Split Layout: ChatBox Left, Document Right */}
+            <div className={styles.splitContent}>
+              {/* Left: ChatBox for Document Discussion */}
+              <div className={styles.chatPane}>
+                <ChatBox 
+                  artifact={artifact} 
+                  onDocumentUpdate={handleDocumentUpdate}
+                />
+              </div>
 
-            {/* Document Editor Area */}
-            <DocumentEditor
-              content={content}
-              editorRef={editorRef}
-              onInput={handleInput}
-              onSave={handleSave}
-            />
+              {/* Right: Document Editor */}
+              <div className={styles.documentPane}>
+                {/* Toolbar with Formatting Options */}
+                <Toolbar editorRef={editorRef} />
+
+                {/* Document Editor Area */}
+                <DocumentEditor
+                  content={content}
+                  editorRef={editorRef}
+                  onInput={handleInput}
+                  onSave={handleSave}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </CSSTransition>
