@@ -13,8 +13,7 @@ import {
 import { 
   TopBar, 
   Toolbar, 
-  DocumentEditor, 
-  FloatingChangesPanel 
+  DocumentEditor 
 } from './sections'
 
 interface ArtifactEditorProps {
@@ -22,15 +21,13 @@ interface ArtifactEditorProps {
   onClose: () => void
   onSave: (content: string) => void
   onDownload: () => void
-  onRequestChanges?: (changes: string) => void
 }
 
 const ArtifactEditor: React.FC<ArtifactEditorProps> = ({ 
   artifact, 
   onClose, 
   onSave, 
-  onDownload,
-  onRequestChanges
+  onDownload
 }) => {
   const [content, setContent] = useState(artifact.content)
   const [animationState, setAnimationState] = useState<EditorAnimationState>({
@@ -63,13 +60,6 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
 
   // Destructure animation state for easier access
   const { showEditor, isClosing } = animationState
-
-  // Handle changes request
-  const handleRequestChanges = (changes: string) => {
-    if (onRequestChanges) {
-      onRequestChanges(changes)
-    }
-  }
 
   return (
     <>
@@ -109,11 +99,6 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
               onInput={handleInput}
               onSave={handleSave}
             />
-
-            {/* Floating Changes Panel */}
-            {onRequestChanges && (
-              <FloatingChangesPanel onRequestChanges={handleRequestChanges} />
-            )}
           </div>
         </div>
       </CSSTransition>
