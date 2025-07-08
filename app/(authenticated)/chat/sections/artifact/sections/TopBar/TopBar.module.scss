@@ -1,0 +1,101 @@
+// TopBar Component Styles
+.topBar {
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-background-secondary);
+  flex-shrink: 0;
+}
+
+.editorTitleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.editorTitle {
+  h3 {
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+}
+
+.editorType {
+  display: inline-block;
+  background: var(--color-accent-primary);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.topBarActions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.topBarButton {
+  background: var(--color-background-tertiary);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+
+  &:hover {
+    background: var(--color-background-secondary);
+    border-color: var(--color-accent-primary);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.saveButton {
+    background: var(--color-accent-primary);
+    color: white;
+    border-color: var(--color-accent-primary);
+
+    &:hover {
+      background: var(--color-accent-secondary);
+      border-color: var(--color-accent-secondary);
+    }
+  }
+
+  &.downloadButton {
+    background: var(--color-success);
+    color: white;
+    border-color: var(--color-success);
+
+    &:hover {
+      background: var(--color-accent-secondary);
+      border-color: var(--color-accent-secondary);
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .topBarButton {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+    
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

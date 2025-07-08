@@ -1,0 +1,327 @@
+// DocumentEditor Component Styles
+.editorArea {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background-secondary);
+  padding: 2rem 1rem;
+  position: relative;
+  
+  // Ensure smooth theme transitions
+  transition: background-color 0.3s ease;
+  
+  // Clean editor environment - remove any chat-like styling
+  min-height: 100%;
+}
+
+.documentContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+  padding: 0 1rem;
+  background: transparent; // Ensure no background interference
+}
+
+.a4Document {
+  width: 210mm; // A4 width
+  min-height: 297mm; // A4 height
+  max-width: 8.5in; // Fallback for screens that don't support mm
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px var(--color-border-secondary);
+  border-radius: 12px;
+  padding: 1in; // Standard document margins
+  margin: 0 auto 2rem auto; // Add bottom margin for scroll space
+  position: relative;
+  overflow: visible; // Allow content to flow naturally
+  transition: all 0.3s ease;
+
+  // Modern document styling
+  backdrop-filter: blur(10px);
+  
+  // Theme-aware shadow
+  [data-theme="dark"] & {
+    box-shadow: 
+      0 10px 25px -5px rgba(0, 0, 0, 0.3),
+      0 4px 6px -2px rgba(0, 0, 0, 0.2),
+      0 0 0 1px var(--color-border-secondary);
+  }
+
+  // Responsive adjustments
+  @media (max-width: 1024px) {
+    width: calc(100vw - 4rem);
+    max-width: none;
+    padding: 1.5rem;
+    min-height: auto;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    width: calc(100vw - 2rem);
+    padding: 1rem;
+    margin: 0 1rem 2rem 1rem;
+    border-radius: 6px;
+  }
+}
+
+.richEditor {
+  width: 100%;
+  min-height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--color-text-primary); // Theme-aware text color
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; // Modern font stack
+  font-size: 11pt; // Standard document font size
+  line-height: 1.6; // Better readability
+  outline: none;
+  overflow: visible;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  transition: color 0.3s ease;
+
+  &:focus {
+    outline: none;
+  }
+
+  // Prevent weird spacing issues with contentEditable
+  &[contenteditable] {
+    &:empty:before {
+      content: 'Start typing your document...';
+      color: var(--color-text-secondary);
+      font-style: italic;
+    }
+  }
+
+  // Heading styles - modern and theme-aware
+  h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 24pt 0 12pt 0;
+    line-height: 1.3;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 18pt 0 10pt 0;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 14pt 0 8pt 0;
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  // Clean up paragraph spacing
+  p {
+    margin: 0 0 12pt 0;
+    line-height: 1.6;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    color: var(--color-text-primary);
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:empty {
+      margin: 0;
+      min-height: 1.2em;
+    }
+  }
+
+  // Clean up div spacing (contentEditable creates divs)
+  div {
+    margin: 0;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    color: var(--color-text-primary);
+    
+    &:empty {
+      min-height: 1.2em;
+    }
+
+    // Convert divs to block elements with proper spacing
+    &:not(:last-child) {
+      margin-bottom: 12pt;
+    }
+  }
+
+  // Lists - modern document style
+  ul, ol {
+    margin: 12pt 0;
+    padding-left: 24pt;
+    color: var(--color-text-primary);
+
+    li {
+      margin: 6pt 0;
+      line-height: 1.6;
+      color: var(--color-text-primary);
+    }
+
+    // Nested lists
+    ul, ol {
+      margin: 6pt 0;
+    }
+  }
+
+  // Text formatting - modern document style
+  strong, b {
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  em, i {
+    font-style: italic;
+    color: var(--color-text-primary);
+  }
+
+  u {
+    text-decoration: underline;
+    color: var(--color-text-primary);
+  }
+
+  // Blockquotes - modern theme-aware style
+  blockquote {
+    margin: 12pt 24pt;
+    padding: 12pt;
+    border-left: 3pt solid var(--color-accent-primary);
+    font-style: italic;
+    background: var(--color-background-tertiary);
+    border-radius: 0 8px 8px 0;
+    color: var(--color-text-secondary);
+
+    p {
+      margin: 0;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  // Code blocks - modern theme-aware style
+  pre {
+    margin: 12pt 0;
+    padding: 12pt;
+    background: var(--color-background-tertiary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 10pt;
+    line-height: 1.4;
+    overflow-x: auto;
+    color: var(--color-text-primary);
+  }
+
+  // Inline code
+  code {
+    background: var(--color-background-tertiary);
+    padding: 2pt 4pt;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 10pt;
+    color: var(--color-text-primary);
+  }
+
+  // Links
+  a {
+    color: var(--color-accent-primary);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color 0.2s ease;
+
+    &:hover {
+      text-decoration-color: var(--color-accent-primary);
+    }
+  }
+
+  // Text alignment
+  &[style*="text-align: center"] {
+    text-align: center;
+  }
+
+  &[style*="text-align: right"] {
+    text-align: right;
+  }
+
+  &[style*="text-align: justify"] {
+    text-align: justify;
+  }
+
+  // Selection styling
+  ::selection {
+    background: var(--color-accent-primary);
+    color: white;
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .editorArea {
+    padding: 1rem 0.5rem;
+  }
+
+  .documentContainer {
+    padding: 0;
+  }
+
+  .richEditor {
+    font-size: 10pt; // Smaller font for mobile
+    line-height: 1.4;
+    
+    h1 {
+      font-size: 16pt;
+      margin: 18pt 0 10pt 0;
+    }
+
+    h2 {
+      font-size: 14pt;
+      margin: 14pt 0 8pt 0;
+    }
+
+    h3 {
+      font-size: 12pt;
+      margin: 12pt 0 6pt 0;
+    }
+
+    p, div {
+      margin: 0 0 10pt 0;
+    }
+  }
+}
