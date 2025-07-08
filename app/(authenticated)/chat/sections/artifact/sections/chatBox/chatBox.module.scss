@@ -4,7 +4,7 @@
   flex-direction: column;
   height: 100%;
   background: var(--color-background-primary);
-  border-right: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border-primary);
   transition: background-color 0.3s ease;
 }
 
@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-primary);
   background: var(--color-background-secondary);
   transition: background-color 0.3s ease;
 }
@@ -21,13 +21,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--color-primary);
+  width: 36px;
+  height: 36px;
+  background: var(--color-accent-primary);
   color: white;
   border-radius: 8px;
   margin-right: 12px;
   flex-shrink: 0;
+  
+  svg {
+    color: white !important;
+  }
 }
 
 .headerTitle {
@@ -101,8 +105,12 @@
     }
     
     .messageIcon {
-      background: var(--color-primary);
+      background: var(--color-accent-primary);
       color: white;
+      
+      svg {
+        color: white !important;
+      }
     }
   }
   
@@ -117,8 +125,12 @@
     
     .messageIcon {
       background: var(--color-background-secondary);
-      color: var(--color-primary);
+      color: var(--color-text-primary);
       border: 1px solid var(--color-border);
+      
+      svg {
+        color: var(--color-text-primary) !important;
+      }
     }
   }
   
@@ -237,7 +249,7 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: var(--color-primary);
+  background: var(--color-accent-primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -245,8 +257,12 @@
   transition: all 0.3s ease;
   flex-shrink: 0;
   
+  svg {
+    color: white !important;
+  }
+  
   &:hover:not(:disabled) {
-    background: var(--color-primary-hover);
+    background: var(--color-accent-secondary);
     transform: translateY(-1px);
   }
   
