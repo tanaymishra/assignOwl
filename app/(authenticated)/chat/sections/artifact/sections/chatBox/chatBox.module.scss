@@ -72,7 +72,7 @@
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--color-border);
+    background: var(--color-border-primary);
     border-radius: 3px;
   }
   
@@ -120,13 +120,13 @@
     .messageContent {
       background: var(--color-background-secondary);
       color: var(--color-text-primary);
-      border: 1px solid var(--color-border);
+      border: 1px solid var(--color-border-primary);
     }
     
     .messageIcon {
       background: var(--color-background-secondary);
       color: var(--color-text-primary);
-      border: 1px solid var(--color-border);
+      border: 1px solid var(--color-border-primary);
       
       svg {
         color: var(--color-text-primary) !important;
@@ -203,7 +203,7 @@
 
 .inputArea {
   padding: 16px;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border-primary);
   background: var(--color-background-secondary);
   transition: background-color 0.3s ease;
 }
@@ -214,7 +214,7 @@
   gap: 8px;
   padding: 8px;
   background: var(--color-background-primary);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-primary);
   border-radius: 12px;
   transition: all 0.3s ease;
   
