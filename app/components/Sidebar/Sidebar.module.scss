@@ -280,6 +280,14 @@
   border-top: none; // Remove duplicate border since token usage has one
 }
 
+// Profile Section
+.profileSection {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 // Scrollbar Styling
 .chatHistory {
   &::-webkit-scrollbar {

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { IconButton } from '@/app/ui'
 import ThemeToggle from '@/app/components/ThemeToggle'
+import ProfileDropdown from '@/app/components/ProfileDropdown'
 import { useTheme } from '@/app/contexts/ThemeContext'
 import styles from './Sidebar.module.scss'
 import Image from 'next/image'
@@ -64,7 +65,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const bottomItems = [
     { id: 'settings', label: 'Settings', icon: Settings },
-    { id: 'profile', label: 'Profile', icon: User },
   ]
 
   return (
@@ -205,6 +205,33 @@ const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Bottom Section */}
       <div className={styles.bottomSection}>
+        {/* Profile Dropdown */}
+        {(!isCollapsed || isMobile) && (
+          <div className={styles.profileSection}>
+            <ProfileDropdown 
+              userName="John Doe"
+              userEmail="john@example.com"
+              onLogout={() => {
+                console.log('Logging out...')
+                // Add your logout logic here
+              }}
+              onSettings={() => {
+                console.log('Opening settings...')
+                setActiveItem('settings')
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+              onHelp={() => {
+                console.log('Opening help...')
+                if (isMobile && onMobileClose) {
+                  onMobileClose()
+                }
+              }}
+            />
+          </div>
+        )}
+        
         {bottomItems.map((item) => (
           <IconButton
             key={item.id}

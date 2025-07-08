@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Menu, User } from 'lucide-react'
 import Sidebar from '../Sidebar/Sidebar'
+import ProfileDropdown from '../ProfileDropdown/ProfileDropdown'
 import { ThemeProvider } from '@/app/contexts/ThemeContext'
 import styles from './AuthenticatedLayout.module.scss'
 
@@ -74,13 +75,22 @@ const AuthenticatedLayout: React.FC<AuthenticatedLayoutProps> = ({ children }) =
                 Get Pro
               </button>
               
-              <button
-                className={styles.mobileProfileButton}
-                onClick={() => {/* Handle profile click */}}
-                aria-label="Profile"
-              >
-                <User />
-              </button>
+              <ProfileDropdown 
+                userName="John Doe"
+                userEmail="john@example.com"
+                onLogout={() => {
+                  console.log('Logging out...')
+                  // Add your logout logic here
+                }}
+                onSettings={() => {
+                  console.log('Opening settings...')
+                  // Add your settings logic here
+                }}
+                onHelp={() => {
+                  console.log('Opening help...')
+                  // Add your help logic here
+                }}
+              />
             </div>
           </div>
         )}

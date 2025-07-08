@@ -11,6 +11,7 @@ export { default as StatsSection } from './StatsSection'
 export { default as Sidebar } from './Sidebar'
 export { default as AuthenticatedLayout } from './Layout/AuthenticatedLayout'
 export { default as ThemeToggle } from './ThemeToggle'
+export { default as ProfileDropdown } from './ProfileDropdown'
 
 // Modal Components
 export { Modal, ExampleModal } from './Modal'
