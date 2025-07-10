@@ -6,7 +6,8 @@ import { Button, Input } from '@/app/ui'
 import { Modal } from '@/app/components/Modal'
 import { useLoginStore } from './store/loginStore'
 import styles from './login.module.scss'
-
+import { signup } from './functions'
+import { login } from './functions'
 // Google Icon Component
 const GoogleIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" width="20" height="20">
