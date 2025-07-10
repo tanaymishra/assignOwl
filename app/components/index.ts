@@ -2,6 +2,7 @@
 export { default as Header } from './Header'
 export { default as Footer } from './Footer'
 export { default as HeroSection } from './HeroSection'
+export { default as AssignmentInputSection } from './AssignmentInputSection'
 export { default as FeaturesSection } from './FeaturesSection'
 export { default as AdditionalFeaturesSection } from './AdditionalFeaturesSection'
 export { default as CTASection } from './CTASection'
