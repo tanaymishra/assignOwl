@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.scss'
 import ModalProvider from './components/ModalProvider'
 import LoginComp from './components/loginModal/login'
+import { ThemeProvider } from './contexts/ThemeContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,9 +24,11 @@ export default function RootLayout({
     <html lang="en">
       <link rel="" href="favicon.ico" />
       <body className={inter.className}>
-        {children}
-        <ModalProvider />
-        <LoginComp />
+        <ThemeProvider>
+          {children}
+          <ModalProvider />
+          <LoginComp />
+        </ThemeProvider>
       </body>
     </html>
   )

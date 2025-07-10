@@ -70,13 +70,22 @@ export const useAuthStore = create<AuthState>()(
 
 // Single hook that contains everything
 export const useAuth = () => {
-  return useAuthStore((state) => ({
-    user: state.user,
-    role: state.role,
-    timestamp: state.timestamp,
-    isHydrated: state.isHydrated,
-    isAuthenticated: !!(state.user?.id && state.user?.email && state.user?.name),
-    setAuth: state.setAuth,
-    clearAuth: state.clearAuth,
-  }));
+  const user = useAuthStore((state) => state.user);
+  const role = useAuthStore((state) => state.role);
+  const timestamp = useAuthStore((state) => state.timestamp);
+  const isHydrated = useAuthStore((state) => state.isHydrated);
+  const setAuth = useAuthStore((state) => state.setAuth);
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  
+  const isAuthenticated = !!(user?.id && user?.email && user?.name);
+
+  return {
+    user,
+    role,
+    timestamp,
+    isHydrated,
+    isAuthenticated,
+    setAuth,
+    clearAuth,
+  };
 };
