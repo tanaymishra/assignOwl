@@ -6,7 +6,7 @@ import { Button, Input } from '@/app/ui'
 import { Modal } from '@/app/components/Modal'
 import { useLoginStore } from './store/loginStore'
 import styles from './login.module.scss'
-import { signup, login } from './functions'
+import { signup, login, handleGoogleLogin } from './functions'
 import { useAuth } from './functions/authStore'
 // Google Icon Component
 const GoogleIcon = ({ className }: { className?: string }) => (
@@ -103,9 +103,24 @@ const LoginComp = () => {
     }
   }
 
-  const handleGoogleLogin = () => {
-    // TODO: Implement Google OAuth login
-    console.log('Google login clicked')
+  const handleGoogleAuth = async () => {
+    try {
+      setLoading(true)
+      setError('')
+
+      const result = await handleGoogleLogin()
+      
+      if (result.success) {
+        closeModal()
+        // Auth store is already updated by the handleGoogleLogin function
+      } else {
+        setError(result.error || 'Google authentication failed')
+      }
+    } catch (error) {
+      setError('Google authentication failed')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -276,7 +291,7 @@ const LoginComp = () => {
               
               <button
                 type="button"
-                onClick={handleGoogleLogin}
+                onClick={handleGoogleAuth}
                 className={styles.googleButton}
                 disabled={isLoading}
               >

@@ -1,3 +1,3 @@
 // Export auth functions
-export { login, signup } from './authService'
-export type { LoginRequest, SignupRequest, AuthResponse } from './authService'
+export { login, signup, googleAuth, handleGoogleLogin } from './authService'
+export type { LoginRequest, SignupRequest, GoogleAuthRequest, AuthResponse } from './authService'
