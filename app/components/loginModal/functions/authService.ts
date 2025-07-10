@@ -2,6 +2,7 @@
  * Simple auth functions that send requests to backend
  * Backend handles everything including httpOnly cookies
  */
+import { useAuthStore } from "./authStore"
 
 export interface LoginRequest {
   email: string
@@ -37,17 +38,20 @@ export const login = async (credentials: LoginRequest): Promise<AuthResponse> =>
     const data = await response.json()
 
     if (response.ok) {
+      useAuthStore.getState().setAuth(data.user, "user");
       return {
         success: true,
         message: data.message || 'Login successful'
       }
-    } else {
+    }
+    else {
       return {
         success: false,
         error: data.error || 'Login failed'
       }
     }
-  } catch (error) {
+  }
+  catch (error) {
     return {
       success: false,
       error: 'Network error. Please try again.'
@@ -72,6 +76,9 @@ export const signup = async (userData: SignupRequest): Promise<AuthResponse> => 
     const data = await response.json()
 
     if (response.ok) {
+
+      // Update auth store with new user data
+      useAuthStore.getState().setAuth(data.user, "user");
       return {
         success: true,
         message: data.message || 'Account created successfully'
