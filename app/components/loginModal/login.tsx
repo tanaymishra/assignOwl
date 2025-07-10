@@ -6,8 +6,8 @@ import { Button, Input } from '@/app/ui'
 import { Modal } from '@/app/components/Modal'
 import { useLoginStore } from './store/loginStore'
 import styles from './login.module.scss'
-import { signup } from './functions'
-import { login } from './functions'
+import { signup, login } from './functions'
+import { useAuth } from './functions/authStore'
 // Google Icon Component
 const GoogleIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" width="20" height="20">
@@ -51,14 +51,50 @@ const LoginComp = () => {
     setName,
     togglePasswordVisibility,
     toggleConfirmPasswordVisibility,
-    submitForm
+    setLoading,
+    setError
   } = useLoginStore()
 
   if (!isOpen) return null
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    submitForm()
+    
+    setLoading(true)
+    setError('')
+
+    try {
+      if (mode === 'signin') {
+        const result = await login({ email, password })
+        if (result.success) {
+          closeModal()
+          // Auth store is already updated by the login function
+        } else {
+          setError(result.error || 'Login failed')
+        }
+      } else if (mode === 'signup') {
+        if (password !== confirmPassword) {
+          setError('Passwords do not match')
+          setLoading(false)
+          return
+        }
+        
+        const result = await signup({ name, email, password })
+        if (result.success) {
+          closeModal()
+          // Auth store is already updated by the signup function
+        } else {
+          setError(result.error || 'Signup failed')
+        }
+      } else if (mode === 'forgot-password') {
+        // TODO: Implement forgot password
+        setError('Forgot password not implemented yet')
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleBackdropClick = (e: React.MouseEvent) => {
