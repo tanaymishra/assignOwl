@@ -6,7 +6,7 @@ import { Button, Input } from '@/app/ui'
 import { Modal } from '@/app/components/Modal'
 import { useLoginStore } from './store/loginStore'
 import styles from './login.module.scss'
-import { signup, login, handleGoogleLogin } from './functions'
+import { signup, login, handleGoogleLogin, forgotPassword } from './functions'
 import { useAuth } from './functions/authStore'
 // Google Icon Component
 const GoogleIcon = ({ className }: { className?: string }) => (
@@ -55,6 +55,8 @@ const LoginComp = () => {
     setError
   } = useLoginStore()
 
+  const [successMessage, setSuccessMessage] = React.useState('')
+
   if (!isOpen) return null
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,6 +64,7 @@ const LoginComp = () => {
     
     setLoading(true)
     setError('')
+    setSuccessMessage('')
 
     try {
       if (mode === 'signin') {
@@ -87,8 +90,13 @@ const LoginComp = () => {
           setError(result.error || 'Signup failed')
         }
       } else if (mode === 'forgot-password') {
-        // TODO: Implement forgot password
-        setError('Forgot password not implemented yet')
+        const result = await forgotPassword(email)
+        if (result.success) {
+          setError('')
+          setSuccessMessage(result.message || 'Password reset link has been sent to your email')
+        } else {
+          setError(result.error || 'Failed to send password reset email')
+        }
       }
     } catch (error) {
       setError('An unexpected error occurred')
@@ -107,6 +115,7 @@ const LoginComp = () => {
     try {
       setLoading(true)
       setError('')
+      setSuccessMessage('')
 
       const result = await handleGoogleLogin()
       
@@ -262,6 +271,13 @@ const LoginComp = () => {
           {error && (
             <div className={styles.error}>
               {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {successMessage && (
+            <div className={styles.success}>
+              {successMessage}
             </div>
           )}
 

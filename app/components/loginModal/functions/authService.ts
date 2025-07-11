@@ -34,15 +34,14 @@ export interface GoogleAuthRequest {
   provider: 'google'
 }
 
+export interface ForgotPasswordRequest {
+  email: string
+}
+
 export interface AuthResponse {
   success: boolean
   message?: string
   error?: string
-}
-
-export interface GoogleAuthRequest {
-  token: string
-  provider: 'google'
 }
 
 /**
@@ -320,5 +319,42 @@ export const handleGoogleLogin = async (): Promise<AuthResponse> => {
       })
     }
   })
+}
+
+/**
+ * Forgot Password function - sends email to backend for password reset
+ */
+export const forgotPassword = async (email: string): Promise<AuthResponse> => {
+  try {
+    const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/auth/forgot-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        email: email
+      }),
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      return {
+        success: true,
+        message: data.message || 'Password reset link has been sent to your email'
+      }
+    } else {
+      return {
+        success: false,
+        error: data.error || 'Failed to send password reset email'
+      }
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Network error. Please try again.'
+    }
+  }
 }
 
