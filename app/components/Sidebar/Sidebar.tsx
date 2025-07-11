@@ -15,6 +15,7 @@ import {
 import { IconButton } from '@/app/ui'
 import ThemeToggle from '@/app/components/ThemeToggle'
 import ProfileDropdown from '@/app/components/ProfileDropdown'
+import BuyComponent from '@/app/components/buy/buy'
 import { useTheme } from '@/app/contexts/ThemeContext'
 import { useAuth } from '@/app/components/loginModal/functions'
 import styles from './Sidebar.module.scss'
@@ -35,6 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [activeItem, setActiveItem] = useState('chat')
   const [isMobile, setIsMobile] = useState(false)
+  const [buyModalOpen, setBuyModalOpen] = useState(0)
   const { theme } = useTheme()
   const { user, clearAuth } = useAuth()
 
@@ -198,7 +200,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               <span className={styles.tokenPeriod}>tokens this month</span>
             </div>
           </div>
-          <button className={styles.upgradeButton}>
+          <button 
+            className={styles.upgradeButton}
+            onClick={() => setBuyModalOpen(1)}
+          >
             Upgrade to Pro 🚀
           </button>
         </div>
@@ -259,6 +264,12 @@ const Sidebar: React.FC<SidebarProps> = ({
           className={styles.navItem}
         />
       </div>
+
+      {/* Buy Component Modal */}
+      <BuyComponent 
+        isOpen={buyModalOpen} 
+        onClose={() => setBuyModalOpen(0)} 
+      />
     </div>
   )
 }
