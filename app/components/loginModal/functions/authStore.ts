@@ -7,6 +7,8 @@ interface User {
   email: string;
 }
 
+export type { User };
+
 interface AuthState {
   isHydrated: boolean;
   user: User | null;

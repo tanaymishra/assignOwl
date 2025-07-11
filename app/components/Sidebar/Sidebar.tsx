@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { 
   MessageSquare, 
   Plus, 
-  Settings, 
   User, 
   History, 
   FileText, 
@@ -17,6 +16,7 @@ import { IconButton } from '@/app/ui'
 import ThemeToggle from '@/app/components/ThemeToggle'
 import ProfileDropdown from '@/app/components/ProfileDropdown'
 import { useTheme } from '@/app/contexts/ThemeContext'
+import { useAuth } from '@/app/components/loginModal/functions'
 import styles from './Sidebar.module.scss'
 import Image from 'next/image'
 
@@ -36,6 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [activeItem, setActiveItem] = useState('chat')
   const [isMobile, setIsMobile] = useState(false)
   const { theme } = useTheme()
+  const { user, clearAuth } = useAuth()
 
   // Check if we're on mobile
   useEffect(() => {
@@ -63,8 +64,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: 'assignments', label: 'My Assignments', icon: FileText },
   ]
 
-  const bottomItems = [
-    { id: 'settings', label: 'Settings', icon: Settings },
+  const bottomItems: { id: string; label: string; icon: any }[] = [
+    // Settings removed as requested
   ]
 
   return (
@@ -209,15 +210,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         {(!isCollapsed || isMobile) && (
           <div className={styles.profileSection}>
             <ProfileDropdown 
-              userName="John Doe"
-              userEmail="john@example.com"
+              userName={user?.name || 'User'}
+              userEmail={user?.email || 'user@example.com'}
               onLogout={() => {
-                console.log('Logging out...')
-                // Add your logout logic here
-              }}
-              onSettings={() => {
-                console.log('Opening settings...')
-                setActiveItem('settings')
+                clearAuth()
+                console.log('User logged out')
+                // Close mobile menu after logout
                 if (isMobile && onMobileClose) {
                   onMobileClose()
                 }

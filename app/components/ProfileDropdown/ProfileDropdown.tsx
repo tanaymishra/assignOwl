@@ -101,10 +101,12 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
           <div className={styles.divider} />
           
           <div className={styles.menuItems}>
-            <button className={styles.menuItem} onClick={handleSettings}>
-              <Settings size={18} />
-              <span>Settings</span>
-            </button>
+            {onSettings && (
+              <button className={styles.menuItem} onClick={handleSettings}>
+                <Settings size={18} />
+                <span>Settings</span>
+              </button>
+            )}
             
             <button className={styles.menuItem} onClick={handleHelp}>
               <HelpCircle size={18} />
