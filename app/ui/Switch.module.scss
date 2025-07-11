@@ -1,0 +1,156 @@
+
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  user-select: none;
+  
+  &.sm {
+    gap: 0.5rem;
+    
+    .switchButton {
+      width: 36px;
+      height: 20px;
+      
+      .switchSlider {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    .switchLabel {
+      font-size: 0.8rem;
+    }
+  }
+  
+  &.md {
+    gap: 0.75rem;
+    
+    .switchButton {
+      width: 42px;
+      height: 22px;
+      
+      .switchSlider {
+        width: 18px;
+        height: 18px;
+      }
+    }
+    
+    .switchLabel {
+      font-size: 0.875rem;
+    }
+  }
+  
+  &.lg {
+    gap: 1rem;
+    
+    .switchButton {
+      width: 48px;
+      height: 26px;
+      
+      .switchSlider {
+        width: 22px;
+        height: 22px;
+      }
+    }
+    
+    .switchLabel {
+      font-size: 0.925rem;
+    }
+  }
+}
+
+.switchLabel {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &.active {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+  
+  &:hover {
+    color: var(--color-accent-primary);
+  }
+}
+
+.badge {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.switchButton {
+  position: relative;
+  background: var(--color-border-secondary);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  
+  &:hover {
+    background: var(--color-border-primary);
+  }
+  
+  &:focus {
+    box-shadow: var(--shadow-focus);
+  }
+  
+  &.checked {
+    background: var(--color-accent-primary);
+    
+    &:hover {
+      background: var(--color-accent-secondary);
+    }
+    
+    .switchSlider {
+      transform: translateX(24px);
+    }
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background: var(--color-border-secondary);
+    }
+    
+    &.checked:hover {
+      background: var(--color-accent-primary);
+    }
+  }
+}
+
+.switchSlider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background: var(--color-background-primary);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+// Size-specific slider positioning
+.sm .switchButton.checked .switchSlider {
+  transform: translateX(18px);
+}
+
+.md .switchButton.checked .switchSlider {
+  transform: translateX(22px);
+}
+
+.lg .switchButton.checked .switchSlider {
+  transform: translateX(24px);
+}

@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react'
 import { Mail } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useWaitlistModal } from '@/lib/store'
 import { Button, Input } from '@/app/ui'
 
 export default function CTASection() {
   const [email, setEmail] = useState('')
   const { openModal } = useWaitlistModal()
+  const router = useRouter()
 
   const handleWaitlistSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,6 +50,16 @@ export default function CTASection() {
               Join Waitlist
             </Button>
           </form>
+
+          <div className="flex items-center justify-center space-x-4 pt-4">
+            <Button
+              onClick={() => router.push('/packages')}
+              variant="outline"
+              size="md"
+            >
+              View Pricing
+            </Button>
+          </div>
 
           <div className="text-center space-y-2 pt-4">
             <p className="text-sm text-gray-600">

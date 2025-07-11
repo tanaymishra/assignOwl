@@ -30,13 +30,29 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-8">
             <Image 
               src='/logo.svg' 
               alt='AssignOwl' 
               width={120} 
               height={40} 
             />
+            
+            {/* Navigation Menu */}
+            <nav className="hidden md:flex items-center space-x-6">
+              <button 
+                onClick={() => router.push('/')}
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
+              >
+                Home
+              </button>
+              <button 
+                onClick={() => router.push('/packages')}
+                className="text-gray-600 hover:text-gray-900 transition-colors font-medium"
+              >
+                Pricing
+              </button>
+            </nav>
           </div>
 
           <div className="flex items-center space-x-3">
