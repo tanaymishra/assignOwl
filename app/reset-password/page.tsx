@@ -3,11 +3,52 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { CheckCircle, XCircle, Loader, Lock, Eye, EyeOff } from 'lucide-react'
+import styles from './resetPassword.module.scss'
 
 interface ResetPasswordResponse {
   success: boolean
   message?: string
   error?: string
+}
+
+interface ValidateTokenResponse {
+  success: boolean
+  message?: string
+  error?: string
+}
+
+const validateResetToken = async (token: string): Promise<ValidateTokenResponse> => {
+  try {
+    const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/auth/validate-reset-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        token: token
+      }),
+    })
+
+    const data = await response.json()
+
+    if (response.ok) {
+      return {
+        success: true,
+        message: data.message || 'Token is valid'
+      }
+    } else {
+      return {
+        success: false,
+        error: data.error || 'Invalid or expired token'
+      }
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: 'Network error. Please try again.'
+    }
+  }
 }
 
 const resetPassword = async (token: string, newPassword: string): Promise<ResetPasswordResponse> => {
@@ -69,9 +110,25 @@ export default function ResetPasswordPage() {
       return
     }
 
-    // Token exists, show the form
+    // Validate the token first
     setToken(tokenParam)
-    setStatus('form')
+    const validateToken = async () => {
+      try {
+        const result = await validateResetToken(tokenParam)
+        
+        if (result.success) {
+          setStatus('form')
+        } else {
+          setStatus('error')
+          setMessage(result.error || 'Invalid or expired reset token')
+        }
+      } catch (error) {
+        setStatus('error')
+        setMessage('An unexpected error occurred')
+      }
+    }
+
+    validateToken()
   }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -117,42 +174,42 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
-        <div className="text-center mb-6">
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.iconContainer}>
           {status === 'loading' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-              <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+            <div className={`${styles.iconWrapper} ${styles.loading}`}>
+              <Loader className={`${styles.icon} ${styles.loading}`} />
             </div>
           )}
           
           {status === 'form' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-              <Lock className="w-8 h-8 text-blue-600" />
+            <div className={`${styles.iconWrapper} ${styles.form}`}>
+              <Lock className={`${styles.icon} ${styles.form}`} />
             </div>
           )}
           
           {status === 'success' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className={`${styles.iconWrapper} ${styles.success}`}>
+              <CheckCircle className={`${styles.icon} ${styles.success}`} />
             </div>
           )}
           
           {status === 'error' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-              <XCircle className="w-8 h-8 text-red-600" />
+            <div className={`${styles.iconWrapper} ${styles.error}`}>
+              <XCircle className={`${styles.icon} ${styles.error}`} />
             </div>
           )}
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+        <h1 className={styles.title}>
           {status === 'loading' && 'Loading...'}
           {status === 'form' && 'Reset Password'}
           {status === 'success' && 'Password Reset!'}
           {status === 'error' && 'Reset Failed'}
         </h1>
 
-        <p className="text-gray-600 mb-6 text-center">
+        <p className={styles.message}>
           {status === 'loading' && 'Please wait while we verify your reset token.'}
           {status === 'form' && 'Enter your new password below.'}
           {status === 'success' && message}
@@ -160,9 +217,9 @@ export default function ResetPasswordPage() {
         </p>
 
         {status === 'form' && (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.inputGroup}>
+              <Lock className={styles.inputIcon} />
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={newPassword}
@@ -170,19 +227,19 @@ export default function ResetPasswordPage() {
                 placeholder="New Password"
                 required
                 minLength={8}
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                className={styles.input}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className={styles.passwordToggle}
               >
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? <EyeOff className={styles.passwordToggleIcon} /> : <Eye className={styles.passwordToggleIcon} />}
               </button>
             </div>
 
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className={styles.inputGroup}>
+              <Lock className={styles.inputIcon} />
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
@@ -190,31 +247,31 @@ export default function ResetPasswordPage() {
                 placeholder="Confirm New Password"
                 required
                 minLength={8}
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                className={styles.input}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className={styles.passwordToggle}
               >
-                {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showConfirmPassword ? <EyeOff className={styles.passwordToggleIcon} /> : <Eye className={styles.passwordToggleIcon} />}
               </button>
             </div>
 
             {formError && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-800 text-sm">{formError}</p>
+              <div className={styles.errorMessage}>
+                {formError}
               </div>
             )}
 
             <button
               type="submit"
               disabled={isSubmitting || !newPassword || !confirmPassword}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
+              className={`${styles.button} ${styles.primary}`}
             >
               {isSubmitting ? (
                 <>
-                  <Loader className="w-5 h-5 animate-spin" />
+                  <Loader className={styles.buttonIcon} />
                   <span>Resetting...</span>
                 </>
               ) : (
@@ -222,20 +279,20 @@ export default function ResetPasswordPage() {
               )}
             </button>
 
-            <div className="text-sm text-gray-500 text-center">
+            <div className={styles.helpText}>
               Password must be at least 8 characters long
             </div>
           </form>
         )}
 
         {status === 'success' && (
-          <div className="text-center">
-            <div className="text-sm text-gray-500 mb-4">
+          <div className={styles.actions}>
+            <div className={styles.redirectMessage}>
               Redirecting you to the homepage in a few seconds...
             </div>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+              className={`${styles.button} ${styles.primary}`}
             >
               Go to Homepage Now
             </button>
@@ -243,14 +300,14 @@ export default function ResetPasswordPage() {
         )}
 
         {status === 'error' && (
-          <div className="space-y-3 text-center">
+          <div className={styles.actions}>
             <button
               onClick={() => router.push('/')}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+              className={`${styles.button} ${styles.primary}`}
             >
               Go to Homepage
             </button>
-            <p className="text-sm text-gray-500">
+            <p className={styles.actionText}>
               Need help? Contact support or try requesting a new reset link.
             </p>
           </div>

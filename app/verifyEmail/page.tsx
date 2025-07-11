@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { CheckCircle, XCircle, Loader } from 'lucide-react'
+import styles from './verifyEmail.module.scss'
 
 interface VerifyResponse {
   success: boolean
@@ -85,57 +86,57 @@ export default function VerifyEmailPage() {
   }, [searchParams, router])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div className="mb-6">
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <div className={styles.iconContainer}>
           {status === 'loading' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-              <Loader className="w-8 h-8 text-blue-600 animate-spin" />
+            <div className={`${styles.iconWrapper} ${styles.loading}`}>
+              <Loader className={`${styles.icon} ${styles.loading}`} />
             </div>
           )}
           
           {status === 'success' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className={`${styles.iconWrapper} ${styles.success}`}>
+              <CheckCircle className={`${styles.icon} ${styles.success}`} />
             </div>
           )}
           
           {status === 'error' && (
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-              <XCircle className="w-8 h-8 text-red-600" />
+            <div className={`${styles.iconWrapper} ${styles.error}`}>
+              <XCircle className={`${styles.icon} ${styles.error}`} />
             </div>
           )}
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+        <h1 className={styles.title}>
           {status === 'loading' && 'Verifying Email...'}
           {status === 'success' && 'Email Verified!'}
           {status === 'error' && 'Verification Failed'}
         </h1>
 
-        <p className="text-gray-600 mb-6">
+        <p className={styles.message}>
           {status === 'loading' && 'Please wait while we verify your email address.'}
           {status === 'success' && message}
           {status === 'error' && message}
         </p>
 
         {status === 'success' && (
-          <div className="text-sm text-gray-500">
+          <div className={styles.redirectMessage}>
             Redirecting you to the homepage in a few seconds...
           </div>
         )}
 
         {status === 'error' && (
-          <div className="space-y-3">
+          <div className={styles.actions}>
             <button
               onClick={() => router.push('/')}
-              className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+              className={`${styles.button} ${styles.primary}`}
             >
               Go to Homepage
             </button>
             <button
               onClick={() => window.location.reload()}
-              className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200"
+              className={`${styles.button} ${styles.secondary}`}
             >
               Try Again
             </button>
