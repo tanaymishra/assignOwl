@@ -22,7 +22,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <link rel="" href="favicon.ico" />
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <script 
+          src="https://accounts.google.com/gsi/client" 
+          async 
+          defer
+        ></script>
+      </head>
       <body className={inter.className} suppressHydrationWarning={true}>
         <ThemeProvider>
           {children}

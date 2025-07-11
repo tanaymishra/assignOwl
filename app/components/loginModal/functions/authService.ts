@@ -12,10 +12,16 @@ declare global {
         id: {
           initialize: (config: any) => void
           prompt: (callback?: (notification: any) => void) => void
+          renderButton: (element: HTMLElement, config: any) => void
         }
       }
     }
   }
+}
+
+interface GoogleCredentialResponse {
+  credential: string
+  select_by: string
 }
 
 export interface LoginRequest {
@@ -27,11 +33,6 @@ export interface SignupRequest {
   name: string
   email: string
   password: string
-}
-
-export interface GoogleAuthRequest {
-  token: string
-  provider: 'google'
 }
 
 export interface ForgotPasswordRequest {
@@ -121,9 +122,9 @@ export const signup = async (userData: SignupRequest): Promise<AuthResponse> => 
 }
 
 /**
- * Google Auth function - sends Google token to backend
+ * Google Auth function - sends Google credential token to backend
  */
-export const googleAuth = async (token: string): Promise<AuthResponse> => {
+export const googleAuth = async (credential: string): Promise<AuthResponse> => {
   try {
     const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/auth/google', {
       method: 'POST',
@@ -132,8 +133,7 @@ export const googleAuth = async (token: string): Promise<AuthResponse> => {
       },
       credentials: 'include', // Important for httpOnly cookies
       body: JSON.stringify({
-        token: token,
-        provider: 'google'
+        credential: credential
       }),
     })
 
@@ -161,7 +161,7 @@ export const googleAuth = async (token: string): Promise<AuthResponse> => {
 }
 
 /**
- * Handle Google OAuth login - manages the entire Google auth flow
+ * Handle Google OAuth login - uses Google Identity Services
  */
 export const handleGoogleLogin = async (): Promise<AuthResponse> => {
   return new Promise((resolve) => {
@@ -176,141 +176,39 @@ export const handleGoogleLogin = async (): Promise<AuthResponse> => {
         return
       }
 
-      // Initialize Google OAuth
-      if (typeof window !== 'undefined' && window.google) {
+      // Initialize Google Identity Services
+      if (window.google?.accounts?.id) {
         window.google.accounts.id.initialize({
           client_id: clientId,
-          callback: async (response: any) => {
+          callback: async (response: GoogleCredentialResponse) => {
             try {
-              if (!response.credential) {
-                resolve({
-                  success: false,
-                  error: 'No credential received from Google'
-                })
-                return
-              }
-
-              // Send the Google token to our backend
+              // Send the credential token to our backend
               const result = await googleAuth(response.credential)
               resolve(result)
             } catch (error) {
-              console.error('Google auth callback error:', error)
+              console.error('Google auth error:', error)
               resolve({
                 success: false,
                 error: 'Google authentication failed'
               })
             }
-          },
-          auto_select: false,
-          cancel_on_tap_outside: true,
-          ux_mode: 'popup',
-          context: 'signin'
+          }
         })
 
-        // Trigger the Google OAuth popup
-        try {
-          window.google.accounts.id.prompt((notification: any) => {
-            if (notification.isNotDisplayed()) {
-              console.error('Google prompt not displayed:', notification.getNotDisplayedReason())
-              resolve({
-                success: false,
-                error: 'Google sign-in not available'
-              })
-            }
-            if (notification.isSkippedMoment()) {
-              console.error('Google prompt skipped:', notification.getSkippedReason())
-              resolve({
-                success: false,
-                error: 'Google sign-in was skipped'
-              })
-            }
-          })
-        } catch (error) {
-          console.error('Google prompt error:', error)
-          resolve({
-            success: false,
-            error: 'Failed to show Google sign-in'
-          })
-        }
-      } else {
-        // Fallback: Load Google Identity Services script dynamically
-        const script = document.createElement('script')
-        script.src = 'https://accounts.google.com/gsi/client'
-        script.async = true
-        script.defer = true
-        
-        script.onload = () => {
-          if (window.google) {
-            window.google.accounts.id.initialize({
-              client_id: clientId,
-              callback: async (response: any) => {
-                try {
-                  if (!response.credential) {
-                    resolve({
-                      success: false,
-                      error: 'No credential received from Google'
-                    })
-                    return
-                  }
-
-                  const result = await googleAuth(response.credential)
-                  resolve(result)
-                } catch (error) {
-                  console.error('Google auth callback error:', error)
-                  resolve({
-                    success: false,
-                    error: 'Google authentication failed'
-                  })
-                }
-              },
-              auto_select: false,
-              cancel_on_tap_outside: true,
-              ux_mode: 'popup',
-              context: 'signin'
-            })
-            
-            try {
-              window.google.accounts.id.prompt((notification: any) => {
-                if (notification.isNotDisplayed()) {
-                  console.error('Google prompt not displayed:', notification.getNotDisplayedReason())
-                  resolve({
-                    success: false,
-                    error: 'Google sign-in not available'
-                  })
-                }
-                if (notification.isSkippedMoment()) {
-                  console.error('Google prompt skipped:', notification.getSkippedReason())
-                  resolve({
-                    success: false,
-                    error: 'Google sign-in was skipped'
-                  })
-                }
-              })
-            } catch (error) {
-              console.error('Google prompt error:', error)
-              resolve({
-                success: false,
-                error: 'Failed to show Google sign-in'
-              })
-            }
-          } else {
-            resolve({
-              success: false,
-              error: 'Google services failed to load'
-            })
+        // Show the One Tap prompt
+        window.google.accounts.id.prompt((notification: any) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // Fallback: show a popup if One Tap doesn't work
+            console.log('One Tap not displayed, user might need to sign in manually')
           }
-        }
-        
-        script.onerror = () => {
-          console.error('Failed to load Google Identity Services script')
-          resolve({
-            success: false,
-            error: 'Failed to load Google authentication'
-          })
-        }
-        
-        document.head.appendChild(script)
+        })
+      } else {
+        resolve({
+          success: false,
+          error: 'Google Identity Services not loaded'
+        })
       }
+
     } catch (error) {
       console.error('Google login error:', error)
       resolve({
@@ -318,6 +216,42 @@ export const handleGoogleLogin = async (): Promise<AuthResponse> => {
         error: 'Google authentication failed'
       })
     }
+  })
+}
+
+/**
+ * Render Google Sign-In button - alternative to One Tap prompt
+ */
+export const renderGoogleButton = (element: HTMLElement): void => {
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+  
+  if (!clientId || !window.google?.accounts?.id) {
+    console.error('Google Identity Services not available')
+    return
+  }
+
+  window.google.accounts.id.initialize({
+    client_id: clientId,
+    callback: async (response: GoogleCredentialResponse) => {
+      try {
+        const result = await googleAuth(response.credential)
+        // The result will be handled by the calling component
+        if (result.success) {
+          console.log('Google authentication successful')
+        } else {
+          console.error('Google authentication failed:', result.error)
+        }
+      } catch (error) {
+        console.error('Google auth error:', error)
+      }
+    }
+  })
+
+  window.google.accounts.id.renderButton(element, {
+    theme: 'outline',
+    size: 'large',
+    width: '100%',
+    text: 'signin_with'
   })
 }
 
