@@ -4,6 +4,7 @@ import './globals.scss'
 import ModalProvider from './components/ModalProvider'
 import LoginComp from './components/loginModal/login'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { SocketProvider } from './socket'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           {children}
           <ModalProvider />
           <LoginComp />
+          <SocketProvider />
         </ThemeProvider>
       </body>
     </html>
