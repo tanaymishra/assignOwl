@@ -62,7 +62,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const menuItems = [
     { id: 'chat', label: 'New Chat', icon: Plus, isButton: true },
-    { id: 'recent', label: 'Recent Chats', icon: History },
     { id: 'assignments', label: 'My Assignments', icon: FileText },
   ]
 
