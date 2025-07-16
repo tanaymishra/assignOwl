@@ -139,6 +139,7 @@ const LoginComp = () => {
       maxWidth="md"
       showCloseButton={true}
       closeOnBackdropClick={true}
+      className={styles.modal}
     >
       {/* Header */}
       <div className={styles.header}>
