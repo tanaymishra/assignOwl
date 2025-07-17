@@ -36,6 +36,7 @@ export const SocketProvider: React.FC = () => {
         reconnectionDelay: 1000,
         reconnectionAttempts: 5,
         timeout: 10000,
+        withCredentials: true,
       });
 
       // Connection successful
