@@ -18,6 +18,7 @@ import ProfileDropdown from '@/app/components/ProfileDropdown'
 import BuyComponent from '@/app/components/buy/buy'
 import { useTheme } from '@/app/contexts/ThemeContext'
 import { useAuth } from '@/app/components/loginModal/functions'
+import { useCreateNewChat } from './functions/chatFunctions'
 import styles from './Sidebar.module.scss'
 import Image from 'next/image'
 
@@ -39,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [buyModalOpen, setBuyModalOpen] = useState(0)
   const { theme } = useTheme()
   const { user, clearAuth } = useAuth()
+  const { createNewChat } = useCreateNewChat()
 
   // Check if we're on mobile
   useEffect(() => {
@@ -121,7 +123,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             icon={item.icon}
             label={item.label}
             onClick={() => {
-              setActiveItem(item.id)
+              // Handle New Chat button differently
+              if (item.id === 'chat' && item.isButton) {
+                createNewChat()
+              } else {
+                setActiveItem(item.id)
+              }
               // Close mobile menu when selecting an item
               if (isMobile && onMobileClose) {
                 onMobileClose()
