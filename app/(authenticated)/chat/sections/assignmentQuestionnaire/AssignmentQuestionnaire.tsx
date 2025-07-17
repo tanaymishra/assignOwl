@@ -26,6 +26,13 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
+  
+  // Create a unique ID generator
+  const messageIdRef = React.useRef(0);
+  const generateMessageId = () => {
+    messageIdRef.current += 1;
+    return `msg-${Date.now()}-${messageIdRef.current}`;
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +57,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     if (chatMessages.length === 0) {
       setTimeout(() => {
         addMessage({
-          id: Date.now().toString(),
+          id: generateMessageId(),
           text: "Hi! I'm here to help you get started with your assignment. Let's gather some details to provide you with the best assistance possible.",
           sender: 'bot',
           timestamp: new Date(),
@@ -71,7 +78,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
       setTimeout(() => {
         setTyping(false);
         addMessage({
-          id: Date.now().toString(),
+          id: generateMessageId(),
           text: question.question,
           sender: 'bot',
           timestamp: new Date(),
@@ -91,7 +98,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
 
     // Add user message
     addMessage({
-      id: Date.now().toString(),
+      id: generateMessageId(),
       text: inputValue,
       sender: 'user',
       timestamp: new Date(),
@@ -105,7 +112,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     // Show acknowledgment
     setTimeout(() => {
       addMessage({
-        id: Date.now().toString(),
+        id: generateMessageId(),
         text: "Perfect! Let me process that...",
         sender: 'bot',
         timestamp: new Date(),
@@ -119,7 +126,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         } else {
           // Complete questionnaire
           addMessage({
-            id: Date.now().toString(),
+            id: generateMessageId(),
             text: "Great! I have all the information I need. Let me analyze your assignment requirements and set up your personalized workspace.",
             sender: 'bot',
             timestamp: new Date(),
@@ -139,7 +146,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
       updateFormData({ attachments: [file] });
       
       addMessage({
-        id: Date.now().toString(),
+        id: generateMessageId(),
         text: `📎 Uploaded: ${file.name}`,
         sender: 'user',
         timestamp: new Date(),
@@ -148,7 +155,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
 
       setTimeout(() => {
         addMessage({
-          id: Date.now().toString(),
+          id: generateMessageId(),
           text: "Excellent! I've received your file. This will help me understand your assignment better.",
           sender: 'bot',
           timestamp: new Date(),

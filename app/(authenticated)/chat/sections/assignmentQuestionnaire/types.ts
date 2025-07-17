@@ -20,10 +20,10 @@ export interface ChatMessage {
 
 export interface Question {
   id: string;
-  question: string;
-  placeholder: string;
-  type: 'text' | 'number' | 'file' | 'select';
-  key: string;
+  text: string;
+  placeholder?: string;
+  type: 'text' | 'input' | 'textarea' | 'number' | 'file' | 'select' | 'boolean';
   required?: boolean;
-  options?: string[];
+  options?: Array<{ value: string; label: string }>;
+  accept?: string;
 }
