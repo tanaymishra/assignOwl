@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Send, Bot, User } from 'lucide-react';
-import { Button, Input } from '@/app/ui';
+import { Button } from '@/app/ui';
 import { useAssignmentQuestionnaireStore } from './store';
 import { questions } from './chatQuestions';
 import { ChatMessage } from './types';
@@ -26,6 +26,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   // Create a unique ID generator
   const messageIdRef = React.useRef(0);
@@ -51,6 +52,11 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+
+  useEffect(() => {
+    // Auto-resize textarea when inputValue changes
+    autoResizeTextarea();
+  }, [inputValue]);
 
   useEffect(() => {
     // Show welcome message and first question
@@ -90,7 +96,31 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+    submitMessage();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      submitMessage();
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value);
+    autoResizeTextarea();
+  };
+
+  const autoResizeTextarea = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = 400; // 400px max height
+      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    }
+  };
+
+  const submitMessage = () => {
     if (!inputValue.trim()) return;
 
     const question = questions[currentStep];
@@ -108,6 +138,11 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     // Update form data
     updateFormData({ [question.key]: inputValue });
     setInputValue('');
+    
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
 
     // Show acknowledgment
     setTimeout(() => {
@@ -240,13 +275,15 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           ) : (
             <form onSubmit={handleSubmit} className={styles.inputForm}>
               <div className={styles.inputWrapper}>
-                <Input
+                <textarea
+                  ref={textareaRef}
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
                   placeholder={currentQuestion?.placeholder || "Type your answer..."}
                   className={styles.messageInput}
                   disabled={isTyping}
-                  noOutline
+                  rows={1}
                 />
                 <Button
                   type="submit"

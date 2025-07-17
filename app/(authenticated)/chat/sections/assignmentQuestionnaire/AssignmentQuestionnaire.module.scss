@@ -304,9 +304,12 @@
   resize: none;
   outline: none;
   min-height: 24px;
-  max-height: 120px;
+  max-height: 300px;
+  height: auto;
   color: var(--text-primary);
   line-height: 1.5;
+  font-family: inherit;
+  overflow-y: auto;
   
   &::placeholder {
     color: #6b7280;
@@ -316,6 +319,24 @@
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+  
+  // Custom scrollbar for the textarea
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
   }
 }
 
