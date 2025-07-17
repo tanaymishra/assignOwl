@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { Send, Bot, User, Upload, CheckCircle, Clock } from 'lucide-react';
+import { Send, Bot, User } from 'lucide-react';
 import { Button, Input } from '@/app/ui';
 import { useAssignmentQuestionnaireStore } from './store';
 import { questions } from './chatQuestions';
@@ -175,30 +175,9 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   };
 
   const currentQuestion = questions[currentStep];
-  const progress = ((currentStep + 1) / questions.length) * 100;
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.title}>
-            <Bot className={styles.titleIcon} />
-            <span>Assignment Setup Assistant</span>
-          </div>
-          <div className={styles.progressContainer}>
-            <div className={styles.progressBar}>
-              <div 
-                className={styles.progressFill} 
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className={styles.progressText}>
-              {currentStep + 1} of {questions.length}
-            </span>
-          </div>
-        </div>
-      </div>
-
       <div className={styles.chatContainer}>
         <div className={styles.messagesContainer}>
           {chatMessages.map((message: ChatMessage) => (
@@ -279,29 +258,6 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
               </div>
             </form>
           )}
-        </div>
-      </div>
-
-      <div className={styles.footer}>
-        <div className={styles.footerContent}>
-          <div className={styles.statusIndicator}>
-            <Clock size={16} />
-            <span>Setting up your assignment workspace...</span>
-          </div>
-          <div className={styles.features}>
-            <div className={styles.feature}>
-              <CheckCircle size={14} />
-              <span>AI-Powered Analysis</span>
-            </div>
-            <div className={styles.feature}>
-              <CheckCircle size={14} />
-              <span>Smart Suggestions</span>
-            </div>
-            <div className={styles.feature}>
-              <CheckCircle size={14} />
-              <span>Personalized Help</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
