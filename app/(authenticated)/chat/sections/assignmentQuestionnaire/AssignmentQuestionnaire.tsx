@@ -8,6 +8,7 @@ import { questions } from './chatQuestions';
 import { ChatMessage } from './types';
 import TypingAnimation from './components/TypingAnimation';
 import { ModernFileUpload } from './components/ModernFileUpload';
+import { ChatInterface } from './components/ChatInterface';
 import styles from './AssignmentQuestionnaire.module.scss';
 
 interface AssignmentQuestionnaireProps {
@@ -18,9 +19,10 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   const {
     currentStep,
     formData,
-    setCurrentStep,
     updateFormData,
     nextStep,
+    isCompleted,
+    setCompleted
   } = useAssignmentQuestionnaireStore();
 
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
@@ -41,10 +43,6 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     setChatMessages(prev => [...prev, message]);
   };
 
-  const setTyping = (typing: boolean) => {
-    setIsTyping(typing);
-  };
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -60,7 +58,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
 
   useEffect(() => {
     // Show welcome message and first question
-    if (chatMessages.length === 0) {
+    if (chatMessages.length === 0 && !isCompleted) {
       setTimeout(() => {
         addMessage({
           id: generateMessageId(),
@@ -75,14 +73,14 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         }, 1500);
       }, 500);
     }
-  }, []);
+  }, [isCompleted]);
 
   const showCurrentQuestion = () => {
     const question = questions[currentStep];
     if (question) {
-      setTyping(true);
+      setIsTyping(true);
       setTimeout(() => {
-        setTyping(false);
+        setIsTyping(false);
         addMessage({
           id: generateMessageId(),
           text: question.question,
@@ -169,6 +167,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           });
           
           setTimeout(() => {
+            setCompleted(true);
             onComplete?.();
           }, 2000);
         }
@@ -202,12 +201,22 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
             nextStep();
             showCurrentQuestion();
           } else {
+            setCompleted(true);
             onComplete?.();
           }
         }, 1500);
       }, 1000);
     }
   };
+
+  // If questionnaire is completed, show the chat interface
+  if (isCompleted) {
+    return (
+      <ChatInterface 
+        initialMessage="Based on your responses, I can help you create a detailed outline, research strategy, or start writing specific sections. What would you like to focus on first?"
+      />
+    );
+  }
 
   const currentQuestion = questions[currentStep];
 

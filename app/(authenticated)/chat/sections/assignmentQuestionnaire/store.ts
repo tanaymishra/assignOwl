@@ -16,6 +16,7 @@ export interface QuestionnaireState {
   currentStep: number;
   formData: AssignmentFormData;
   isSubmitting: boolean;
+  isCompleted: boolean;
   errors: Record<string, string>;
 }
 
@@ -24,6 +25,7 @@ interface QuestionnaireActions {
   updateFormData: (data: Partial<AssignmentFormData>) => void;
   setErrors: (errors: Record<string, string>) => void;
   setSubmitting: (submitting: boolean) => void;
+  setCompleted: (completed: boolean) => void;
   resetForm: () => void;
   nextStep: () => void;
   previousStep: () => void;
@@ -45,6 +47,7 @@ export const useAssignmentQuestionnaireStore = create<QuestionnaireState & Quest
   currentStep: 0,
   formData: initialFormData,
   isSubmitting: false,
+  isCompleted: false,
   errors: {},
 
   setCurrentStep: (step) => set({ currentStep: step }),
@@ -58,10 +61,13 @@ export const useAssignmentQuestionnaireStore = create<QuestionnaireState & Quest
   
   setSubmitting: (submitting) => set({ isSubmitting: submitting }),
   
+  setCompleted: (completed) => set({ isCompleted: completed }),
+  
   resetForm: () => set({
     currentStep: 0,
     formData: initialFormData,
     isSubmitting: false,
+    isCompleted: false,
     errors: {},
   }),
   

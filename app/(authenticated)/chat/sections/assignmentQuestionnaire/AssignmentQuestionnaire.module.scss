@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #ffffff;
+  background: var(--color-background-primary);
   overflow: hidden;
   position: relative;
 }
@@ -35,7 +35,7 @@
   color: var(--text-primary);
   
   span {
-    background: linear-gradient(135deg, #10b981, #34d399);
+    background: var(--color-accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -43,8 +43,8 @@
 }
 
 .titleIcon {
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-accent-primary);
+  background: var(--color-accent-light);
   padding: 0.5rem;
   border-radius: 12px;
   animation: pulse 2s ease-in-out infinite alternate;
@@ -59,7 +59,7 @@
 .progressBar {
   flex: 1;
   height: 8px;
-  background: rgba(16, 185, 129, 0.1);
+  background: var(--color-accent-light);
   border-radius: 4px;
   overflow: hidden;
   position: relative;
@@ -78,7 +78,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+  background: var(--color-accent-gradient);
   border-radius: 4px;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -98,7 +98,7 @@
 .progressText {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #10b981;
+  color: var(--color-accent-primary);
   min-width: 80px;
   text-align: right;
 }
@@ -152,13 +152,13 @@
     }
     
     .messageAvatar {
-      background: linear-gradient(135deg, #10b981, #34d399);
+      background: var(--color-accent-gradient);
       color: white;
       order: 1;
     }
     
     .messageBubble {
-      background: linear-gradient(135deg, #10b981, #34d399);
+      background: var(--color-accent-gradient);
       color: white;
       border-radius: 20px 20px 8px 20px;
       margin-right: 0.75rem;
@@ -174,13 +174,13 @@
     }
     
     .messageAvatar {
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
+      background: var(--color-accent-light);
+      color: var(--color-accent-primary);
     }
     
     .messageBubble {
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(16, 185, 129, 0.1);
+      background: rgba(var(--color-background-primary-rgb), 0.9);
+      border: 1px solid var(--color-accent-light);
       border-radius: 20px 20px 20px 8px;
       margin-left: 0.75rem;
       position: relative;
@@ -204,7 +204,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  box-shadow: var(--shadow-accent);
   transition: transform 0.3s ease;
   
   &:hover {
@@ -214,7 +214,7 @@
 
 .messageBubble {
   padding: 1rem 1.25rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   backdrop-filter: blur(10px);
   position: relative;
   overflow: hidden;
@@ -256,9 +256,9 @@
 
 .inputContainer {
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--color-background-primary-rgb), 0.95);
   backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--color-border-primary);
   position: sticky;
   bottom: 0;
   width: 100%;
@@ -280,18 +280,18 @@
   display: flex;
   gap: 0.5rem;
   align-items: flex-end;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: var(--color-background-primary);
+  border: 1px solid var(--color-border-secondary);
   border-radius: 12px;
   padding: 0.75rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   
   &:focus-within {
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    border-color: var(--color-accent-primary);
+    box-shadow: var(--shadow-focus);
   }
 }
 
@@ -312,7 +312,7 @@
   overflow-y: auto;
   
   &::placeholder {
-    color: #6b7280;
+    color: var(--color-text-tertiary);
     opacity: 1;
   }
   
@@ -341,7 +341,7 @@
 }
 
 .sendButton {
-  background: #10b981 !important;
+  background: var(--color-accent-primary) !important;
   border: none !important;
   color: white !important;
   border-radius: 8px !important;
@@ -353,27 +353,27 @@
   flex-shrink: 0 !important;
   transition: all 0.2s ease !important;
   cursor: pointer !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: var(--shadow-sm) !important;
   
   &:hover:not(:disabled) {
-    background: #059669 !important;
+    background: var(--color-accent-secondary) !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: var(--shadow-md) !important;
   }
   
   &:active:not(:disabled) {
     transform: translateY(0) !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: var(--shadow-sm) !important;
   }
   
   &:disabled {
-    background: #e5e7eb !important;
+    background: var(--color-border-secondary) !important;
     cursor: not-allowed !important;
     transform: none !important;
     box-shadow: none !important;
     
     svg {
-      color: #9ca3af !important;
+      color: var(--color-text-muted) !important;
     }
   }
 }
