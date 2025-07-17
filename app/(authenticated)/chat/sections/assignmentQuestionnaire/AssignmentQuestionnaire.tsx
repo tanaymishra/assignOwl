@@ -246,6 +246,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
                   placeholder={currentQuestion?.placeholder || "Type your answer..."}
                   className={styles.messageInput}
                   disabled={isTyping}
+                  noOutline
                 />
                 <Button
                   type="submit"

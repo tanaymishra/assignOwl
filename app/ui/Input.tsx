@@ -10,6 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   iconPosition?: 'left' | 'right'
   fullWidth?: boolean
   variant?: 'default' | 'glow'
+  noOutline?: boolean
 }
 
 export default function Input({
@@ -19,23 +20,27 @@ export default function Input({
   iconPosition = 'left',
   fullWidth = false,
   variant = 'default',
+  noOutline = false,
   className = '',
   id,
   ...props
 }: InputProps) {
   const inputId = id || label?.toLowerCase().replace(/\s+/g, '-')
   
-  const baseStyles = 'w-full px-4 py-3 bg-white border rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200'
+  const baseStyles = noOutline 
+    ? 'w-full px-4 py-3 bg-white border rounded-lg text-gray-900 placeholder-gray-500 transition-all duration-200'
+    : 'w-full px-4 py-3 bg-white border rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none transition-all duration-200'
   
   const variants = {
-    default: 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20',
-    glow: 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:shadow-lg focus:shadow-green-500/25'
+    default: noOutline ? 'border-gray-300' : 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20',
+    glow: noOutline ? 'border-gray-300' : 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500/20 focus:shadow-lg focus:shadow-green-500/25'
   }
   
   const combinedClassName = `
     ${baseStyles}
     ${variants[variant]}
-    ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : ''}
+    ${error && !noOutline ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20' : ''}
+    ${error && noOutline ? 'border-red-500' : ''}
     ${Icon && iconPosition === 'left' ? 'pl-12' : ''}
     ${Icon && iconPosition === 'right' ? 'pr-12' : ''}
     ${className}
