@@ -2,7 +2,7 @@
 
 import React from 'react'
 import useChatStore, { Message, Artifact } from './store/chatStore'
-import { EmptyState, ChatMessages, ChatInput } from './sections'
+import { ChatMessages, ChatInput, AssignmentQuestionnaire } from './sections'
 import styles from './page.module.scss'
 
 const generateSampleAssignmentContent = () => {
@@ -126,7 +126,7 @@ export default function ChatPage() {
   return (
     <div className={styles.container}>
       {messages.length === 0 ? (
-        <EmptyState onSubmit={handleSubmit} />
+        <AssignmentQuestionnaire />
       ) : (
         <div className={styles.chatContainer}>
           <ChatMessages />

@@ -1,0 +1,40 @@
+.typewriterText {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.typingWord {
+  opacity: 0;
+  animation: fadeInWord 0.5s ease-in-out forwards;
+}
+
+.typingCursor {
+  color: var(--color-accent-primary, #10b981);
+  font-weight: bold;
+  animation: blink 1s ease-in-out infinite;
+  margin-left: 0.1rem;
+}
+
+@keyframes fadeInWord {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}

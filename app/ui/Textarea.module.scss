@@ -1,0 +1,106 @@
+.textareaContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.required {
+  color: var(--error-color, #ef4444);
+  margin-left: 0.125rem;
+}
+
+.textareaWrapper {
+  position: relative;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1.5px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  background-color: var(--surface-color, #ffffff);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 6rem;
+  transition: all 0.2s ease-in-out;
+  font-family: inherit;
+
+  &::placeholder {
+    color: var(--text-secondary, #6b7280);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color, #3b82f6);
+    box-shadow: 0 0 0 3px var(--primary-color-alpha, rgba(59, 130, 246, 0.1));
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--border-hover, #d1d5db);
+  }
+
+  &:disabled {
+    background-color: var(--surface-disabled, #f9fafb);
+    color: var(--text-disabled, #9ca3af);
+    cursor: not-allowed;
+  }
+}
+
+.error {
+  .textarea {
+    border-color: var(--error-color, #ef4444);
+    
+    &:focus {
+      border-color: var(--error-color, #ef4444);
+      box-shadow: 0 0 0 3px var(--error-color-alpha, rgba(239, 68, 68, 0.1));
+    }
+  }
+}
+
+.charCount {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #6b7280);
+  background-color: var(--surface-color, #ffffff);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: var(--error-color, #ef4444);
+  margin-top: 0.25rem;
+}
+
+// Dark theme support
+[data-theme="dark"] {
+  .textarea {
+    background-color: var(--surface-color, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color, #374151);
+
+    &:hover:not(:disabled) {
+      border-color: var(--border-hover, #4b5563);
+    }
+
+    &:disabled {
+      background-color: var(--surface-disabled, #111827);
+      color: var(--text-disabled, #6b7280);
+    }
+  }
+
+  .charCount {
+    background-color: var(--surface-color, #1f2937);
+  }
+}

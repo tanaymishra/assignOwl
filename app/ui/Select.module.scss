@@ -1,0 +1,117 @@
+.selectContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.required {
+  color: var(--error-color, #ef4444);
+  margin-left: 0.125rem;
+}
+
+.selectWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 1.5px solid var(--border-color, #e5e7eb);
+  border-radius: 0.75rem;
+  background-color: var(--surface-color, #ffffff);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  line-height: 1.25;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color, #3b82f6);
+    box-shadow: 0 0 0 3px var(--primary-color-alpha, rgba(59, 130, 246, 0.1));
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--border-hover, #d1d5db);
+  }
+
+  &:disabled {
+    background-color: var(--surface-disabled, #f9fafb);
+    color: var(--text-disabled, #9ca3af);
+    cursor: not-allowed;
+  }
+
+  // Custom option styling
+  option {
+    color: var(--text-primary);
+    background-color: var(--surface-color);
+  }
+}
+
+.selectIcon {
+  position: absolute;
+  right: 1rem;
+  pointer-events: none;
+  color: var(--text-secondary, #6b7280);
+  transition: transform 0.2s ease-in-out;
+}
+
+.selectWrapper:focus-within .selectIcon {
+  transform: rotate(180deg);
+}
+
+.error {
+  .select {
+    border-color: var(--error-color, #ef4444);
+    
+    &:focus {
+      border-color: var(--error-color, #ef4444);
+      box-shadow: 0 0 0 3px var(--error-color-alpha, rgba(239, 68, 68, 0.1));
+    }
+  }
+}
+
+.disabled {
+  .selectIcon {
+    color: var(--text-disabled, #9ca3af);
+  }
+}
+
+.errorMessage {
+  font-size: 0.75rem;
+  color: var(--error-color, #ef4444);
+  margin-top: 0.25rem;
+}
+
+// Dark theme support
+[data-theme="dark"] {
+  .select {
+    background-color: var(--surface-color, #1f2937);
+    color: var(--text-primary);
+    border-color: var(--border-color, #374151);
+
+    &:hover:not(:disabled) {
+      border-color: var(--border-hover, #4b5563);
+    }
+
+    &:disabled {
+      background-color: var(--surface-disabled, #111827);
+      color: var(--text-disabled, #6b7280);
+    }
+
+    option {
+      background-color: var(--surface-color, #1f2937);
+      color: var(--text-primary);
+    }
+  }
+}
