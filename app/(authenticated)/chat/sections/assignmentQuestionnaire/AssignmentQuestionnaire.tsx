@@ -32,6 +32,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
+  const [isInitialized, setIsInitialized] = React.useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   // Create a unique ID generator
@@ -61,8 +62,10 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   }, [inputValue]);
 
   useEffect(() => {
-    // Show welcome message and first question
-    if (chatMessages.length === 0 && !isCompleted) {
+    // Show welcome message and first question only once
+    if (!isInitialized && !isCompleted) {
+      setIsInitialized(true);
+      
       setTimeout(() => {
         addMessage({
           id: generateMessageId(),
@@ -77,7 +80,12 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         }, 1500);
       }, 500);
     }
-  }, [isCompleted]);
+  }, []); // Empty dependency array - only run once on mount
+
+  useEffect(() => {
+    // Auto-resize textarea when inputValue changes
+    autoResizeTextarea();
+  }, [inputValue]);
 
   const showCurrentQuestion = () => {
     const question = questions[currentStep];
