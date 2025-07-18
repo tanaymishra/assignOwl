@@ -57,11 +57,6 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   }, [chatMessages]);
 
   useEffect(() => {
-    // Auto-resize textarea when inputValue changes
-    autoResizeTextarea();
-  }, [inputValue]);
-
-  useEffect(() => {
     // Show welcome message and first question only once
     if (!isInitialized && !isCompleted) {
       setIsInitialized(true);
@@ -87,9 +82,17 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     autoResizeTextarea();
   }, [inputValue]);
 
+  // Clear input value when step changes
+  useEffect(() => {
+    setInputValue('');
+  }, [currentStep]);
+
   const showCurrentQuestion = () => {
     const question = questions[currentStep];
     if (question) {
+      // Clear input value when showing a new question
+      setInputValue('');
+      
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
@@ -321,7 +324,7 @@ I can help you create an outline, research sources, write sections, or generate 
                    currentQuestion.key === 'lectureNotes' ? formData.lectureNotes?.[0] : null) || null
                 }
                 onChange={handleFileUpload}
-                placeholder="Drop your assignment file here or click to browse"
+                placeholder={currentQuestion.placeholder}
                 accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
                 maxSizeMB={10}
               />
@@ -330,7 +333,63 @@ I can help you create an outline, research sources, write sections, or generate 
             <div className={styles.selectSection}>
               <select
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setInputValue(newValue);
+                  
+                  // Auto-submit when a selection is made
+                  if (newValue) {
+                    setTimeout(() => {
+                      // Add user message
+                      addMessage({
+                        id: generateMessageId(),
+                        text: newValue,
+                        sender: 'user',
+                        timestamp: new Date(),
+                        type: 'text'
+                      });
+
+                      // Update form data
+                      const question = questions[currentStep];
+                      updateFormData({ [question.key]: newValue });
+                      
+                      // Move to next question
+                      setTimeout(() => {
+                        if (currentStep < questions.length - 1) {
+                          nextStep();
+                          showCurrentQuestion();
+                        } else {
+                          setCompleted(true);
+                          
+                          // Initialize the chat store with a welcome message when questionnaire completes
+                          const welcomeMessage = {
+                            id: `chat-welcome-${Date.now()}`,
+                            type: 'assistant' as const,
+                            content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:
+
+**Assignment Type**: ${formData.assignmentType || 'Not specified'}
+**Subject**: ${formData.subject || 'Not specified'}
+**Course**: ${formData.course || 'Not specified'}
+**Academic Level**: ${formData.academicLevel || 'Not specified'}
+**Word Count**: ${formData.wordCount || 'Not specified'} (excluding references and appendix)
+**Referencing Style**: ${formData.referencingStyle || 'Not specified'}
+**Formatting**: ${formData.formatting || 'Not specified'}
+**Include Visuals**: ${formData.includeVisuals || 'Not specified'}
+${formData.otherInstructions ? `**Additional Instructions**: ${formData.otherInstructions}` : ''}
+
+I can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
+                            timestamp: new Date()
+                          };
+                          
+                          // Set the initial message in the chat store
+                          setMessages([welcomeMessage]);
+                          
+                          onComplete?.();
+                        }
+                      }, 1000);
+                    }, 100);
+                  }
+                }}
                 className={styles.selectInput}
                 disabled={isTyping}
               >
@@ -341,15 +400,6 @@ I can help you create an outline, research sources, write sections, or generate 
                   </option>
                 ))}
               </select>
-              <Button
-                type="button"
-                onClick={submitMessage}
-                disabled={!inputValue.trim() || isTyping}
-                className={styles.sendButton}
-                size="sm"
-              >
-                <Send size={16} />
-              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className={styles.inputForm}>
