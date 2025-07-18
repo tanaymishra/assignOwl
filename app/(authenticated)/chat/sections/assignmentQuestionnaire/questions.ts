@@ -1,4 +1,3 @@
-import { Question } from './types';
 import { 
   ASSIGNMENT_TYPES, 
   REFERENCING_STYLES, 
@@ -8,7 +7,7 @@ import {
   FONT_SIZE_OPTIONS
 } from './constants';
 
-export const questions: Question[] = [
+export const questions: any= [
   {
     id: 'assignmentType',
     text: "Hi there! 👋 I'm here to help you with your assignment. Let's start with the basics - what type of assignment do you need help with?",
