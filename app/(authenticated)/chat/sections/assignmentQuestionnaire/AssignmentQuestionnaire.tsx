@@ -8,7 +8,9 @@ import { questions } from './chatQuestions';
 import { ChatMessage } from './types';
 import TypingAnimation from './components/TypingAnimation';
 import { ModernFileUpload } from './components/ModernFileUpload';
-import { ChatInterface } from './components/ChatInterface';
+import ChatMessages from '../ChatMessages';
+import ChatInput from '../ChatInput';
+import useChatStore from '../../store/chatStore';
 import styles from './AssignmentQuestionnaire.module.scss';
 
 interface AssignmentQuestionnaireProps {
@@ -24,6 +26,8 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     isCompleted,
     setCompleted
   } = useAssignmentQuestionnaireStore();
+
+  const { setMessages } = useChatStore();
 
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = React.useState(false);
@@ -142,37 +146,29 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
       textareaRef.current.style.height = 'auto';
     }
 
-    // Show acknowledgment
+    // Process the answer immediately without intermediate messages
     setTimeout(() => {
-      addMessage({
-        id: generateMessageId(),
-        text: "Perfect! Let me process that...",
-        sender: 'bot',
-        timestamp: new Date(),
-        type: 'text'
-      });
-
-      setTimeout(() => {
-        if (currentStep < questions.length - 1) {
-          nextStep();
-          showCurrentQuestion();
-        } else {
-          // Complete questionnaire
-          addMessage({
-            id: generateMessageId(),
-            text: "Great! I have all the information I need. Let me analyze your assignment requirements and set up your personalized workspace.",
-            sender: 'bot',
-            timestamp: new Date(),
-            type: 'text'
-          });
-          
-          setTimeout(() => {
-            setCompleted(true);
-            onComplete?.();
-          }, 2000);
-        }
-      }, 1000);
-    }, 500);
+      if (currentStep < questions.length - 1) {
+        nextStep();
+        showCurrentQuestion();
+      } else {
+        // Complete questionnaire - no intermediate messages, just complete
+        setCompleted(true);
+        
+        // Initialize the chat store with a welcome message when questionnaire completes
+        const welcomeMessage = {
+          id: `chat-welcome-${Date.now()}`,
+          type: 'assistant' as const,
+          content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:\n\n**${formData.assignmentType || 'Assignment'}**: ${formData.topic || 'Your Topic'}\n**Subject**: ${formData.subject || 'Not specified'}\n**Academic Level**: ${formData.academicLevel || 'Not specified'}\n**Word Count**: ${formData.wordCount || 'Not specified'}\n**Deadline**: ${formData.deadline || 'Not specified'}\n\nI can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
+          timestamp: new Date()
+        };
+        
+        // Set the initial message in the chat store
+        setMessages([welcomeMessage]);
+        
+        onComplete?.();
+      }
+    }, 1000);
   };
 
   const handleFileUpload = (file: File | null) => {
@@ -188,23 +184,25 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
       });
 
       setTimeout(() => {
-        addMessage({
-          id: generateMessageId(),
-          text: "Excellent! I've received your file. This will help me understand your assignment better.",
-          sender: 'bot',
-          timestamp: new Date(),
-          type: 'text'
-        });
-
-        setTimeout(() => {
-          if (currentStep < questions.length - 1) {
-            nextStep();
-            showCurrentQuestion();
-          } else {
-            setCompleted(true);
-            onComplete?.();
-          }
-        }, 1500);
+        if (currentStep < questions.length - 1) {
+          nextStep();
+          showCurrentQuestion();
+        } else {
+          setCompleted(true);
+          
+          // Initialize the chat store with a welcome message when questionnaire completes
+          const welcomeMessage = {
+            id: `chat-welcome-${Date.now()}`,
+            type: 'assistant' as const,
+            content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:\n\n**${formData.assignmentType || 'Assignment'}**: ${formData.topic || 'Your Topic'}\n**Subject**: ${formData.subject || 'Not specified'}\n**Academic Level**: ${formData.academicLevel || 'Not specified'}\n**Word Count**: ${formData.wordCount || 'Not specified'}\n**Deadline**: ${formData.deadline || 'Not specified'}\n\nI can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
+            timestamp: new Date()
+          };
+          
+          // Set the initial message in the chat store
+          setMessages([welcomeMessage]);
+          
+          onComplete?.();
+        }
       }, 1000);
     }
   };
@@ -212,9 +210,17 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   // If questionnaire is completed, show the chat interface
   if (isCompleted) {
     return (
-      <ChatInterface 
-        initialMessage="Based on your responses, I can help you create a detailed outline, research strategy, or start writing specific sections. What would you like to focus on first?"
-      />
+      <div className={styles.container}>
+        <div className={styles.chatContainer}>
+          <ChatMessages />
+          <div className={styles.inputContainer}>
+            <ChatInput 
+              onSubmit={() => {}} 
+              placeholder="Continue the conversation about your assignment..."
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 
