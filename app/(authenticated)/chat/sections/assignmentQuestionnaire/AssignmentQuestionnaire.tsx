@@ -66,7 +66,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
       setTimeout(() => {
         addMessage({
           id: generateMessageId(),
-          text: "Hi! I'm here to help you get started with your assignment. Let's gather some details to provide you with the best assistance possible.",
+          text: "Hi! I'm here to help you with your assignment. Let me ask you a few quick questions to get started.",
           sender: 'bot',
           timestamp: new Date(),
           type: 'text'
