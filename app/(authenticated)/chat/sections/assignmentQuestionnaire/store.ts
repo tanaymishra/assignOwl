@@ -1,15 +1,17 @@
 import { create } from 'zustand';
 
 export interface AssignmentFormData {
-  subject: string;
   assignmentType: string;
-  topic: string;
-  wordCount: string;
-  deadline: string;
+  subject: string;
+  course: string;
   academicLevel: string;
-  referenceStyle: string;
-  specialRequirements: string;
-  attachments: File[];
+  referencingStyle: string;
+  sampleAssignments: File[];
+  lectureNotes: File[];
+  wordCount: string;
+  formatting: string;
+  includeVisuals: string;
+  otherInstructions: string;
 }
 
 export interface QuestionnaireState {
@@ -32,15 +34,17 @@ interface QuestionnaireActions {
 }
 
 const initialFormData: AssignmentFormData = {
-  subject: '',
   assignmentType: '',
-  topic: '',
-  wordCount: '',
-  deadline: '',
+  subject: '',
+  course: '',
   academicLevel: '',
-  referenceStyle: '',
-  specialRequirements: '',
-  attachments: [],
+  referencingStyle: '',
+  sampleAssignments: [],
+  lectureNotes: [],
+  wordCount: '',
+  formatting: '',
+  includeVisuals: '',
+  otherInstructions: '',
 };
 
 export const useAssignmentQuestionnaireStore = create<QuestionnaireState & QuestionnaireActions>((set, get) => ({
@@ -72,7 +76,7 @@ export const useAssignmentQuestionnaireStore = create<QuestionnaireState & Quest
   }),
   
   nextStep: () => set((state) => ({
-    currentStep: Math.min(state.currentStep + 1, 13) // Assuming 14 total steps (0-13)
+    currentStep: Math.min(state.currentStep + 1, 10) // 11 total questions (0-10)
   })),
   
   previousStep: () => set((state) => ({

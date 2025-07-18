@@ -159,7 +159,19 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         const welcomeMessage = {
           id: `chat-welcome-${Date.now()}`,
           type: 'assistant' as const,
-          content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:\n\n**${formData.assignmentType || 'Assignment'}**: ${formData.topic || 'Your Topic'}\n**Subject**: ${formData.subject || 'Not specified'}\n**Academic Level**: ${formData.academicLevel || 'Not specified'}\n**Word Count**: ${formData.wordCount || 'Not specified'}\n**Deadline**: ${formData.deadline || 'Not specified'}\n\nI can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
+          content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:
+
+**Assignment Type**: ${formData.assignmentType || 'Not specified'}
+**Subject**: ${formData.subject || 'Not specified'}
+**Course**: ${formData.course || 'Not specified'}
+**Academic Level**: ${formData.academicLevel || 'Not specified'}
+**Word Count**: ${formData.wordCount || 'Not specified'} (excluding references and appendix)
+**Referencing Style**: ${formData.referencingStyle || 'Not specified'}
+**Formatting**: ${formData.formatting || 'Not specified'}
+**Include Visuals**: ${formData.includeVisuals || 'Not specified'}
+${formData.otherInstructions ? `**Additional Instructions**: ${formData.otherInstructions}` : ''}
+
+I can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
           timestamp: new Date()
         };
         
@@ -173,7 +185,11 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
 
   const handleFileUpload = (file: File | null) => {
     if (file) {
-      updateFormData({ attachments: [file] });
+      const question = questions[currentStep];
+      const fileKey = question.key as 'sampleAssignments' | 'lectureNotes';
+      
+      // Update form data with the file in the appropriate field
+      updateFormData({ [fileKey]: [file] });
       
       addMessage({
         id: generateMessageId(),
@@ -194,7 +210,19 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           const welcomeMessage = {
             id: `chat-welcome-${Date.now()}`,
             type: 'assistant' as const,
-            content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:\n\n**${formData.assignmentType || 'Assignment'}**: ${formData.topic || 'Your Topic'}\n**Subject**: ${formData.subject || 'Not specified'}\n**Academic Level**: ${formData.academicLevel || 'Not specified'}\n**Word Count**: ${formData.wordCount || 'Not specified'}\n**Deadline**: ${formData.deadline || 'Not specified'}\n\nI can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
+            content: `Perfect! I now have all the details about your assignment. Here's what we'll work on:
+
+**Assignment Type**: ${formData.assignmentType || 'Not specified'}
+**Subject**: ${formData.subject || 'Not specified'}
+**Course**: ${formData.course || 'Not specified'}
+**Academic Level**: ${formData.academicLevel || 'Not specified'}
+**Word Count**: ${formData.wordCount || 'Not specified'} (excluding references and appendix)
+**Referencing Style**: ${formData.referencingStyle || 'Not specified'}
+**Formatting**: ${formData.formatting || 'Not specified'}
+**Include Visuals**: ${formData.includeVisuals || 'Not specified'}
+${formData.otherInstructions ? `**Additional Instructions**: ${formData.otherInstructions}` : ''}
+
+I can help you create an outline, research sources, write sections, or generate a complete document. What would you like to start with?`,
             timestamp: new Date()
           };
           
@@ -280,12 +308,40 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           {currentQuestion?.type === 'file' ? (
             <div className={styles.fileUploadSection}>
               <ModernFileUpload
-                value={formData.attachments?.[0] || null}
+                value={
+                  (currentQuestion.key === 'sampleAssignments' ? formData.sampleAssignments?.[0] : 
+                   currentQuestion.key === 'lectureNotes' ? formData.lectureNotes?.[0] : null) || null
+                }
                 onChange={handleFileUpload}
                 placeholder="Drop your assignment file here or click to browse"
                 accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
                 maxSizeMB={10}
               />
+            </div>
+          ) : currentQuestion?.type === 'select' ? (
+            <div className={styles.selectSection}>
+              <select
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className={styles.selectInput}
+                disabled={isTyping}
+              >
+                <option value="">{currentQuestion.placeholder}</option>
+                {currentQuestion.options?.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <Button
+                type="button"
+                onClick={submitMessage}
+                disabled={!inputValue.trim() || isTyping}
+                className={styles.sendButton}
+                size="sm"
+              >
+                <Send size={16} />
+              </Button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className={styles.inputForm}>
