@@ -1,12 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, User } from 'lucide-react';
-import { Button } from '@/app/ui';
+import React, { useEffect, useRef } from 'react';
+import { Bot, User } from 'lucide-react';
 import TypingAnimation from './components/TypingAnimation';
-import { ModernFileUpload } from './components/ModernFileUpload';
-import ChatMessages from '../ChatMessages';
-import ChatInput from '../ChatInput';
+import QuestionInput from './components/QuestionInput';
 import styles from './AssignmentQuestionnaire.module.scss';
 import useAssignmentQuestionnaireStore from './store/assignMentQuestionare';
 import { questions } from './questions';
@@ -16,15 +13,12 @@ interface AssignmentQuestionnaireProps {
 
 export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = ({ onComplete }) => {
   const { 
-    answers, 
     messages, 
-    inputLocked, 
     isLoading, 
     currentQuesion, 
     update
   } = useAssignmentQuestionnaireStore();
   
-  const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto scroll to bottom when new messages are added
@@ -36,35 +30,11 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!inputValue.trim() || inputLocked) return;
-
+  const handleQuestionSubmit = () => {
     const currentQuestion = questions[currentQuesion];
     if (!currentQuestion) return;
 
-    // Add user message
-    const userMessage = {
-      id: Date.now().toString(),
-      type: 'user' as const,
-      text: inputValue.trim(),
-      timestamp: new Date()
-    };
-    update({ key: 'messages', value: [...messages, userMessage] });
-
-    // Save the answer (for non-file types, save the input value)
-    if (currentQuestion.type !== 'file') {
-      const updatedAnswers = {
-        ...answers,
-        [currentQuestion.id]: inputValue.trim()
-      };
-      update({ key: 'answers', value: updatedAnswers });
-    }
-    // For file types, the answer is already saved in the onChange handler
-
-    // Clear input and show loading
-    setInputValue('');
+    // Show loading state
     update({ key: 'isLoading', value: true });
 
     // Move to next question after a short delay
@@ -85,7 +55,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
             text: nextQuestion.text,
             timestamp: new Date()
           };
-          update({ key: 'messages', value: [...messages, userMessage, botMessage] });
+          update({ key: 'messages', value: [...messages, botMessage] });
         }
       } else {
         // All questions completed
@@ -95,13 +65,13 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           text: "Thank you! I have all the information I need. Let me process your assignment requirements.",
           timestamp: new Date()
         };
-        update({ key: 'messages', value: [...messages, userMessage, completionMessage] });
+        update({ key: 'messages', value: [...messages, completionMessage] });
         
         if (onComplete) {
           onComplete();
         }
       }
-    }, 1500); // Increased delay to show thinking animation
+    }, 1500); // Delay to show thinking animation
   };
 
   const currentQuestion = questions[currentQuesion];
@@ -156,52 +126,10 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         </div>
 
         <div className={styles.inputContainer}>
-          <form className={styles.inputForm} onSubmit={handleSubmit}>
-            <div className={styles.inputWrapper}>
-              {currentQuestion?.type === 'file' ? (
-                <ModernFileUpload
-                  onChange={(file) => {
-                    // Handle file selection - store file name for display
-                    if (file) {
-                      setInputValue(file.name);
-                      // Store the actual file in answers for this question
-                      const updatedAnswers = {
-                        ...answers,
-                        [currentQuestion.id]: file
-                      };
-                      update({ key: 'answers', value: updatedAnswers });
-                    } else {
-                      setInputValue('');
-                    }
-                  }}
-                  placeholder={currentQuestion?.placeholder || "Upload your file..."}
-                />
-              ) : (
-                <textarea
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={currentQuestion?.placeholder || "Type your message..."}
-                  className={styles.messageInput}
-                  rows={1}
-                  disabled={inputLocked}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                />
-              )}
-              <Button
-                type="submit"
-                className={styles.sendButton}
-                size="sm"
-                disabled={!inputValue.trim() || inputLocked}
-              >
-                <Send size={16} />
-              </Button>
-            </div>
-          </form>
+          <QuestionInput 
+            onSubmit={handleQuestionSubmit}
+            disabled={isLoading}
+          />
         </div>
       </div>
     </div>
