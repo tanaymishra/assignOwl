@@ -54,7 +54,7 @@
   flex: 1;
   text-align: left;
   color: var(--text-primary);
-  
+
   &:empty::before {
     content: attr(data-placeholder);
     color: var(--text-secondary);
@@ -219,8 +219,9 @@
 .error {
   .selectTrigger {
     border-color: #ef4444;
-    
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
       border-color: #ef4444;
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
@@ -268,15 +269,15 @@
     padding: 0.5rem 0.75rem;
     font-size: 0.9rem;
   }
-  
+
   .option {
     padding: 0.5rem 0.75rem;
   }
-  
+
   .searchInput {
     font-size: 0.8rem;
   }
-  
+
   .dropdown {
     margin-top: 0.125rem;
   }

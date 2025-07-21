@@ -55,7 +55,9 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
             text: nextQuestion.text,
             timestamp: new Date()
           };
-          update({ key: 'messages', value: [...messages, botMessage] });
+          // Get current messages from store to ensure we have the latest state
+          const currentMessages = useAssignmentQuestionnaireStore.getState().messages;
+          update({ key: 'messages', value: [...currentMessages, botMessage] });
         }
       } else {
         // All questions completed
@@ -65,7 +67,9 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           text: "Thank you! I have all the information I need. Let me process your assignment requirements.",
           timestamp: new Date()
         };
-        update({ key: 'messages', value: [...messages, completionMessage] });
+        // Get current messages from store to ensure we have the latest state
+        const currentMessages = useAssignmentQuestionnaireStore.getState().messages;
+        update({ key: 'messages', value: [...currentMessages, completionMessage] });
 
         if (onComplete) {
           onComplete();
