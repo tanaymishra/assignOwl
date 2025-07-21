@@ -12,13 +12,13 @@ interface AssignmentQuestionnaireProps {
 }
 
 export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = ({ onComplete }) => {
-  const { 
-    messages, 
-    isLoading, 
-    currentQuesion, 
+  const {
+    messages,
+    isLoading,
+    currentQuesion,
     update
   } = useAssignmentQuestionnaireStore();
-  
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto scroll to bottom when new messages are added
@@ -40,12 +40,12 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     // Move to next question after a short delay
     setTimeout(() => {
       update({ key: 'isLoading', value: false });
-      
+
       if (currentQuesion < questions.length - 1) {
         // Move to next question
         const nextQuestionIndex = currentQuesion + 1;
         update({ key: 'currentQuesion', value: nextQuestionIndex });
-        
+
         // Add next question message
         const nextQuestion = questions[nextQuestionIndex];
         if (nextQuestion) {
@@ -66,7 +66,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           timestamp: new Date()
         };
         update({ key: 'messages', value: [...messages, completionMessage] });
-        
+
         if (onComplete) {
           onComplete();
         }
@@ -82,11 +82,10 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         <div className={styles.messagesContainer}>
           {/* Render all messages */}
           {messages.map((message) => (
-            <div 
-              key={message.id} 
-              className={`${styles.messageWrapper} ${
-                message.type === 'bot' ? styles.botMessage : styles.userMessage
-              }`}
+            <div
+              key={message.id}
+              className={`${styles.messageWrapper} ${message.type === 'bot' ? styles.botMessage : styles.userMessage
+                }`}
             >
               <div className={styles.messageContent}>
                 <div className={styles.messageAvatar}>
@@ -97,16 +96,16 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
                     {message.text}
                   </div>
                   <div className={styles.messageTime}>
-                    {message.timestamp.toLocaleTimeString([], { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
+                    {message.timestamp.toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit'
                     })}
                   </div>
                 </div>
               </div>
             </div>
           ))}
-          
+
           {/* Loading indicator */}
           {isLoading && (
             <div className={`${styles.messageWrapper} ${styles.botMessage}`}>
@@ -120,13 +119,13 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
               </div>
             </div>
           )}
-          
+
           {/* Auto scroll anchor */}
           <div ref={messagesEndRef} />
         </div>
 
         <div className={styles.inputContainer}>
-          <QuestionInput 
+          <QuestionInput
             onSubmit={handleQuestionSubmit}
             disabled={isLoading}
           />

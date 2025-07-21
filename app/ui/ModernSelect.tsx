@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
-import styles from './Select.module.scss';
+import styles from './ModernSelect.module.scss';
 
 interface SelectOption {
   value: string | number;
@@ -34,8 +34,10 @@ export const Select: React.FC<SelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [dropdownPosition, setDropdownPosition] = useState<'below' | 'above'>('below');
   const selectRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -49,6 +51,23 @@ export const Select: React.FC<SelectProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Calculate dropdown position based on viewport space
+  useEffect(() => {
+    if (isOpen && selectRef.current) {
+      const rect = selectRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const dropdownHeight = 250; // Approximate dropdown height
+      const spaceBelow = viewportHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+        setDropdownPosition('above');
+      } else {
+        setDropdownPosition('below');
+      }
+    }
+  }, [isOpen]);
 
   // Filter options based on search term
   const filteredOptions = options.filter(option =>
@@ -115,7 +134,10 @@ export const Select: React.FC<SelectProps> = ({
         </div>
 
         {isOpen && (
-          <div className={styles.dropdown}>
+          <div 
+            ref={dropdownRef}
+            className={`${styles.dropdown} ${dropdownPosition === 'above' ? styles.dropdownAbove : styles.dropdownBelow}`}
+          >
             <div className={styles.searchContainer}>
               <input
                 ref={inputRef}

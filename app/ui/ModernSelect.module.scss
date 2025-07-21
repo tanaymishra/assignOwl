@@ -73,7 +73,6 @@
 
 .dropdown {
   position: absolute;
-  top: 100%;
   left: 0;
   right: 0;
   background: white;
@@ -81,16 +80,37 @@
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  margin-top: 0.25rem;
   overflow: hidden;
   backdrop-filter: blur(10px);
+}
+
+.dropdownBelow {
+  top: 100%;
+  margin-top: 0.25rem;
   animation: slideDown 0.2s ease-out;
+}
+
+.dropdownAbove {
+  bottom: 100%;
+  margin-bottom: 0.25rem;
+  animation: slideUp 0.2s ease-out;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
