@@ -10,7 +10,7 @@ interface Message {
 
 interface AssignmentFormData {
     currentQuesion:number;
-    answers: Record<string, string>;
+    answers: Record<string, any>;
     messages: Message[];
     inputLocked: boolean;
     isLoading: boolean;

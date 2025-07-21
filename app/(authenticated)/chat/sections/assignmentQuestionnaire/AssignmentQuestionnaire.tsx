@@ -53,12 +53,15 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     };
     update({ key: 'messages', value: [...messages, userMessage] });
 
-    // Save the answer
-    const updatedAnswers = {
-      ...answers,
-      [currentQuestion.id]: inputValue.trim()
-    };
-    update({ key: 'answers', value: updatedAnswers });
+    // Save the answer (for non-file types, save the input value)
+    if (currentQuestion.type !== 'file') {
+      const updatedAnswers = {
+        ...answers,
+        [currentQuestion.id]: inputValue.trim()
+      };
+      update({ key: 'answers', value: updatedAnswers });
+    }
+    // For file types, the answer is already saved in the onChange handler
 
     // Clear input and show loading
     setInputValue('');
@@ -155,20 +158,40 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
         <div className={styles.inputContainer}>
           <form className={styles.inputForm} onSubmit={handleSubmit}>
             <div className={styles.inputWrapper}>
-              <textarea
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder={currentQuestion?.placeholder || "Type your message..."}
-                className={styles.messageInput}
-                rows={1}
-                disabled={inputLocked}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit(e);
-                  }
-                }}
-              />
+              {currentQuestion?.type === 'file' ? (
+                <ModernFileUpload
+                  onChange={(file) => {
+                    // Handle file selection - store file name for display
+                    if (file) {
+                      setInputValue(file.name);
+                      // Store the actual file in answers for this question
+                      const updatedAnswers = {
+                        ...answers,
+                        [currentQuestion.id]: file
+                      };
+                      update({ key: 'answers', value: updatedAnswers });
+                    } else {
+                      setInputValue('');
+                    }
+                  }}
+                  placeholder={currentQuestion?.placeholder || "Upload your file..."}
+                />
+              ) : (
+                <textarea
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder={currentQuestion?.placeholder || "Type your message..."}
+                  className={styles.messageInput}
+                  rows={1}
+                  disabled={inputLocked}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
+                />
+              )}
               <Button
                 type="submit"
                 className={styles.sendButton}
