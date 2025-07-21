@@ -60,11 +60,14 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     };
     update({ key: 'answers', value: updatedAnswers });
 
-    // Clear input
+    // Clear input and show loading
     setInputValue('');
+    update({ key: 'isLoading', value: true });
 
     // Move to next question after a short delay
     setTimeout(() => {
+      update({ key: 'isLoading', value: false });
+      
       if (currentQuesion < questions.length - 1) {
         // Move to next question
         const nextQuestionIndex = currentQuesion + 1;
@@ -95,7 +98,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           onComplete();
         }
       }
-    }, 500);
+    }, 1500); // Increased delay to show thinking animation
   };
 
   const currentQuestion = questions[currentQuesion];
