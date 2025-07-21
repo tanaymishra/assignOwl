@@ -8,10 +8,11 @@
   gap: 0.75rem;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-radius: 20px;
+  border-radius: 10px;
   border: 1px solid rgba(16, 185, 129, 0.2);
   padding: 0.75rem;
   transition: all 0.3s ease;
+  align-items: center;
 
   &:focus-within {
     border-color: var(--color-accent-primary);
