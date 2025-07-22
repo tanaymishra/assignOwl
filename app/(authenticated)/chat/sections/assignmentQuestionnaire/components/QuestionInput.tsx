@@ -186,6 +186,11 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
   const isSubmitDisabled = () => {
     if (disabled) return true;
     
+    // For optional questions, allow submission even if empty
+    if (!currentQuestion?.required) {
+      return false;
+    }
+    
     if (currentQuestion?.type === 'boolean') {
       return inputValue === '';
     }
@@ -197,20 +202,60 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
     return !inputValue.trim();
   };
 
+  const handleSkip = () => {
+    if (currentQuestion?.required) return; // Don't allow skipping required questions
+    
+    // Add a skip message to chat
+    const skipMessage = {
+      id: Date.now().toString(),
+      type: 'user' as const,
+      text: 'Skipped',
+      timestamp: new Date()
+    };
+    update({ key: 'messages', value: [...messages, skipMessage] });
+
+    // Clear any existing answer for this question
+    const updatedAnswers = {
+      ...answers,
+      [currentQuestion.id]: null
+    };
+    update({ key: 'answers', value: updatedAnswers });
+
+    // Clear input
+    setInputValue('');
+
+    // Call onSubmit callback to move to next question
+    onSubmit?.();
+  };
+
   const isSelectType = currentQuestion?.type === 'select' || currentQuestion?.type === 'boolean';
 
   return (
     <form className={styles.inputForm} onSubmit={handleSubmit}>
       <div className={`${styles.inputWrapper} ${isSelectType ? styles.selectWrapper : ''}`}>
         {renderInput()}
-        <Button
-          type="submit"
-          className={styles.sendButton}
-          size="sm"
-          disabled={isSubmitDisabled()}
-        >
-          <Send size={16} />
-        </Button>
+        <div className={styles.buttonGroup}>
+          {!currentQuestion?.required && (
+            <Button
+              type="button"
+              onClick={handleSkip}
+              className={styles.skipButton}
+              variant="secondary"
+              size="sm"
+              disabled={disabled}
+            >
+              Skip
+            </Button>
+          )}
+          <Button
+            type="submit"
+            className={styles.sendButton}
+            size="sm"
+            disabled={isSubmitDisabled()}
+          >
+            <Send size={16} />
+          </Button>
+        </div>
       </div>
     </form>
   );
