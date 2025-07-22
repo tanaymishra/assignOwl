@@ -5,31 +5,46 @@ import { Upload, X, FileText, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/app/ui';
 import styles from './ModernFileUpload.module.scss';
 
+interface UploadedFile {
+  savedAs: string;
+  originalName: string;
+  size?: number;
+  isUploading?: boolean;
+  uploadProgress?: number;
+}
+
 interface ModernFileUploadProps {
-  value?: string | null; // Changed to string (savedAs filename)
-  onChange: (savedAs: string | null) => void; // Changed to return savedAs filename
+  value?: string[] | null; // Array of savedAs filenames
+  onChange: (savedAsArray: string[] | null) => void; // Return array of savedAs filenames
   accept?: string;
   placeholder?: string;
   maxSizeMB?: number;
+  maxFiles?: number;
 }
 
 export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
-  value,
+  value = [],
   onChange,
   accept = '.pdf,.doc,.docx,.txt',
-  placeholder = 'Drop your file here or click to browse',
+  placeholder = 'Add files',
   maxSizeMB = 10,
+  maxFiles = 5,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [currentFile, setCurrentFile] = useState<File | null>(null);
-  const [uploadedFileName, setUploadedFileName] = useState<string>('');
+  const [uploadingFiles, setUploadingFiles] = useState<Map<string, UploadedFile>>(new Map());
 
-  const uploadFile = async (file: File) => {
-    setIsUploading(true);
-    setUploadProgress(0);
+  const uploadFile = async (file: File): Promise<string | null> => {
+    const tempId = `temp_${Date.now()}_${Math.random()}`;
+    
+    // Add to uploading files
+    setUploadingFiles(prev => new Map(prev).set(tempId, {
+      savedAs: '',
+      originalName: file.name,
+      size: file.size,
+      isUploading: true,
+      uploadProgress: 0
+    }));
     
     try {
       const formData = new FormData();
@@ -49,42 +64,56 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
       
       if (result.success && result.files && result.files.length > 0) {
         const uploadedFile = result.files[0];
-        setUploadedFileName(uploadedFile.originalName);
-        onChange(uploadedFile.savedAs); // Return savedAs to parent
-        setUploadProgress(100);
+        
+        // Remove from uploading files
+        setUploadingFiles(prev => {
+          const newMap = new Map(prev);
+          newMap.delete(tempId);
+          return newMap;
+        });
+        
+        // Add to uploaded files
+        const currentFiles = value || [];
+        onChange([...currentFiles, uploadedFile.savedAs]);
+        
+        return uploadedFile.savedAs;
       } else {
         throw new Error('Upload failed');
       }
     } catch (error) {
       console.error('Upload error:', error);
-      onChange(null);
-      setCurrentFile(null);
-      setUploadProgress(0);
-    } finally {
-      setIsUploading(false);
+      
+      // Remove from uploading files on error
+      setUploadingFiles(prev => {
+        const newMap = new Map(prev);
+        newMap.delete(tempId);
+        return newMap;
+      });
+      
+      return null;
     }
   };
 
-  const handleFileSelect = async (file: File | null) => {
-    if (!file) return;
+  const handleFileSelect = async (files: FileList | null) => {
+    if (!files) return;
     
-    if (maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
-      alert(`File size must be less than ${maxSizeMB}MB`);
-      return;
+    const currentCount = (value?.length || 0) + uploadingFiles.size;
+    const filesToUpload = Array.from(files).slice(0, maxFiles - currentCount);
+    
+    for (const file of filesToUpload) {
+      if (maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
+        alert(`File "${file.name}" is too large. Maximum size is ${maxSizeMB}MB`);
+        continue;
+      }
+      
+      await uploadFile(file);
     }
-    
-    setCurrentFile(file);
-    await uploadFile(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handleFileSelect(files[0]);
-    }
+    handleFileSelect(e.dataTransfer.files);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -101,12 +130,10 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
     fileInputRef.current?.click();
   };
 
-  const handleRemove = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onChange(null);
-    setCurrentFile(null);
-    setUploadedFileName('');
-    setUploadProgress(0);
+  const handleRemoveFile = (savedAs: string) => {
+    const currentFiles = value || [];
+    const updatedFiles = currentFiles.filter(file => file !== savedAs);
+    onChange(updatedFiles.length > 0 ? updatedFiles : null);
   };
 
   const formatFileSize = (bytes: number) => {
@@ -117,92 +144,81 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const canAddMore = (value?.length || 0) + uploadingFiles.size < maxFiles;
+
   return (
     <div className={styles.uploadContainer}>
       <input
         ref={fileInputRef}
         type="file"
         accept={accept}
-        onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+        multiple
+        onChange={(e) => handleFileSelect(e.target.files)}
         className={styles.hiddenInput}
       />
       
-      <div
-        className={`${styles.uploadArea} ${isDragOver ? styles.dragOver : ''} ${value ? styles.hasFile : ''}`}
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onClick={!value ? handleClick : undefined}
-      >
-        {value || currentFile ? (
-          <div className={styles.filePreview}>
-            <div className={styles.fileInfo}>
-              <div className={styles.fileIcon}>
-                <FileText size={24} />
-              </div>
-              <div className={styles.fileDetails}>
-                <div className={styles.fileName}>
-                  {uploadedFileName || currentFile?.name || 'Uploaded file'}
-                </div>
-                {currentFile && (
-                  <div className={styles.fileSize}>{formatFileSize(currentFile.size)}</div>
-                )}
-                {isUploading && (
-                  <div className={styles.progressBar}>
-                    <div 
-                      className={styles.progressFill} 
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </div>
-                )}
-              </div>
+      {/* Files Grid */}
+      <div className={styles.filesGrid}>
+        {/* Uploaded Files */}
+        {value?.map((savedAs, index) => (
+          <div key={savedAs} className={styles.fileCard}>
+            <div className={styles.fileIcon}>
+              <FileText size={20} />
             </div>
-            <div className={styles.fileActions}>
-              {value && !isUploading ? (
-                <div className={styles.successIcon}>
-                  <Check size={20} />
-                </div>
-              ) : isUploading ? (
-                <div className={styles.loadingIcon}>
-                  <Loader2 size={20} className={styles.spinner} />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleRemove}
-                  className={styles.removeButton}
-                >
-                  <X size={16} />
-                </button>
+            <div className={styles.fileInfo}>
+              <div className={styles.fileName}>{savedAs}</div>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleRemoveFile(savedAs)}
+              className={styles.removeButton}
+            >
+              <X size={14} />
+            </button>
+          </div>
+        ))}
+
+        {/* Uploading Files */}
+        {Array.from(uploadingFiles.entries()).map(([tempId, file]) => (
+          <div key={tempId} className={styles.fileCard}>
+            <div className={styles.fileIcon}>
+              <FileText size={20} />
+            </div>
+            <div className={styles.fileInfo}>
+              <div className={styles.fileName}>{file.originalName}</div>
+              {file.size && (
+                <div className={styles.fileSize}>{formatFileSize(file.size)}</div>
               )}
             </div>
-          </div>
-        ) : (
-          <div className={styles.uploadPrompt}>
-            <div className={styles.uploadIcon}>
-              <Upload size={32} />
+            <div className={styles.loadingIcon}>
+              <Loader2 size={16} className={styles.spinner} />
             </div>
-            <div className={styles.uploadText}>
-              <div className={styles.primaryText}>{placeholder}</div>
-              <div className={styles.secondaryText}>
-                Supports {accept.split(',').join(', ')} up to {maxSizeMB}MB
-              </div>
+          </div>
+        ))}
+
+        {/* Add More Button */}
+        {canAddMore && (
+          <div 
+            className={`${styles.addButton} ${isDragOver ? styles.dragOver : ''}`}
+            onClick={handleClick}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+          >
+            <div className={styles.addIcon}>
+              <Upload size={20} />
+            </div>
+            <div className={styles.addText}>
+              {(value?.length || 0) === 0 ? placeholder : 'Add more'}
             </div>
           </div>
         )}
       </div>
-      
-      {value && (
-        <div className={styles.actionButtons}>
-          <Button
-            variant="secondary"
-            onClick={() => onChange(null)}
-            size="sm"
-          >
-            Remove
-          </Button>
-        </div>
-      )}
+
+      {/* Info Text */}
+      <div className={styles.infoText}>
+        Supports {accept.split(',').join(', ')} up to {maxSizeMB}MB each • Max {maxFiles} files
+      </div>
     </div>
   );
 };

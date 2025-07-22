@@ -34,10 +34,10 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
       displayValue = inputValue === 'yes' ? 'Yes' : 'No';
       actualValue = inputValue === 'yes';
     } else if (currentQuestion?.type === 'file') {
-      const savedAs = answers[currentQuestion.id] as string;
-      if (!savedAs) return;
-      displayValue = `📎 ${savedAs}`;
-      actualValue = savedAs;
+      const savedAsArray = answers[currentQuestion.id] as string[];
+      if (!savedAsArray || savedAsArray.length === 0) return;
+      displayValue = `📎 ${savedAsArray.length} file${savedAsArray.length > 1 ? 's' : ''} uploaded`;
+      actualValue = savedAsArray;
     } else {
       if (!inputValue.trim()) return;
       displayValue = inputValue.trim();
@@ -82,16 +82,21 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
     }
   };
 
-  const handleFileChange = (savedAs: string | null) => {
-    if (savedAs && currentQuestion) {
-      setInputValue(savedAs);
+  const handleFileChange = (savedAsArray: string[] | null) => {
+    if (savedAsArray && savedAsArray.length > 0 && currentQuestion) {
+      setInputValue(`${savedAsArray.length} file${savedAsArray.length > 1 ? 's' : ''}`);
       const updatedAnswers = {
         ...answers,
-        [currentQuestion.id]: savedAs
+        [currentQuestion.id]: savedAsArray
       };
       update({ key: 'answers', value: updatedAnswers });
     } else {
       setInputValue('');
+      const updatedAnswers = {
+        ...answers,
+        [currentQuestion.id]: null
+      };
+      update({ key: 'answers', value: updatedAnswers });
     }
   };
 
@@ -127,7 +132,7 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
       case 'file':
         return (
           <ModernFileUpload
-            value={answers[currentQuestion.id] as string || null}
+            value={answers[currentQuestion.id] as string[] || null}
             onChange={handleFileChange}
             placeholder={currentQuestion.placeholder}
             accept={currentQuestion.accept}
