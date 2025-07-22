@@ -6,13 +6,11 @@ import { Button } from '@/app/ui';
 import styles from './ModernFileUpload.module.scss';
 
 interface ModernFileUploadProps {
-  value?: File | null;
-  onChange: (file: File | null) => void;
+  value?: string | null; // Changed to string (savedAs filename)
+  onChange: (savedAs: string | null) => void; // Changed to return savedAs filename
   accept?: string;
   placeholder?: string;
   maxSizeMB?: number;
-  onUpload?: () => void;
-  isUploading?: boolean;
 }
 
 export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
@@ -21,32 +19,62 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
   accept = '.pdf,.doc,.docx,.txt',
   placeholder = 'Drop your file here or click to browse',
   maxSizeMB = 10,
-  onUpload,
-  isUploading = false,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string>('');
 
-  const handleFileSelect = (file: File | null) => {
-    if (file && maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
+  const uploadFile = async (file: File) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+    
+    try {
+      const formData = new FormData();
+      formData.append('folder', 'assignowl');
+      formData.append('file', file);
+
+      const response = await fetch('https://files.bluepen.co.in/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.files && result.files.length > 0) {
+        const uploadedFile = result.files[0];
+        setUploadedFileName(uploadedFile.originalName);
+        onChange(uploadedFile.savedAs); // Return savedAs to parent
+        setUploadProgress(100);
+      } else {
+        throw new Error('Upload failed');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      onChange(null);
+      setCurrentFile(null);
+      setUploadProgress(0);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileSelect = async (file: File | null) => {
+    if (!file) return;
+    
+    if (maxSizeMB && file.size > maxSizeMB * 1024 * 1024) {
+      alert(`File size must be less than ${maxSizeMB}MB`);
       return;
     }
-    onChange(file);
     
-    // Simulate upload progress for demo
-    if (file && onUpload) {
-      setUploadProgress(0);
-      const interval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            return 100;
-          }
-          return prev + 10;
-        });
-      }, 100);
-    }
+    setCurrentFile(file);
+    await uploadFile(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -76,6 +104,8 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
     onChange(null);
+    setCurrentFile(null);
+    setUploadedFileName('');
     setUploadProgress(0);
   };
 
@@ -104,16 +134,20 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
         onDragLeave={handleDragLeave}
         onClick={!value ? handleClick : undefined}
       >
-        {value ? (
+        {value || currentFile ? (
           <div className={styles.filePreview}>
             <div className={styles.fileInfo}>
               <div className={styles.fileIcon}>
                 <FileText size={24} />
               </div>
               <div className={styles.fileDetails}>
-                <div className={styles.fileName}>{value.name}</div>
-                <div className={styles.fileSize}>{formatFileSize(value.size)}</div>
-                {uploadProgress > 0 && uploadProgress < 100 && (
+                <div className={styles.fileName}>
+                  {uploadedFileName || currentFile?.name || 'Uploaded file'}
+                </div>
+                {currentFile && (
+                  <div className={styles.fileSize}>{formatFileSize(currentFile.size)}</div>
+                )}
+                {isUploading && (
                   <div className={styles.progressBar}>
                     <div 
                       className={styles.progressFill} 
@@ -124,7 +158,7 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
               </div>
             </div>
             <div className={styles.fileActions}>
-              {uploadProgress === 100 ? (
+              {value && !isUploading ? (
                 <div className={styles.successIcon}>
                   <Check size={20} />
                 </div>
@@ -167,16 +201,6 @@ export const ModernFileUpload: React.FC<ModernFileUploadProps> = ({
           >
             Remove
           </Button>
-          {onUpload && (
-            <Button
-              variant="primary"
-              onClick={onUpload}
-              disabled={isUploading}
-              size="sm"
-            >
-              {isUploading ? 'Uploading...' : 'Upload'}
-            </Button>
-          )}
         </div>
       )}
     </div>

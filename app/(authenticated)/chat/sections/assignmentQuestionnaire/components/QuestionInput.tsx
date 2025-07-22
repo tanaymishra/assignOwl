@@ -34,10 +34,10 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
       displayValue = inputValue === 'yes' ? 'Yes' : 'No';
       actualValue = inputValue === 'yes';
     } else if (currentQuestion?.type === 'file') {
-      const file = answers[currentQuestion.id] as File;
-      if (!file) return;
-      displayValue = `📎 ${file.name}`;
-      actualValue = file;
+      const savedAs = answers[currentQuestion.id] as string;
+      if (!savedAs) return;
+      displayValue = `📎 ${savedAs}`;
+      actualValue = savedAs;
     } else {
       if (!inputValue.trim()) return;
       displayValue = inputValue.trim();
@@ -82,12 +82,12 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
     }
   };
 
-  const handleFileChange = (file: File | null) => {
-    if (file && currentQuestion) {
-      setInputValue(file.name);
+  const handleFileChange = (savedAs: string | null) => {
+    if (savedAs && currentQuestion) {
+      setInputValue(savedAs);
       const updatedAnswers = {
         ...answers,
-        [currentQuestion.id]: file
+        [currentQuestion.id]: savedAs
       };
       update({ key: 'answers', value: updatedAnswers });
     } else {
@@ -127,7 +127,7 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
       case 'file':
         return (
           <ModernFileUpload
-            value={answers[currentQuestion.id] as File || null}
+            value={answers[currentQuestion.id] as string || null}
             onChange={handleFileChange}
             placeholder={currentQuestion.placeholder}
             accept={currentQuestion.accept}
@@ -192,9 +192,11 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
     return !inputValue.trim();
   };
 
+  const isSelectType = currentQuestion?.type === 'select' || currentQuestion?.type === 'boolean';
+
   return (
     <form className={styles.inputForm} onSubmit={handleSubmit}>
-      <div className={styles.inputWrapper}>
+      <div className={`${styles.inputWrapper} ${isSelectType ? styles.selectWrapper : ''}`}>
         {renderInput()}
         <Button
           type="submit"
