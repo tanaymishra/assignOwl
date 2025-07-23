@@ -1,22 +1,50 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Bot, User } from 'lucide-react';
 import TypingAnimation from './components/TypingAnimation';
 import QuestionInput from './components/QuestionInput';
 import styles from './AssignmentQuestionnaire.module.scss';
 import useAssignmentQuestionnaireStore from './store/assignMentQuestionare';
 import { questions } from './questions';
+import {
+  assignmentStatusService,
+  restoreQuestionnaireState
+} from './functions/assignmentStatus';
+import { useSocket, useIsConnected } from '@/app/socket/socketStore';
+
+// Client-side only time formatting component to avoid hydration mismatch
+const MessageTime: React.FC<{ timestamp: Date }> = ({ timestamp }) => {
+  const [timeString, setTimeString] = React.useState('');
+
+  React.useEffect(() => {
+    // Only format time on client side
+    setTimeString(timestamp.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    }));
+  }, [timestamp]);
+
+  return <>{timeString}</>;
+};
+
 interface AssignmentQuestionnaireProps {
   onComplete?: () => void;
 }
 
 export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = ({ onComplete }) => {
+  const searchParams = useSearchParams();
+  const socket = useSocket();
+  const isConnected = useIsConnected();
   const {
     messages,
     isLoading,
     currentQuesion,
-    update
+    isInitialized,
+    update,
+    reset,
+    initializeFromStatus
   } = useAssignmentQuestionnaireStore();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -29,6 +57,105 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Initialize assignment status on component mount
+  useEffect(() => {
+    const initializeAssignment = async () => {
+      const assignmentId = searchParams.get('id');
+
+      if (!assignmentId) {
+        console.log('No assignment ID found, starting fresh questionnaire');
+        return;
+      }
+
+      // Check if socket is available and connected
+      if (!socket || !isConnected) {
+        console.log('Socket not available, skipping assignment status fetch');
+        return;
+      }
+
+      try {
+        // Fetch assignment status using global socket
+        const response = await assignmentStatusService.fetchAssignmentStatus(parseInt(assignmentId), socket, isConnected);
+
+        if (response.success && response.assignment) {
+          const {
+            currentQuestionIndex,
+            restoredAnswers,
+            restoredMessages,
+            isCompleted
+          } = restoreQuestionnaireState(response);
+
+          // Restore the questionnaire state
+          const allMessages = [];
+
+          // Add bot messages for each answered question
+          response.assignment.previous_messages.forEach(({ questionId, answer }, index) => {
+            const question = questions.find((q: any) => q.id === questionId);
+            if (question) {
+              // Add bot question
+              allMessages.push({
+                id: `restored_bot_${index}`,
+                type: 'bot' as const,
+                text: question.text,
+                timestamp: new Date(response.assignment!.created_at)
+              });
+
+              // Add user answer
+              let displayAnswer = answer;
+              if (Array.isArray(answer)) {
+                displayAnswer = `📎 ${answer.length} file${answer.length > 1 ? 's' : ''} uploaded`;
+              } else if (typeof answer === 'boolean') {
+                displayAnswer = answer ? 'Yes' : 'No';
+              }
+
+              allMessages.push({
+                id: `restored_user_${index}`,
+                type: 'user' as const,
+                text: displayAnswer,
+                timestamp: new Date(response.assignment!.updated_at)
+              });
+            }
+          });
+
+          // Add current question if not completed
+          if (!isCompleted && currentQuestionIndex < questions.length) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (currentQuestion) {
+              allMessages.push({
+                id: `current_${Date.now()}`,
+                type: 'bot' as const,
+                text: currentQuestion.text,
+                timestamp: new Date()
+              });
+            }
+          }
+
+          // Initialize store with restored state
+          initializeFromStatus(currentQuestionIndex, restoredAnswers, allMessages);
+
+          console.log(`Assignment ${assignmentId} restored - Question ${currentQuestionIndex}/${questions.length}`);
+
+          if (isCompleted) {
+            console.log('Assignment questionnaire already completed');
+            onComplete?.();
+          }
+        } else {
+          console.error('Failed to fetch assignment status:', response.error);
+        }
+      } catch (error) {
+        console.error('Error initializing assignment:', error);
+        // Continue with fresh questionnaire on error
+      }
+    };
+
+    initializeAssignment();
+
+    // Cleanup on unmount
+    return () => {
+      assignmentStatusService.removeStatusListener();
+    };
+  }, [searchParams, socket, isConnected, update, onComplete, initializeFromStatus]);
 
   const handleQuestionSubmit = () => {
     const currentQuestion = questions[currentQuesion];
@@ -78,7 +205,6 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
     }, 1500); // Delay to show thinking animation
   };
 
-  const currentQuestion = questions[currentQuesion];
 
   return (
     <div className={styles.container}>
@@ -100,10 +226,7 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
                     {message.text}
                   </div>
                   <div className={styles.messageTime}>
-                    {message.timestamp.toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+                    <MessageTime timestamp={message.timestamp} />
                   </div>
                 </div>
               </div>

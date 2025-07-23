@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Send } from 'lucide-react';
 import { Button } from '@/app/ui';
 import ModernSelect from '@/app/ui/ModernSelect';
 import { ModernFileUpload } from './ModernFileUpload';
 import useAssignmentQuestionnaireStore from '../store/assignMentQuestionare';
 import { questions } from '../questions';
+import { updateAssignmentField } from '../functions/assignmentStatus';
 import styles from './QuestionInput.module.scss';
 
 interface QuestionInputProps {
@@ -15,10 +17,42 @@ interface QuestionInputProps {
 }
 
 export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled = false }) => {
+  const searchParams = useSearchParams();
   const { currentQuesion, answers, messages, update } = useAssignmentQuestionnaireStore();
   const [inputValue, setInputValue] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
   
   const currentQuestion = questions[currentQuesion];
+  const assignmentId = searchParams.get('id');
+
+  // Function to update assignment in background
+  const updateAssignmentInBackground = async (questionId: string, answer: any) => {
+    if (!assignmentId) return;
+
+    try {
+      setIsUpdating(true);
+      // Import socket store to get current socket state
+      const { useSocketStore } = await import('@/app/socket/socketStore');
+      const socketState = useSocketStore.getState();
+      const socket = socketState.socket;
+      const isConnected = socketState.isConnected;
+      
+      const response = await updateAssignmentField(parseInt(assignmentId), questionId, answer, socket, isConnected);
+      
+      if (response.success) {
+        console.log(`Updated assignment ${assignmentId} - Fields: ${response.assignment?.updated_fields.join(', ')}`);
+      } else {
+        console.error('Assignment update failed:', response.error);
+        if (response.validation_errors) {
+          console.error('Validation errors:', response.validation_errors);
+        }
+      }
+    } catch (error) {
+      console.error('Error updating assignment:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +93,11 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
       [currentQuestion.id]: actualValue
     };
     update({ key: 'answers', value: updatedAnswers });
+
+    // Update backend if assignment ID exists
+    if (assignmentId && currentQuestion) {
+      updateAssignmentInBackground(currentQuestion.id, actualValue);
+    }
 
     // Clear input
     setInputValue('');
@@ -221,6 +260,11 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
     };
     update({ key: 'answers', value: updatedAnswers });
 
+    // Update backend with null/empty value for skipped question
+    if (assignmentId && currentQuestion) {
+      updateAssignmentInBackground(currentQuestion.id, null);
+    }
+
     // Clear input
     setInputValue('');
 
@@ -251,7 +295,7 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
             type="submit"
             className={styles.sendButton}
             size="sm"
-            disabled={isSubmitDisabled()}
+            disabled={isSubmitDisabled() || isUpdating}
           >
             <Send size={16} />
           </Button>
