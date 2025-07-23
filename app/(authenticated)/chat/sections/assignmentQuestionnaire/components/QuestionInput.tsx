@@ -169,9 +169,13 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
         );
 
       case 'file':
+        const fileValue = answers[currentQuestion.id];
+        // Handle case where file question was skipped (value would be 'Skipped')
+        const fileArray = Array.isArray(fileValue) ? fileValue : null;
+        
         return (
           <ModernFileUpload
-            value={answers[currentQuestion.id] as string[] || null}
+            value={fileArray}
             onChange={handleFileChange}
             placeholder={currentQuestion.placeholder}
             accept={currentQuestion.accept}
@@ -253,16 +257,16 @@ export const QuestionInput: React.FC<QuestionInputProps> = ({ onSubmit, disabled
     };
     update({ key: 'messages', value: [...messages, skipMessage] });
 
-    // Clear any existing answer for this question
+    // Save "Skipped" as the answer for this question
     const updatedAnswers = {
       ...answers,
-      [currentQuestion.id]: null
+      [currentQuestion.id]: 'Skipped'
     };
     update({ key: 'answers', value: updatedAnswers });
 
-    // Update backend with null/empty value for skipped question
+    // Update backend with "Skipped" text for skipped question
     if (assignmentId && currentQuestion) {
-      updateAssignmentInBackground(currentQuestion.id, null);
+      updateAssignmentInBackground(currentQuestion.id, 'Skipped');
     }
 
     // Clear input

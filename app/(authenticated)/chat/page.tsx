@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import useChatStore, { Message, Artifact } from './store/chatStore'
 import { ChatMessages, ChatInput, AssignmentQuestionnaire } from './sections'
 import { useCreateNewChat } from '@/app/components/Sidebar/functions/chatFunctions'
-import { Plus } from 'lucide-react'
+import useAssignmentQuestionnaireStore from './sections/assignmentQuestionnaire/store/assignMentQuestionare'
+import { questions } from './sections/assignmentQuestionnaire/questions'
 import styles from './page.module.scss'
 
 const generateSampleAssignmentContent = () => {
@@ -63,7 +64,7 @@ export default function ChatPage() {
   const searchParams = useSearchParams()
   const chatId = searchParams.get('id')
   const { createNewChat } = useCreateNewChat()
-  
+
   const {
     messages,
     inputValue,
@@ -73,6 +74,12 @@ export default function ChatPage() {
     setIsLoading,
     updateMessageArtifact
   } = useChatStore()
+
+  // Get questionnaire state
+  const { currentQuesion } = useAssignmentQuestionnaireStore()
+
+  // Check if questionnaire is completed
+  const isQuestionnaireCompleted = currentQuesion >= questions.length
 
   // Auto-create new chat if no ID exists
   React.useEffect(() => {
@@ -144,7 +151,7 @@ export default function ChatPage() {
 
   return (
     <div className={styles.container}>
-      {messages.length === 0 ? (
+      {!isQuestionnaireCompleted ? (
         <AssignmentQuestionnaire />
       ) : (
         <div className={styles.chatContainer}>
