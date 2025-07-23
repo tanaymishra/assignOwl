@@ -1,8 +1,11 @@
 'use client'
 
 import React from 'react'
+import { useSearchParams } from 'next/navigation'
 import useChatStore, { Message, Artifact } from './store/chatStore'
 import { ChatMessages, ChatInput, AssignmentQuestionnaire } from './sections'
+import { useCreateNewChat } from '@/app/components/Sidebar/functions/chatFunctions'
+import { Plus } from 'lucide-react'
 import styles from './page.module.scss'
 
 const generateSampleAssignmentContent = () => {
@@ -57,6 +60,10 @@ const generateSampleAssignmentContent = () => {
 }
 
 export default function ChatPage() {
+  const searchParams = useSearchParams()
+  const chatId = searchParams.get('id')
+  const { createNewChat } = useCreateNewChat()
+  
   const {
     messages,
     inputValue,
@@ -66,6 +73,13 @@ export default function ChatPage() {
     setIsLoading,
     updateMessageArtifact
   } = useChatStore()
+
+  // Auto-create new chat if no ID exists
+  React.useEffect(() => {
+    if (!chatId) {
+      createNewChat()
+    }
+  }, [chatId, createNewChat])
 
   const handleSubmit = async () => {
     if (!inputValue.trim() && attachedFiles.length === 0) return
@@ -121,6 +135,11 @@ export default function ChatPage() {
         }, 3000)
       }, 1000)
     }, 2000)
+  }
+
+  // If no chat ID exists, return null (createNewChat will redirect)
+  if (!chatId) {
+    return null
   }
 
   return (
