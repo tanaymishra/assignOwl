@@ -69,12 +69,17 @@ const ChatMessages: React.FC = () => {
 
   // Auto-trigger the response sequence when component loads
   useEffect(() => {
-    if (!hasAutoTriggered) {
+    const { messages } = useChatStore.getState()
+
+    // Only trigger if no messages exist and hasn't been triggered yet
+    if (!hasAutoTriggered && messages.length === 0) {
       setHasAutoTriggered(true)
 
-      // Auto-trigger the AI response sequence
+      // Auto-trigger the AI response sequence with unique ID
       const aiResponseTime = Date.now()
-      const aiResponseId = `assistant-${aiResponseTime}`
+      const randomSuffix = Math.random().toString(36).substr(2, 9)
+      const aiResponseId = `assistant-${aiResponseTime}-${randomSuffix}`
+
       const aiResponse: Message = {
         id: aiResponseId,
         type: 'assistant',
@@ -89,8 +94,9 @@ const ChatMessages: React.FC = () => {
       // Generate artifact after a short delay (skeleton loading)
       setTimeout(() => {
         const artifactTime = Date.now()
+        const artifactRandomSuffix = Math.random().toString(36).substr(2, 9)
         const artifact: Artifact = {
-          id: `artifact-${artifactTime}`,
+          id: `artifact-${artifactTime}-${artifactRandomSuffix}`,
           title: 'Assignment Structure Guide',
           type: 'document',
           content: generateSampleAssignmentContent(),
@@ -111,7 +117,7 @@ const ChatMessages: React.FC = () => {
         }, 3000) // 3 second skeleton loading
       }, 1000) // 1 second delay before artifact starts
     }
-  }, [hasAutoTriggered, addMessage, setIsLoading, updateMessageArtifact])
+  }, [hasAutoTriggered]) // Removed store functions from dependencies
 
   const handleEditArtifact = (messageId: string, artifact: Artifact) => {
     setEditingArtifact({ messageId, artifact })
