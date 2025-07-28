@@ -156,13 +156,6 @@ export default function ChatPage() {
       ) : (
         <div className={styles.chatContainer}>
           <ChatMessages />
-          <div className={styles.chatInputContainer}>
-            <ChatInput
-              onSubmit={handleSubmit}
-              placeholder="Continue the conversation..."
-              className={styles.fixedInput}
-            />
-          </div>
         </div>
       )}
     </div>
