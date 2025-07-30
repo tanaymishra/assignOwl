@@ -58,8 +58,11 @@ const generateSampleAssignmentContent = () => {
 }
 
 const ChatMessages: React.FC = () => {
-  const { addMessage, setIsLoading, updateMessageArtifact, updateArtifactContent } = useChatStore()
-  const [editingArtifact, setEditingArtifact] = useState<{ messageId: string; artifact: Artifact } | null>(null)
+  // Don't use chat store - use local state for single response
+  const [responseMessage, setResponseMessage] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [artifact, setArtifact] = useState<Artifact | null>(null)
+  const [editingArtifact, setEditingArtifact] = useState<Artifact | null>(null)
   const [isClient, setIsClient] = useState(false)
   const [hasAutoTriggered, setHasAutoTriggered] = useState(false)
 
@@ -69,10 +72,8 @@ const ChatMessages: React.FC = () => {
 
   // Auto-trigger the response sequence when component loads
   useEffect(() => {
-    const { messages } = useChatStore.getState()
-
-    // Only trigger if no messages exist and hasn't been triggered yet
-    if (!hasAutoTriggered && messages.length === 0) {
+    // Only trigger once
+    if (!hasAutoTriggered) {
       setHasAutoTriggered(true)
 
       // Get assignment ID from URL params
@@ -88,15 +89,11 @@ const ChatMessages: React.FC = () => {
             // Show skeleton loading immediately while waiting for response
             setIsLoading(true)
 
-            // Request assignment description from server
+            // Request assignment description from server - SINGLE CALL
             socket.emit('assignment:description', { assignment_id: parseInt(assignmentId) })
 
-            // Handle response
+            // Handle response - SINGLE RESPONSE
             socket.once('assignment:description_response', (response) => {
-              const aiResponseTime = Date.now()
-              const randomSuffix = Math.random().toString(36).substr(2, 9)
-              const aiResponseId = `assistant-${aiResponseTime}-${randomSuffix}`
-
               let messageContent = ''
               let artifactTitle = 'Assignment Document'
               let artifactContent = ''
@@ -113,50 +110,35 @@ const ChatMessages: React.FC = () => {
                 artifactContent = 'Your assignment is being generated based on your requirements. Please wait...'
               }
 
-              const aiResponse: Message = {
-                id: aiResponseId,
-                type: 'assistant',
-                content: messageContent,
-                timestamp: new Date(aiResponseTime)
-              }
-
-              // Add AI response message - ONLY ONE MESSAGE
-              addMessage(aiResponse)
+              // Set single response message
+              setResponseMessage(messageContent)
 
               // Turn off the initial loading state since we have the message
               setIsLoading(false)
 
               // Add assignment skeleton after message appears
               setTimeout(() => {
-                const artifactTime = Date.now()
-                const artifactRandomSuffix = Math.random().toString(36).substr(2, 9)
                 const artifact: Artifact = {
-                  id: `artifact-${artifactTime}-${artifactRandomSuffix}`,
+                  id: `artifact-${Date.now()}`,
                   title: artifactTitle,
                   type: 'document',
                   content: artifactContent,
                   isGenerating: true // Keep as skeleton
                 }
 
-                // Add artifact with skeleton state (shows skeleton)
-                updateMessageArtifact(aiResponseId, artifact)
-
-                // Keep it as skeleton - don't complete it
-                // The assignment part stays on skeleton as requested
+                // Set artifact with skeleton state (shows skeleton)
+                setArtifact(artifact)
               }, 1000) // 1 second delay before assignment skeleton appears
             })
           } else {
             // Show skeleton loading if socket not available
             console.log('Socket not available, showing skeleton until connection')
             setIsLoading(true)
-
-            // Keep showing skeleton until socket becomes available
-            // You can add retry logic here if needed
           }
         })
       }
     }
-  }, [hasAutoTriggered]) // Removed store functions from dependencies
+  }, [hasAutoTriggered])
 
   const handleEditArtifact = (messageId: string, artifact: Artifact) => {
     setEditingArtifact({ messageId, artifact })
@@ -180,52 +162,46 @@ const ChatMessages: React.FC = () => {
   }
 
   const handleSaveArtifact = (content: string) => {
-    if (editingArtifact) {
-      updateArtifactContent(editingArtifact.messageId, editingArtifact.artifact.id, content)
+    if (editingArtifact && artifact) {
+      // Update local artifact state
+      setArtifact({
+        ...artifact,
+        content: content
+      })
       setEditingArtifact(null)
     }
   }
 
-  const { messages, isLoading } = useChatStore()
+  // Using local state instead of chat store
 
   return (
     <>
       <div className={`${styles.messagesArea} chat-scrollbar`}>
         <div className={styles.innerContainer}>
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`${styles.message} ${message.type === 'user' ? styles.userMessage : styles.assistantMessage}`}
-            >
+          {/* Single Response Message - Not Chat */}
+          {responseMessage && (
+            <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
-                {message.attachments && message.attachments.length > 0 && (
-                  <div className={styles.messageAttachments}>
-                    {message.attachments.map((attachment, index) => (
-                      <span key={index} className={styles.messageAttachment}>
-                        📎 {attachment}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <p className={styles.messageText}>{message.content}</p>
-
-                {message.artifact && (
-                  <div className={styles.artifactContainer}>
-                    <ArtifactCard
-                      artifact={message.artifact}
-                      onEdit={(artifact) => handleEditArtifact(message.id, artifact)}
-                      onDownload={handleDownloadArtifact}
-                    />
-                  </div>
-                )}
+                <p className={styles.messageText}>{responseMessage}</p>
               </div>
               <div className={styles.messageTime}>
-                {isClient && message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {isClient && new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
-          ))}
+          )}
 
-          {/* Skeleton Loading - replaces the typing animation */}
+          {/* Assignment Artifact - Single */}
+          {artifact && (
+            <div className={styles.artifactContainer}>
+              <ArtifactCard
+                artifact={artifact}
+                onEdit={(artifact) => setEditingArtifact(artifact)}
+                onDownload={handleDownloadArtifact}
+              />
+            </div>
+          )}
+
+          {/* Initial Skeleton Loading */}
           {isLoading && (
             <div className={styles.skeletonContainer}>
               <div className={styles.skeletonCard}>
@@ -254,10 +230,10 @@ const ChatMessages: React.FC = () => {
 
       {editingArtifact && (
         <ArtifactEditor
-          artifact={editingArtifact.artifact}
+          artifact={editingArtifact}
           onClose={() => setEditingArtifact(null)}
           onSave={handleSaveArtifact}
-          onDownload={() => handleDownloadArtifact(editingArtifact.artifact)}
+          onDownload={() => handleDownloadArtifact(editingArtifact)}
         />
       )}
     </>
