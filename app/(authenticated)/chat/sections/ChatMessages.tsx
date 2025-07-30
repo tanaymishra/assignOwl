@@ -75,47 +75,86 @@ const ChatMessages: React.FC = () => {
     if (!hasAutoTriggered && messages.length === 0) {
       setHasAutoTriggered(true)
 
-      // Auto-trigger the AI response sequence with unique ID
-      const aiResponseTime = Date.now()
-      const randomSuffix = Math.random().toString(36).substr(2, 9)
-      const aiResponseId = `assistant-${aiResponseTime}-${randomSuffix}`
+      // Get assignment ID from URL params
+      const urlParams = new URLSearchParams(window.location.search)
+      const assignmentId = urlParams.get('id')
 
-      const aiResponse: Message = {
-        id: aiResponseId,
-        type: 'assistant',
-        content: "I understand you need help with your assignment. Based on what you've shared, here are some suggestions:\n\n1. **Start with an outline** - Break down your assignment into smaller, manageable sections.\n\n2. **Research thoroughly** - Use credible academic sources to support your arguments.\n\n3. **Create a timeline** - Set deadlines for each section to avoid last-minute stress.\n\n4. **Review requirements** - Make sure you understand all the assignment criteria.\n\nI'm generating a detailed assignment structure document for you below.",
-        timestamp: new Date(aiResponseTime)
-      }
+      if (assignmentId) {
+        // Import socket store dynamically to avoid SSR issues
+        import('@/app/socket/socketStore').then(({ useSocketStore }) => {
+          const { socket, isConnected } = useSocketStore.getState()
 
-      // Add AI response message
-      addMessage(aiResponse)
-      setIsLoading(true)
+          if (socket && isConnected) {
+            // Show skeleton loading immediately while waiting for response
+            setIsLoading(true)
 
-      // Generate artifact after a short delay (skeleton loading)
-      setTimeout(() => {
-        const artifactTime = Date.now()
-        const artifactRandomSuffix = Math.random().toString(36).substr(2, 9)
-        const artifact: Artifact = {
-          id: `artifact-${artifactTime}-${artifactRandomSuffix}`,
-          title: 'Assignment Structure Guide',
-          type: 'document',
-          content: generateSampleAssignmentContent(),
-          isGenerating: true
-        }
+            // Request assignment description from server
+            socket.emit('assignment:description', { assignment_id: parseInt(assignmentId) })
 
-        // Add artifact with generating state (shows skeleton)
-        updateMessageArtifact(aiResponseId, artifact)
+            // Handle response
+            socket.once('assignment:description_response', (response) => {
+              const aiResponseTime = Date.now()
+              const randomSuffix = Math.random().toString(36).substr(2, 9)
+              const aiResponseId = `assistant-${aiResponseTime}-${randomSuffix}`
 
-        // Complete artifact generation after skeleton loading
-        setTimeout(() => {
-          const completedArtifact: Artifact = {
-            ...artifact,
-            isGenerating: false
+              let messageContent = ''
+              let artifactTitle = 'Assignment Document'
+              let artifactContent = ''
+
+              if (response.generated) {
+                // Show only the description
+                messageContent = response.assignment.description
+                artifactTitle = response.assignment.title
+                artifactContent = response.assignment.description
+              } else {
+                // Show only the server message for pending
+                messageContent = response.message || "Your assignment is being generated..."
+                artifactTitle = 'Assignment Document (Generating...)'
+                artifactContent = 'Your assignment is being generated based on your requirements. Please wait...'
+              }
+
+              const aiResponse: Message = {
+                id: aiResponseId,
+                type: 'assistant',
+                content: messageContent,
+                timestamp: new Date(aiResponseTime)
+              }
+
+              // Add AI response message - ONLY ONE MESSAGE
+              addMessage(aiResponse)
+
+              // Turn off the initial loading state since we have the message
+              setIsLoading(false)
+
+              // Add assignment skeleton after message appears
+              setTimeout(() => {
+                const artifactTime = Date.now()
+                const artifactRandomSuffix = Math.random().toString(36).substr(2, 9)
+                const artifact: Artifact = {
+                  id: `artifact-${artifactTime}-${artifactRandomSuffix}`,
+                  title: artifactTitle,
+                  type: 'document',
+                  content: artifactContent,
+                  isGenerating: true // Keep as skeleton
+                }
+
+                // Add artifact with skeleton state (shows skeleton)
+                updateMessageArtifact(aiResponseId, artifact)
+
+                // Keep it as skeleton - don't complete it
+                // The assignment part stays on skeleton as requested
+              }, 1000) // 1 second delay before assignment skeleton appears
+            })
+          } else {
+            // Show skeleton loading if socket not available
+            console.log('Socket not available, showing skeleton until connection')
+            setIsLoading(true)
+
+            // Keep showing skeleton until socket becomes available
+            // You can add retry logic here if needed
           }
-          updateMessageArtifact(aiResponseId, completedArtifact)
-          setIsLoading(false)
-        }, 3000) // 3 second skeleton loading
-      }, 1000) // 1 second delay before artifact starts
+        })
+      }
     }
   }, [hasAutoTriggered]) // Removed store functions from dependencies
 
