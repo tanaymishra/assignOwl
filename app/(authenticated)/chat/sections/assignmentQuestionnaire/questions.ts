@@ -55,8 +55,8 @@ export const questions: any= [
   },
   {
     id: 'sampleAssignment',
-    text: "Do you have a sample assignment that shows the format and style you need? (This is optional but really helpful! 📄)",
-    required: false,
+    text: "Please upload your assignment guidelines or a sample assignment that shows the format and style required. This is mandatory to ensure I create exactly what you need! 📄",
+    required: true,
     type: 'file',
     accept: ".pdf,.doc,.docx"
   },
