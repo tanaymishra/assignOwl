@@ -37,16 +37,16 @@ export default function ChatPage() {
     if (chatId && chatId !== currentChatId) {
       // ID has changed, reset all state
       console.log(`Chat ID changed from ${currentChatId} to ${chatId} - resetting state`)
-      
+
       // Reset chat store (messages, loading, etc.)
       resetChat()
-      
+
       // Reset questionnaire store (questions, answers, etc.)
       resetQuestionnaire()
-      
+
       // Update current chat ID
       setCurrentChatId(chatId)
-      
+
       // TODO: Here you would typically fetch the assignment status from server
       // to determine if questionnaire is completed or not
       // For now, we'll start fresh with questionnaire

@@ -183,21 +183,21 @@ const ChatMessages: React.FC = () => {
             <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
                 <p className={styles.messageText}>{responseMessage}</p>
+                
+                {/* Assignment Artifact - Inside Message Content */}
+                {artifact && (
+                  <div className={styles.artifactContainer}>
+                    <ArtifactCard
+                      artifact={artifact}
+                      onEdit={(artifact) => setEditingArtifact(artifact)}
+                      onDownload={handleDownloadArtifact}
+                    />
+                  </div>
+                )}
               </div>
               <div className={styles.messageTime}>
                 {isClient && new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
-            </div>
-          )}
-
-          {/* Assignment Artifact - Single */}
-          {artifact && (
-            <div className={styles.artifactContainer}>
-              <ArtifactCard
-                artifact={artifact}
-                onEdit={(artifact) => setEditingArtifact(artifact)}
-                onDownload={handleDownloadArtifact}
-              />
             </div>
           )}
 
