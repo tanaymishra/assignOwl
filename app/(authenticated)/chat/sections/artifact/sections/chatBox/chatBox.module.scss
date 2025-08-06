@@ -92,20 +92,20 @@
     flex-direction: row-reverse;
     
     .messageContent {
-      background: var(--color-primary);
+      background: var(--color-accent-primary);
       color: white;
       
       p {
-        color: white;
+        color: white !important;
       }
       
       .messageTime {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(255, 255, 255, 0.7) !important;
       }
     }
     
     .messageIcon {
-      background: var(--color-accent-primary);
+      background: var(--color-accent-secondary);
       color: white;
       
       svg {
@@ -172,6 +172,23 @@
   }
 }
 
+.changesIndicator {
+  margin: 8px 0 4px 0;
+  padding: 4px 8px;
+  background: var(--color-success-background);
+  border: 1px solid var(--color-success-border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: var(--color-success);
+  display: inline-block;
+}
+
+.changesMessage {
+  .messageContent {
+    border-left: 3px solid var(--color-success);
+  }
+}
+
 .typingIndicator {
   display: flex;
   align-items: center;
@@ -219,8 +236,8 @@
   transition: all 0.3s ease;
   
   &:focus-within {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.1);
+    border-color: var(--color-accent-primary);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
   }
 }
 

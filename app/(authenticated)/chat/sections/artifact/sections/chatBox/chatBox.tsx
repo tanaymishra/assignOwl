@@ -60,12 +60,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
     setTimeout(() => {
       // Determine if this will make changes to the document
       const willMakeChanges = onDocumentUpdate && userMessage.content.toLowerCase().includes('change')
-      
+
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
         type: 'assistant' as const,
-        content: willMakeChanges 
-          ? 'Changes made to your document.' 
+        content: willMakeChanges
+          ? 'Changes made to your document.'
           : `I understand you want to: "${userMessage.content}". I'll help you update the document accordingly.`,
         timestamp: new Date().toISOString(),
         responseType: willMakeChanges ? 'changes' as const : 'text' as const
