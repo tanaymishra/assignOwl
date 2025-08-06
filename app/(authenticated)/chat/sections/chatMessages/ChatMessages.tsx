@@ -10,21 +10,20 @@ import { fetchAssignmentDetails } from './functions/requestUpdateStatus,'
 import { useSocketStore } from '@/app/socket'
 import { useSearchParams } from 'next/navigation'
 const ChatMessages: React.FC = () => {
-  const {value,update}=useMessagesStore()
-  const [artifact, setArtifact] = useState<Artifact | null>(null)
+  const { value, update } = useMessagesStore()
   const [editingArtifact, setEditingArtifact] = useState<Artifact | null>(null)
   const [isClient, setIsClient] = useState(false)
-  const {socket}=useSocketStore()
-  const params=useSearchParams()
+  const { socket } = useSocketStore()
+  const params = useSearchParams()
 
   useEffect(() => {
     setIsClient(true)
   }, [])
-  useEffect(()=>{
-    const assignmentId= params.get("id")
-    const unMount=fetchAssignmentDetails(assignmentId)
+  useEffect(() => {
+    const assignmentId = params.get("id")
+    const unMount = fetchAssignmentDetails(assignmentId)
     return unMount;
-  },[socket])
+  }, [socket])
 
   const handleDownloadArtifact = (artifact: Artifact) => {
     // Simple HTML download
@@ -51,11 +50,25 @@ const ChatMessages: React.FC = () => {
             <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
                 <p className={styles.messageText}>{value.description}</p>
-                
-                {value.has_generated_content && (
+
+                {(value.has_generated_content || value.status === 'generating') && (
                   <div className={styles.artifactContainer}>
                     <ArtifactCard
-                      artifact={}
+                      artifact={
+                        value.generated_content ? {
+                          id: value.generated_content.generation_id.toString(),
+                          title: value.title || 'Generated Assignment',
+                          type: 'document' as const,
+                          content: value.generated_content.content,
+                          isGenerating: false
+                        } : {
+                          id: 'generating',
+                          title: value.title || 'Assignment',
+                          type: 'document' as const,
+                          content: '',
+                          isGenerating: true
+                        }
+                      }
                       onEdit={(artifact) => setEditingArtifact(artifact)}
                       onDownload={handleDownloadArtifact}
                     />
@@ -73,8 +86,8 @@ const ChatMessages: React.FC = () => {
       {editingArtifact && (
         <ArtifactEditor
           artifact={editingArtifact}
-          onClose={() => {}}
-          onSave={()=>{}}
+          onClose={() => { }}
+          onSave={() => { }}
           onDownload={() => handleDownloadArtifact(editingArtifact)}
         />
       )}

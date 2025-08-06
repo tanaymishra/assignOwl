@@ -8,6 +8,13 @@ interface GeneratedContent {
     generation_id: number;
 }
 
+interface ChatMessage {
+    id: string;
+    type: 'user' | 'assistant';
+    content: string;
+    timestamp: string;
+}
+
 interface AssignmentData {
     success: boolean;
     assignmentId: number;
@@ -27,11 +34,15 @@ interface AssignmentData {
     has_description: boolean;
     has_generated_content: boolean;
     timestamp: string;
+    // Chat messages array
+    chat_messages: ChatMessage[];
 }
 
 interface MessagesStore {
     value: AssignmentData;
     update: (key: keyof AssignmentData, value: any) => void;
+    addChatMessage: (message: ChatMessage) => void;
+    setChatMessages: (messages: ChatMessage[]) => void;
 }
 
 export const useMessagesStore = create<MessagesStore>((set) => ({
@@ -53,9 +64,20 @@ export const useMessagesStore = create<MessagesStore>((set) => ({
         has_title: false,
         has_description: false,
         has_generated_content: false,
-        timestamp: ""
+        timestamp: "",
+        // Chat messages array
+        chat_messages: []
     },
     update: (key, value) => set((state) => ({
         value: { ...state.value, [key]: value }
+    })),
+    addChatMessage: (message) => set((state) => ({
+        value: {
+            ...state.value,
+            chat_messages: [...state.value.chat_messages, message]
+        }
+    })),
+    setChatMessages: (messages) => set((state) => ({
+        value: { ...state.value, chat_messages: messages }
     })),
 }));

@@ -3,14 +3,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Send, MessageSquare, Bot, User } from 'lucide-react'
 import { Artifact } from '../../../../store/chatStore'
+import { useMessagesStore } from '../../../chatMessages/store/store'
 import styles from './chatBox.module.scss'
-
-interface ChatMessage {
-  id: string
-  type: 'user' | 'assistant'
-  content: string
-  timestamp: Date
-}
 
 interface ChatBoxProps {
   artifact: Artifact
@@ -18,48 +12,59 @@ interface ChatBoxProps {
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'welcome',
-      type: 'assistant',
-      content: `I'm here to help you with your document: "${artifact.title}". You can ask me to make changes, add content, or improve the document in any way.`,
-      timestamp: new Date()
-    }
-  ])
+  const { value, addChatMessage } = useMessagesStore()
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const initializedArtifacts = useRef<Set<string>>(new Set())
+
+  // Initialize welcome message if no messages exist for this artifact
+  useEffect(() => {
+    const artifactWelcomeId = `welcome-${artifact.id}`
+    const hasWelcomeForThisArtifact = value.chat_messages.some(msg => msg.id === artifactWelcomeId)
+
+    if (!hasWelcomeForThisArtifact && !initializedArtifacts.current.has(artifact.id)) {
+      const welcomeMessage = {
+        id: artifactWelcomeId,
+        type: 'assistant' as const,
+        content: `I'm here to help you with your document: "${artifact.title}". You can ask me to make changes, add content, or improve the document in any way.`,
+        timestamp: new Date().toISOString()
+      }
+      addChatMessage(welcomeMessage)
+      initializedArtifacts.current.add(artifact.id)
+    }
+  }, [artifact.id, artifact.title, addChatMessage])
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [value.chat_messages])
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return
 
-    const userMessage: ChatMessage = {
+    const userMessage = {
       id: Date.now().toString(),
-      type: 'user',
+      type: 'user' as const,
       content: inputValue.trim(),
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     }
 
-    setMessages(prev => [...prev, userMessage])
+    addChatMessage(userMessage)
     setInputValue('')
     setIsLoading(true)
 
     // Simulate AI response
     setTimeout(() => {
-      const assistantMessage: ChatMessage = {
+      const assistantMessage = {
         id: (Date.now() + 1).toString(),
-        type: 'assistant',
+        type: 'assistant' as const,
         content: `I understand you want to: "${userMessage.content}". I'll help you update the document accordingly. Let me make those changes for you.`,
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       }
 
-      setMessages(prev => [...prev, assistantMessage])
+      addChatMessage(assistantMessage)
       setIsLoading(false)
 
       // Simulate document update
@@ -72,7 +77,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
     }, 1500)
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
@@ -94,12 +99,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
 
       {/* Messages Area */}
       <div className={styles.messagesArea}>
-        {messages.map((message) => (
+        {value.chat_messages.map((message) => (
           <div
             key={message.id}
-            className={`${styles.message} ${
-              message.type === 'user' ? styles.userMessage : styles.assistantMessage
-            }`}
+            className={`${styles.message} ${message.type === 'user' ? styles.userMessage : styles.assistantMessage
+              }`}
           >
             <div className={styles.messageIcon}>
               {message.type === 'user' ? <User size={16} /> : <Bot size={16} />}
@@ -107,12 +111,12 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
             <div className={styles.messageContent}>
               <p>{message.content}</p>
               <span className={styles.messageTime}>
-                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
           </div>
         ))}
-        
+
         {isLoading && (
           <div className={`${styles.message} ${styles.assistantMessage} ${styles.loadingMessage}`}>
             <div className={styles.messageIcon}>
@@ -127,7 +131,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
             </div>
           </div>
         )}
-        
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -139,7 +143,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
             placeholder="Ask me to modify the document..."
             className={styles.input}
             disabled={isLoading}
