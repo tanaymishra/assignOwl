@@ -56,32 +56,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
     setInputValue('')
     setIsLoading(true)
 
-    // Simulate AI response
+    // TODO: Integrate with actual AI service
+    // For now, just stop loading after user sends message
     setTimeout(() => {
-      // Determine if this will make changes to the document
-      const willMakeChanges = onDocumentUpdate && userMessage.content.toLowerCase().includes('change')
-
-      const assistantMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'assistant' as const,
-        content: willMakeChanges
-          ? 'Changes made to your document.'
-          : `I understand you want to: "${userMessage.content}". I'll help you update the document accordingly.`,
-        timestamp: new Date().toISOString(),
-        responseType: willMakeChanges ? 'changes' as const : 'text' as const
-      }
-
-      addChatMessage(assistantMessage)
       setIsLoading(false)
-
-      // Simulate document update if changes were made
-      if (willMakeChanges && onDocumentUpdate) {
-        // This is where you would integrate with your AI service
-        // For now, just add a note to the document
-        const updatedContent = artifact.content + `\n\n<p><em>Update requested: ${userMessage.content}</em></p>`
-        onDocumentUpdate(updatedContent)
-      }
-    }, 1500)
+    }, 500)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
