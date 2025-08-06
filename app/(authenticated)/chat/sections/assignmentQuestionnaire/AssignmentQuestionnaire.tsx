@@ -187,7 +187,9 @@ export const AssignmentQuestionnaire: React.FC<AssignmentQuestionnaireProps> = (
           update({ key: 'messages', value: [...currentMessages, botMessage] });
         }
       } else {
-        // All questions completed
+        // All questions completed - increment currentQuesion to indicate completion
+        update({ key: 'currentQuesion', value: questions.length });
+        
         const completionMessage = {
           id: (Date.now() + 1).toString(),
           type: 'bot' as const,
