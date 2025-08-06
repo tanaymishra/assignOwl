@@ -49,7 +49,7 @@ const ChatMessages: React.FC = () => {
     <>
       <div className={`${styles.messagesArea} chat-scrollbar`}>
         <div className={styles.innerContainer}>
-          {true ? (
+          {!value.description ? (
             // Show loading skeleton when description is not available
             <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
