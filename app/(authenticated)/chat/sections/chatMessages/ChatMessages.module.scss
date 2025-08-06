@@ -168,13 +168,13 @@
   // width: 100%;
   background: linear-gradient(
     90deg,
-    var(--color-background-tertiary, #f3f4f6) 25%,
-    var(--color-border-primary, #e5e7eb) 50%,
-    var(--color-background-tertiary, #f3f4f6) 75%
+    var(--color-background-tertiary, #f3f4f6) 0%,
+    var(--color-border-secondary, #d1d5db) 50%,
+    var(--color-background-tertiary, #f3f4f6) 100%
   );
   background-size: 200% 100%;
   border-radius: 0.25rem;
-  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  animation: skeletonShimmer 2s ease-in-out infinite;
 
   &:first-child {
     width: 300px;
