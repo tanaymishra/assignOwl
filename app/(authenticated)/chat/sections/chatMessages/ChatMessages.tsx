@@ -53,11 +53,39 @@ const ChatMessages: React.FC = () => {
             // Show loading skeleton when description is not available
             <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
+                {/* Description skeleton */}
                 <div className={styles.skeletonLoader}>
                   <div className={styles.skeletonLine}></div>
                   <div className={styles.skeletonLine}></div>
-                  <div className={styles.skeletonLine} style={{ width: '70%' }}></div>
+                  <div className={styles.skeletonLine}></div>
+                  <div className={styles.skeletonLine}></div>
+                  <div className={styles.skeletonLine} style={{ width: '60%' }}></div>
                 </div>
+                
+                {/* Artifact skeleton */}
+                <div className={styles.artifactContainer}>
+                  <div className={styles.artifactSkeleton}>
+                    <div className={styles.artifactSkeletonHeader}>
+                      <div className={styles.artifactSkeletonIcon}></div>
+                      <div className={styles.artifactSkeletonInfo}>
+                        <div className={styles.skeletonLine} style={{ width: '180px', height: '1.2rem' }}></div>
+                        <div className={styles.skeletonLine} style={{ width: '80px', height: '0.9rem', marginTop: '4px' }}></div>
+                      </div>
+                    </div>
+                    <div className={styles.artifactSkeletonPreview}>
+                      <div className={styles.skeletonLine} style={{ width: '100%', height: '0.9rem' }}></div>
+                      <div className={styles.skeletonLine} style={{ width: '90%', height: '0.9rem' }}></div>
+                      <div className={styles.skeletonLine} style={{ width: '70%', height: '0.9rem' }}></div>
+                    </div>
+                    <div className={styles.artifactSkeletonActions}>
+                      <div className={styles.skeletonButton}></div>
+                      <div className={styles.skeletonButton}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.messageTime}>
+                <div className={styles.skeletonLine} style={{ width: '60px', height: '0.75rem' }}></div>
               </div>
             </div>
           ) : (

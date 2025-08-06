@@ -196,6 +196,72 @@
   }
 }
 
+// Artifact Skeleton Styles
+.artifactSkeleton {
+  background: var(--color-background-primary, #ffffff);
+  border: 1px solid var(--color-border-primary, #e5e7eb);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.artifactSkeletonHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.artifactSkeletonIcon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(
+    90deg,
+    var(--color-background-tertiary, #f3f4f6) 25%,
+    var(--color-border-primary, #e5e7eb) 50%,
+    var(--color-background-tertiary, #f3f4f6) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+.artifactSkeletonInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.artifactSkeletonPreview {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--color-background-secondary, #f9fafb);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.artifactSkeletonActions {
+  display: flex;
+  gap: 8px;
+}
+
+.skeletonButton {
+  width: 80px;
+  height: 36px;
+  background: linear-gradient(
+    90deg,
+    var(--color-background-tertiary, #f3f4f6) 25%,
+    var(--color-border-primary, #e5e7eb) 50%,
+    var(--color-background-tertiary, #f3f4f6) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+}
+
 // Responsive Design
 @media (max-width: 768px) {
   .message {
