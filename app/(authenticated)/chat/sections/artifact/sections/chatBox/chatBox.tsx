@@ -100,7 +100,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
         </div>
         <div className={styles.headerTitle}>
           <h3>Document Chat</h3>
-          <p>Chat about: {artifact.title}</p>
+          <p>
+            Chat about: <abbr title={artifact.title}>
+              {artifact.title.length > 30 ? `${artifact.title.slice(0, 30)}...` : artifact.title}
+            </abbr>
+          </p>
         </div>
       </div>
 

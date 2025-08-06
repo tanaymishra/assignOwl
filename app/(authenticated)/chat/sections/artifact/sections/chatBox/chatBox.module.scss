@@ -15,6 +15,8 @@
   border-bottom: 1px solid var(--color-border-primary);
   background: var(--color-background-secondary);
   transition: background-color 0.3s ease;
+  overflow: hidden; // Prevent horizontal overflow
+  min-width: 0; // Allow flex children to shrink
 }
 
 .headerIcon {
@@ -36,12 +38,17 @@
 
 .headerTitle {
   flex: 1;
+  min-width: 0; // Allow flex child to shrink
+  overflow: hidden; // Prevent content overflow
   
   h3 {
     margin: 0;
     font-size: 1rem;
     font-weight: 600;
     color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   p {
@@ -51,6 +58,24 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0; // Ensures flex child can shrink
+    
+    abbr {
+      text-decoration: none;
+      border-bottom: 1px dotted var(--color-text-secondary);
+      cursor: help;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: bottom;
+      
+      &:hover {
+        border-bottom-color: var(--color-accent-primary);
+        color: var(--color-accent-primary);
+      }
+    }
   }
 }
 
@@ -85,7 +110,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  max-width: 85%;
+  max-width: 100%;
   
   &.userMessage {
     align-self: flex-end;
