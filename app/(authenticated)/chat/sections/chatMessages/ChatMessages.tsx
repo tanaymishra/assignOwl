@@ -8,18 +8,22 @@ import styles from './ChatMessages.module.scss'
 import { useMessagesStore } from './store/store'
 import { fetchAssignmentDetails } from './functions/requestUpdateStatus,'
 import { useSocketStore } from '@/app/socket'
+import { useSearchParams } from 'next/navigation'
 const ChatMessages: React.FC = () => {
   const {value,update}=useMessagesStore()
   const [artifact, setArtifact] = useState<Artifact | null>(null)
   const [editingArtifact, setEditingArtifact] = useState<Artifact | null>(null)
   const [isClient, setIsClient] = useState(false)
   const {socket}=useSocketStore()
+  const params=useSearchParams()
 
   useEffect(() => {
     setIsClient(true)
   }, [])
   useEffect(()=>{
-    fetchAssignmentDetails()
+    const assignmentId= params.get("id")
+    const unMount=fetchAssignmentDetails(assignmentId)
+    return unMount;
   },[socket])
 
   const handleDownloadArtifact = (artifact: Artifact) => {
