@@ -43,12 +43,13 @@ const ChatMessages: React.FC = () => {
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
   }
+  console.log(value, "Store Value")
 
   return (
     <>
       <div className={`${styles.messagesArea} chat-scrollbar`}>
         <div className={styles.innerContainer}>
-          {!value.description ? (
+          {true ? (
             // Show loading skeleton when description is not available
             <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>

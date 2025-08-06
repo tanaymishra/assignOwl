@@ -156,29 +156,34 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.5rem 0;
+  min-height: 3rem; // Ensure it takes up space
+  width: 100%; // Ensure parent has width
+  max-width: 400px; // Reasonable max width
 }
 
 .skeletonLine {
   height: 1rem;
-  background: linear-gradient(90deg, 
-    var(--color-background-tertiary) 25%, 
-    var(--color-border-primary) 50%, 
-    var(--color-background-tertiary) 75%
+  width: 300px; // Fixed width as fallback
+  background: linear-gradient(
+    90deg,
+    var(--color-background-tertiary, #f3f4f6) 25%,
+    var(--color-border-primary, #e5e7eb) 50%,
+    var(--color-background-tertiary, #f3f4f6) 75%
   );
   background-size: 200% 100%;
   border-radius: 0.25rem;
   animation: skeletonShimmer 1.5s ease-in-out infinite;
-  
+
   &:first-child {
-    width: 100%;
+    width: 300px;
   }
-  
+
   &:nth-child(2) {
-    width: 90%;
+    width: 250px;
   }
-  
-  &:last-child {
-    width: 70%;
+
+  &:nth-child(3) {
+    width: 200px;
   }
 }
 
