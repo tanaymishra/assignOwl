@@ -29,7 +29,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
         id: artifactWelcomeId,
         type: 'assistant' as const,
         content: `I'm here to help you with your document: "${artifact.title}". You can ask me to make changes, add content, or improve the document in any way.`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        responseType: 'text' as const
       }
       addChatMessage(welcomeMessage)
       initializedArtifacts.current.add(artifact.id)
@@ -57,18 +58,24 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
 
     // Simulate AI response
     setTimeout(() => {
+      // Determine if this will make changes to the document
+      const willMakeChanges = onDocumentUpdate && userMessage.content.toLowerCase().includes('change')
+      
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
         type: 'assistant' as const,
-        content: `I understand you want to: "${userMessage.content}". I'll help you update the document accordingly. Let me make those changes for you.`,
-        timestamp: new Date().toISOString()
+        content: willMakeChanges 
+          ? 'Changes made to your document.' 
+          : `I understand you want to: "${userMessage.content}". I'll help you update the document accordingly.`,
+        timestamp: new Date().toISOString(),
+        responseType: willMakeChanges ? 'changes' as const : 'text' as const
       }
 
       addChatMessage(assistantMessage)
       setIsLoading(false)
 
-      // Simulate document update
-      if (onDocumentUpdate) {
+      // Simulate document update if changes were made
+      if (willMakeChanges && onDocumentUpdate) {
         // This is where you would integrate with your AI service
         // For now, just add a note to the document
         const updatedContent = artifact.content + `\n\n<p><em>Update requested: ${userMessage.content}</em></p>`
@@ -103,13 +110,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ artifact, onDocumentUpdate }) => {
           <div
             key={message.id}
             className={`${styles.message} ${message.type === 'user' ? styles.userMessage : styles.assistantMessage
-              }`}
+              } ${message.responseType === 'changes' ? styles.changesMessage : ''}`}
           >
             <div className={styles.messageIcon}>
               {message.type === 'user' ? <User size={16} /> : <Bot size={16} />}
             </div>
             <div className={styles.messageContent}>
               <p>{message.content}</p>
+              {message.responseType === 'changes' && (
+                <div className={styles.changesIndicator}>
+                  <span>📝 Document updated</span>
+                </div>
+              )}
               <span className={styles.messageTime}>
                 {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>

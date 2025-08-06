@@ -13,6 +13,8 @@ interface ChatMessage {
     type: 'user' | 'assistant';
     content: string;
     timestamp: string;
+    // Response type for assistant messages - 'changes' if document was modified, 'text' for normal conversation
+    responseType?: 'text' | 'changes';
 }
 
 interface AssignmentData {
