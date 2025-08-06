@@ -61,7 +61,7 @@ const ChatMessages: React.FC = () => {
                   <div className={styles.skeletonLine}></div>
                   <div className={styles.skeletonLine} style={{ width: '60%' }}></div>
                 </div>
-                
+
                 {/* Artifact skeleton */}
                 <div className={styles.artifactContainer}>
                   <div className={styles.artifactSkeleton}>
