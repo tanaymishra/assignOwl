@@ -16,6 +16,8 @@ const ChatMessages: React.FC = () => {
   const { socket } = useSocketStore()
   const params = useSearchParams()
 
+
+
   useEffect(() => {
     setIsClient(true)
   }, [])
@@ -46,7 +48,19 @@ const ChatMessages: React.FC = () => {
     <>
       <div className={`${styles.messagesArea} chat-scrollbar`}>
         <div className={styles.innerContainer}>
-          {value.description && (
+          {!value.description ? (
+            // Show loading skeleton when description is not available
+            <div className={`${styles.message} ${styles.assistantMessage}`}>
+              <div className={styles.messageContent}>
+                <div className={styles.skeletonLoader}>
+                  <div className={styles.skeletonLine}></div>
+                  <div className={styles.skeletonLine}></div>
+                  <div className={styles.skeletonLine} style={{ width: '70%' }}></div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Show description when available
             <div className={`${styles.message} ${styles.assistantMessage}`}>
               <div className={styles.messageContent}>
                 <p className={styles.messageText}>{value.description}</p>

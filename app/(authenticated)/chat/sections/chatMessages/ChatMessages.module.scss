@@ -84,6 +84,12 @@
   margin-bottom: 0.5rem;
 }
 
+.artifactContainer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-primary);
+}
+
 // Loading Animation - Typewriter Effect
 .loadingMessage {
   .messageContent {
@@ -141,6 +147,47 @@
   51%,
   100% {
     opacity: 0;
+  }
+}
+
+// Skeleton Loading Styles
+.skeletonLoader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.skeletonLine {
+  height: 1rem;
+  background: linear-gradient(90deg, 
+    var(--color-background-tertiary) 25%, 
+    var(--color-border-primary) 50%, 
+    var(--color-background-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 0.25rem;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
+  
+  &:first-child {
+    width: 100%;
+  }
+  
+  &:nth-child(2) {
+    width: 90%;
+  }
+  
+  &:last-child {
+    width: 70%;
+  }
+}
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 
