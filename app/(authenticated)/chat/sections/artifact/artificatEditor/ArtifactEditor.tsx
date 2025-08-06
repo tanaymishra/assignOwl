@@ -2,20 +2,20 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import { Artifact } from '../../store/chatStore'
+import { Artifact } from '../../../store/chatStore'
 import styles from './ArtifactEditor.module.scss'
 import {
   cleanHtml,
   createAnimationHandlers,
   createEditorHandlers,
   type EditorAnimationState
-} from './functions'
+} from '../functions'
 import { 
   TopBar, 
   Toolbar, 
   DocumentEditor,
   ChatBox 
-} from './sections'
+} from '../sections'
 
 interface ArtifactEditorProps {
   artifact: Artifact

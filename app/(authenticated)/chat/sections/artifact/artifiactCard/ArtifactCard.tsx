@@ -2,11 +2,11 @@
 
 import React from 'react'
 import { FileText, Download, Edit3 } from 'lucide-react'
-import { Artifact } from '../../store/chatStore'
+import { Artifact } from '../../../store/chatStore'
 import styles from './ArtifactCard.module.scss'
 
 interface ArtifactCardProps {
-  artifact: Artifact
+  artifact: any
   onEdit: (artifact: Artifact) => void
   onDownload: (artifact: Artifact) => void
 }
@@ -46,22 +46,22 @@ const ArtifactCard: React.FC<ArtifactCardProps> = ({ artifact, onEdit, onDownloa
           </div>
         </div>
       </div>
-      
+
       <div className={styles.artifactPreview}>
         <p className={styles.previewText}>
           {artifact.content.substring(0, 120)}...
         </p>
       </div>
-      
+
       <div className={styles.artifactActions}>
-        <button 
+        <button
           className={styles.actionButton}
           onClick={() => onEdit(artifact)}
         >
           <Edit3 size={16} />
           Edit
         </button>
-        <button 
+        <button
           className={styles.actionButton}
           onClick={() => onDownload(artifact)}
         >

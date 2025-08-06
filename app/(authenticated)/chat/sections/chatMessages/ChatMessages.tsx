@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { Artifact } from '../../store/chatStore'
-import ArtifactCard from '../artifact/ArtifactCard'
-import ArtifactEditor from '../artifact/ArtifactEditor'
+import ArtifactCard from '../artifact/artifiactCard/ArtifactCard'
+import ArtifactEditor from '../artifact/artificatEditor/ArtifactEditor'
 import styles from './ChatMessages.module.scss'
 import { useMessagesStore } from './store/store'
 import { fetchAssignmentDetails } from './functions/requestUpdateStatus,'
@@ -43,17 +43,6 @@ const ChatMessages: React.FC = () => {
     URL.revokeObjectURL(url)
   }
 
-  const handleSaveArtifact = (content: string) => {
-    if (editingArtifact && artifact) {
-      // Update local artifact state
-      setArtifact({
-        ...artifact,
-        content: content
-      })
-      setEditingArtifact(null)
-    }
-  }
-
   return (
     <>
       <div className={`${styles.messagesArea} chat-scrollbar`}>
@@ -63,10 +52,10 @@ const ChatMessages: React.FC = () => {
               <div className={styles.messageContent}>
                 <p className={styles.messageText}>{value.description}</p>
                 
-                {artifact && (
+                {value.has_generated_content && (
                   <div className={styles.artifactContainer}>
                     <ArtifactCard
-                      artifact={artifact}
+                      artifact={}
                       onEdit={(artifact) => setEditingArtifact(artifact)}
                       onDownload={handleDownloadArtifact}
                     />
@@ -84,8 +73,8 @@ const ChatMessages: React.FC = () => {
       {editingArtifact && (
         <ArtifactEditor
           artifact={editingArtifact}
-          onClose={() => setEditingArtifact(null)}
-          onSave={handleSaveArtifact}
+          onClose={() => {}}
+          onSave={()=>{}}
           onDownload={() => handleDownloadArtifact(editingArtifact)}
         />
       )}
