@@ -24,6 +24,7 @@
   display: flex;
   flex-direction: column;
   word-wrap: break-word;
+  width: 100%;
 }
 
 .userMessage {
@@ -41,6 +42,7 @@
 .assistantMessage {
   align-self: flex-start;
   align-items: flex-start;
+  width: 100%;
 
   .messageContent {
     background-color: var(--color-background-secondary);
@@ -53,6 +55,7 @@
 
 .messageContent {
   margin-bottom: 0.25rem;
+  width: 100%;
 }
 
 .messageText {
@@ -158,12 +161,11 @@
   padding: 0.5rem 0;
   min-height: 3rem; // Ensure it takes up space
   width: 100%; // Ensure parent has width
-  max-width: 400px; // Reasonable max width
 }
 
 .skeletonLine {
   height: 1rem;
-  width: 300px; // Fixed width as fallback
+  // width: 100%;
   background: linear-gradient(
     90deg,
     var(--color-background-tertiary, #f3f4f6) 25%,
