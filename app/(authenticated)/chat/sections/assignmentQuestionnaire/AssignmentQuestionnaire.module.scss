@@ -8,7 +8,7 @@
 }
 
 .header {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--color-background-primary-rgb), 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(16, 185, 129, 0.1);
   padding: 1.5rem 2rem;
@@ -32,7 +32,7 @@
   gap: 0.75rem;
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   
   span {
     background: var(--color-accent-gradient);
@@ -245,6 +245,7 @@
   line-height: 1.6;
   margin: 0;
   word-wrap: break-word;
+  color: var(--color-text-primary);
 }
 
 .messageTime {
@@ -292,7 +293,7 @@
   border-radius: 12px;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   outline: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-sm);
@@ -315,7 +316,7 @@
   
   option {
     background: var(--color-background-primary);
-    color: var(--text-primary);
+    color: var(--color-text-primary);
     padding: 0.5rem;
   }
 }
@@ -350,7 +351,7 @@
   min-height: 24px;
   max-height: 300px;
   height: auto;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   line-height: 1.5;
   font-family: inherit;
   overflow-y: auto;
