@@ -47,13 +47,17 @@ export default function ChatPage() {
 
       // Update current chat ID
       setCurrentChatId(chatId)
+    }
+  }, [chatId, currentChatId, resetChat])
 
-      // Fetch assignment status - this will determine if questionnaire is needed
+  // Separate effect to wait for socket connection before fetching assignment status
+  React.useEffect(() => {
+    if (chatId && socket && socket.connected) {
+      console.log("Socket connected, fetching assignment status for:", chatId)
       const cleanup = fetchAssignmentStatus(chatId)
-
       return cleanup
     }
-  }, [chatId, currentChatId, resetChat, socket, update, resetQuestionnaire])
+  }, [chatId, socket])
 
 
 

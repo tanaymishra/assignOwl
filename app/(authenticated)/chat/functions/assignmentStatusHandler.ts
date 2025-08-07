@@ -1,15 +1,15 @@
 import { useSocketStore } from "@/app/socket"
 import useAssignmentQuestionnaireStore from "../sections/assignmentQuestionnaire/store/assignMentQuestionare"
-export function fetchAssignmentStatus(assignmentId:string) {
+export function fetchAssignmentStatus(assignmentId: string) {
     const socket = useSocketStore.getState().socket
-    const {update,reset} = useAssignmentQuestionnaireStore.getState()
-    console.log(socket,"Socket Check")
+    const { update, reset } = useAssignmentQuestionnaireStore.getState()
+    console.log(socket, "Socket Check")
     if (!socket || !assignmentId) return
 
     console.log("Fetching assignment status for ID:", assignmentId)
 
     // Request assignment status from serveruseAssignmentQuestionnaireStore
-    socket.emit("assignment:description", {
+    socket.emit("assignment:status", {
         assignment_id: Number(assignmentId)
     })
 
@@ -19,7 +19,7 @@ export function fetchAssignmentStatus(assignmentId:string) {
         if (data.success) {
             // Update messages store with assignment data
             Object.keys(data).forEach(key => {
-                update({key:key,value:data[key]})
+                update({ key: key, value: data[key] })
             })
 
             // Check if questionnaire is needed
@@ -32,10 +32,10 @@ export function fetchAssignmentStatus(assignmentId:string) {
     }
 
     // Listen for assignment details
-    socket.on("assignment:details", handleAssignmentDetails)
+    socket.on("assignment:status_update", handleAssignmentDetails)
 
     // Return cleanup function
     return () => {
-        socket.off("assignment:details", handleAssignmentDetails)
+        socket.off("assignment:status_update", handleAssignmentDetails)
     }
 }
