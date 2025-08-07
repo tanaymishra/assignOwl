@@ -9,7 +9,6 @@ import useAssignmentQuestionnaireStore from './sections/assignmentQuestionnaire/
 import { questions } from './sections/assignmentQuestionnaire/questions'
 import { fetchAssignmentStatus } from './functions/assignmentStatusHandler'
 import { useSocketStore } from '@/app/socket'
-import { useMessagesStore } from './sections/chatMessages/store/store'
 import styles from './page.module.scss'
 
 export default function ChatPage() {
@@ -17,16 +16,15 @@ export default function ChatPage() {
   const chatId = searchParams.get('id')
   const { createNewChat } = useCreateNewChat()
   const [currentChatId, setCurrentChatId] = React.useState<string | null>(null)
+  const fetchedAssignments = React.useRef<Set<string>>(new Set())
 
   const { resetChat } = useChatStore()
-  const { socket } = useSocketStore()
-  const { update } = useMessagesStore()
+  const { isConnected } = useSocketStore()
 
   // Get questionnaire state
-  const { currentQuesion, reset: resetQuestionnaire } = useAssignmentQuestionnaireStore()
+  const { currentQuesion } = useAssignmentQuestionnaireStore()
 
-  // Simple approach: use questionnaire store directly, but default to completed
-  // This way socket can control it by updating the store
+  // Check if questionnaire is completed
   const isQuestionnaireCompleted = currentQuesion >= questions.length
 
   // Auto-create new chat if no ID exists
@@ -36,28 +34,36 @@ export default function ChatPage() {
     }
   }, [chatId, createNewChat])
 
-  // Handle ID changes and fetch assignment status
+  // Handle chat ID changes - reset state and clear fetch tracking
   React.useEffect(() => {
     if (chatId && chatId !== currentChatId) {
-      // ID has changed, reset all state
-      console.log(`Chat ID changed from ${currentChatId} to ${chatId} - resetting state`)
+      console.log(`Chat ID changed from ${currentChatId} to ${chatId}`)
 
-      // Reset chat store (messages, loading, etc.)
+      // Reset chat store
       resetChat()
+
+      // Clear fetch tracking for new chat
+      fetchedAssignments.current.clear()
 
       // Update current chat ID
       setCurrentChatId(chatId)
     }
   }, [chatId, currentChatId, resetChat])
 
-  // Separate effect to wait for socket connection before fetching assignment status
+  // Fetch assignment status once per chat when socket is connected
   React.useEffect(() => {
-    if (chatId && socket && socket.connected) {
-      console.log("Socket connected, fetching assignment status for:", chatId)
+    if (chatId && isConnected && !fetchedAssignments.current.has(chatId)) {
+      console.log("Fetching assignment status for:", chatId)
+
+      // Mark as fetched immediately to prevent duplicates
+      fetchedAssignments.current.add(chatId)
+
+      // Fetch assignment status
       const cleanup = fetchAssignmentStatus(chatId)
+
       return cleanup
     }
-  }, [chatId, socket])
+  }, [chatId, isConnected])
 
 
 

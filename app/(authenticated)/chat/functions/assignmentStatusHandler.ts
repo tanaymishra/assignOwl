@@ -8,8 +8,8 @@ export function fetchAssignmentStatus(assignmentId: string) {
 
     console.log("Fetching assignment status for ID:", assignmentId)
 
-    // Request assignment status from serveruseAssignmentQuestionnaireStore
-    socket.emit("assignment:status", {
+    // Request assignment status from server
+    socket.emit("assignment:description", {
         assignment_id: Number(assignmentId)
     })
 
@@ -17,7 +17,7 @@ export function fetchAssignmentStatus(assignmentId: string) {
         console.log("Assignment details received:", data)
 
         if (data.success) {
-            // Update messages store with assignment data
+            // Update questionnaire store with assignment data
             Object.keys(data).forEach(key => {
                 update({ key: key, value: data[key] })
             })
@@ -31,11 +31,11 @@ export function fetchAssignmentStatus(assignmentId: string) {
         }
     }
 
-    // Listen for assignment details
-    socket.on("assignment:status_update", handleAssignmentDetails)
+    // Listen for assignment details (matching the emit event)
+    socket.on("assignment:details", handleAssignmentDetails)
 
     // Return cleanup function
     return () => {
-        socket.off("assignment:status_update", handleAssignmentDetails)
+        socket.off("assignment:details", handleAssignmentDetails)
     }
 }
