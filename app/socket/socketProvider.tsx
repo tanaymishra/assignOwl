@@ -1,28 +1,37 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { useSocketStore } from './socketStore';
 import { useAuth } from '../components/loginModal/functions';
 
 export const SocketProvider: React.FC = () => {
-  const { 
-    setSocket, 
-    setConnected, 
-    setConnecting, 
-    setError, 
+  const {
+    setSocket,
+    setConnected,
+    setConnecting,
+    setError,
     disconnect,
     socket,
-    isConnected 
+    isConnected
   } = useSocketStore();
-  
+
   const { user } = useAuth();
+  const initializingRef = useRef(false);
 
   const initializeSocket = () => {
     // Don't initialize if already connected or connecting, or if user is not authenticated
-    if (socket || !user) {
+    if (socket || !user || initializingRef.current) {
+      console.log('Socket initialization skipped:', {
+        hasSocket: !!socket,
+        hasUser: !!user,
+        isConnected,
+        isInitializing: initializingRef.current
+      });
       return;
     }
+
+    initializingRef.current = true;
 
     setConnecting(true);
     setError(null);
@@ -46,6 +55,7 @@ export const SocketProvider: React.FC = () => {
         setConnected(true);
         setConnecting(false);
         setError(null);
+        initializingRef.current = false;
       });
 
       // Connection error
@@ -54,13 +64,14 @@ export const SocketProvider: React.FC = () => {
         setError(error.message || 'Failed to connect to server');
         setConnecting(false);
         setConnected(false);
+        initializingRef.current = false;
       });
 
       // Disconnection
       newSocket.on('disconnect', (reason) => {
         console.log('Socket disconnected:', reason);
         setConnected(false);
-        
+
         // Don't automatically reconnect on manual disconnect
         if (reason === 'io client disconnect') {
           setSocket(null);
@@ -107,7 +118,7 @@ export const SocketProvider: React.FC = () => {
 
   // Initialize socket when user is authenticated
   useEffect(() => {
-    if (user && !socket && !isConnected) {
+    if (user && !socket) {
       console.log('User authenticated, initializing socket connection...');
       initializeSocket();
     } else if (!user && socket) {
@@ -115,7 +126,7 @@ export const SocketProvider: React.FC = () => {
       console.log('User logged out, disconnecting socket...');
       disconnect();
     }
-  }, [user, socket, isConnected]);
+  }, [user, socket]); // Removed isConnected from dependencies
 
   // Cleanup on unmount
   useEffect(() => {
