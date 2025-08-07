@@ -7,9 +7,10 @@ import { ChatMessages, AssignmentQuestionnaire } from './sections'
 import { useCreateNewChat } from '@/app/components/Sidebar/functions/chatFunctions'
 import useAssignmentQuestionnaireStore from './sections/assignmentQuestionnaire/store/assignMentQuestionare'
 import { questions } from './sections/assignmentQuestionnaire/questions'
+import { fetchAssignmentStatus } from './functions/assignmentStatusHandler'
+import { useSocketStore } from '@/app/socket'
+import { useMessagesStore } from './sections/chatMessages/store/store'
 import styles from './page.module.scss'
-
-
 
 export default function ChatPage() {
   const searchParams = useSearchParams()
@@ -18,23 +19,15 @@ export default function ChatPage() {
   const [currentChatId, setCurrentChatId] = React.useState<string | null>(null)
 
   const { resetChat } = useChatStore()
+  const { socket } = useSocketStore()
+  const { update } = useMessagesStore()
 
   // Get questionnaire state
   const { currentQuesion, reset: resetQuestionnaire } = useAssignmentQuestionnaireStore()
 
-  // Default to questionnaire completed (true) - show ChatMessages by default
-  // Only becomes false when socket confirms questionnaire is needed
-  const [isQuestionnaireCompleted, setIsQuestionnaireCompleted] = React.useState(true)
-
-  // Function to be called by socket when questionnaire is needed for new chat
-  React.useEffect(() => {
-    // This would be called by your socket event handler when server confirms
-    // that this is a new chat requiring questionnaire
-    // Example: socket.on('assignment:needs_questionnaire', () => {
-    //   resetQuestionnaire()
-    //   setIsQuestionnaireCompleted(false)
-    // })
-  }, [])
+  // Simple approach: use questionnaire store directly, but default to completed
+  // This way socket can control it by updating the store
+  const isQuestionnaireCompleted = currentQuesion >= questions.length
 
   // Auto-create new chat if no ID exists
   React.useEffect(() => {
@@ -43,7 +36,7 @@ export default function ChatPage() {
     }
   }, [chatId, createNewChat])
 
-  // Handle ID changes - reset state when chat ID changes
+  // Handle ID changes and fetch assignment status
   React.useEffect(() => {
     if (chatId && chatId !== currentChatId) {
       // ID has changed, reset all state
@@ -55,11 +48,12 @@ export default function ChatPage() {
       // Update current chat ID
       setCurrentChatId(chatId)
 
-      // DON'T automatically reset questionnaire or show it
-      // Wait for socket confirmation to determine if questionnaire is needed
-      // Keep showing ChatMessages (with skeleton) until socket confirms otherwise
+      // Fetch assignment status - this will determine if questionnaire is needed
+      const cleanup = fetchAssignmentStatus(chatId)
+
+      return cleanup
     }
-  }, [chatId, currentChatId, resetChat, resetQuestionnaire])
+  }, [chatId, currentChatId, resetChat, socket, update, resetQuestionnaire])
 
 
 
@@ -71,7 +65,7 @@ export default function ChatPage() {
   return (
     <div className={styles.container}>
       {!isQuestionnaireCompleted ? (
-        <AssignmentQuestionnaire onComplete={() => setIsQuestionnaireCompleted(true)} />
+        <AssignmentQuestionnaire />
       ) : (
         <div className={styles.chatContainer}>
           <ChatMessages />

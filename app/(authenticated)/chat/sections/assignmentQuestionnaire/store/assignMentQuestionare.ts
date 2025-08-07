@@ -20,16 +20,9 @@ interface AssignmentFormData {
     initializeFromStatus: (currentQuestionIndex: number, answers: Record<string, any>, messages: Message[]) => void;
 }
 const useAssignmentQuestionnaireStore = create<AssignmentFormData>((set, get) => ({
-    currentQuesion: 0,
+    currentQuesion: questions.length, // Default to completed
     answers: {},
-    messages: [
-        {
-            id: '1',
-            type: 'bot',
-            text: questions[0]?.text || 'Loading...',
-            timestamp: new Date()
-        }
-    ],
+    messages: [], // Start with empty messages when completed
     inputLocked: false,
     isLoading: false,
     isInitialized: false,
