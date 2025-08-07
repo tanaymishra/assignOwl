@@ -22,8 +22,19 @@ export default function ChatPage() {
   // Get questionnaire state
   const { currentQuesion, reset: resetQuestionnaire } = useAssignmentQuestionnaireStore()
 
-  // Check if questionnaire is completed
-  const isQuestionnaireCompleted = currentQuesion >= questions.length
+  // Default to questionnaire completed (true) - show ChatMessages by default
+  // Only becomes false when socket confirms questionnaire is needed
+  const [isQuestionnaireCompleted, setIsQuestionnaireCompleted] = React.useState(true)
+
+  // Function to be called by socket when questionnaire is needed for new chat
+  React.useEffect(() => {
+    // This would be called by your socket event handler when server confirms
+    // that this is a new chat requiring questionnaire
+    // Example: socket.on('assignment:needs_questionnaire', () => {
+    //   resetQuestionnaire()
+    //   setIsQuestionnaireCompleted(false)
+    // })
+  }, [])
 
   // Auto-create new chat if no ID exists
   React.useEffect(() => {
@@ -41,15 +52,12 @@ export default function ChatPage() {
       // Reset chat store (messages, loading, etc.)
       resetChat()
 
-      // Reset questionnaire store (questions, answers, etc.)
-      resetQuestionnaire()
-
       // Update current chat ID
       setCurrentChatId(chatId)
 
-      // TODO: Here you would typically fetch the assignment status from server
-      // to determine if questionnaire is completed or not
-      // For now, we'll start fresh with questionnaire
+      // DON'T automatically reset questionnaire or show it
+      // Wait for socket confirmation to determine if questionnaire is needed
+      // Keep showing ChatMessages (with skeleton) until socket confirms otherwise
     }
   }, [chatId, currentChatId, resetChat, resetQuestionnaire])
 
@@ -63,7 +71,7 @@ export default function ChatPage() {
   return (
     <div className={styles.container}>
       {!isQuestionnaireCompleted ? (
-        <AssignmentQuestionnaire />
+        <AssignmentQuestionnaire onComplete={() => setIsQuestionnaireCompleted(true)} />
       ) : (
         <div className={styles.chatContainer}>
           <ChatMessages />
