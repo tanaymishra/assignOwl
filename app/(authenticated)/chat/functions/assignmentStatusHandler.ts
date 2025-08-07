@@ -1,8 +1,11 @@
 import { useSocketStore } from "@/app/socket"
 import useAssignmentQuestionnaireStore from "../sections/assignmentQuestionnaire/store/assignMentQuestionare"
+import { useMessagesStore } from "../sections/chatMessages/store/store"
 export function fetchAssignmentStatus(assignmentId: string) {
     const socket = useSocketStore.getState().socket
-    const { update, reset } = useAssignmentQuestionnaireStore.getState()
+    const { update: updateQuestionnaire, reset } = useAssignmentQuestionnaireStore.getState()
+    const { update: updateMessages } = useMessagesStore.getState()
+    
     console.log(socket, "Socket Check")
     if (!socket || !assignmentId) return
 
@@ -17,9 +20,10 @@ export function fetchAssignmentStatus(assignmentId: string) {
         console.log("Assignment details received:", data)
 
         if (data.success) {
-            // Update questionnaire store with assignment data
+            // Update both stores with assignment data
             Object.keys(data).forEach(key => {
-                update({ key: key, value: data[key] })
+                updateQuestionnaire({ key: key, value: data[key] })
+                updateMessages(key as any, data[key])
             })
 
             // Check if questionnaire is needed

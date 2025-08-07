@@ -6,26 +6,22 @@ import ArtifactCard from '../artifact/artifiactCard/ArtifactCard'
 import ArtifactEditor from '../artifact/artificatEditor/ArtifactEditor'
 import styles from './ChatMessages.module.scss'
 import { useMessagesStore } from './store/store'
-import { fetchAssignmentDetails } from './functions/requestUpdateStatus,'
+// Removed fetchAssignmentDetails import - no longer needed
 import { useSocketStore } from '@/app/socket'
 import { useSearchParams } from 'next/navigation'
 const ChatMessages: React.FC = () => {
   const { value, update } = useMessagesStore()
   const [editingArtifact, setEditingArtifact] = useState<Artifact | null>(null)
   const [isClient, setIsClient] = useState(false)
-  const { socket } = useSocketStore()
-  const params = useSearchParams()
+  // Removed socket and params - no longer needed for fetching
 
 
 
   useEffect(() => {
     setIsClient(true)
   }, [])
-  useEffect(() => {
-    const assignmentId = params.get("id")
-    const unMount = fetchAssignmentDetails(assignmentId)
-    return unMount;
-  }, [socket])
+  // Remove duplicate fetch - page.tsx already handles fetching assignment data
+  // ChatMessages will use the data from the store that page.tsx populates
 
   const handleDownloadArtifact = (artifact: Artifact) => {
     // Simple HTML download
