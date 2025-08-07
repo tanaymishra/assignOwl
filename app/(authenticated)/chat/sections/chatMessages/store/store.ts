@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 
 interface GeneratedContent {
-    content: string;
+    content: string; // HTML content
+    content_css: string; // Main CSS
+    sections_css: string; // Section CSS
     word_count: number;
     sections: string[];
     generated_at: string;
