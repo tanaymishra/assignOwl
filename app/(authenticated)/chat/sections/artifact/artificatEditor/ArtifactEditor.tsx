@@ -69,21 +69,16 @@ const ArtifactEditor: React.FC<ArtifactEditorProps> = ({
     }
 
     // Create new style element with CSS from store
-    if (value.generated_content?.content_css || value.generated_content?.sections_css) {
+    if (value.generated_content?.content_css) {
       const styleElement = document.createElement('style')
       styleElement.type = 'text/css'
 
-      // Combine both CSS strings
-      const combinedCSS = [
-        value.generated_content.content_css || '',
-        value.generated_content.sections_css || ''
-      ].filter(Boolean).join('\n')
-
-      styleElement.textContent = combinedCSS
+      // Use only content_css (sections_css has been removed)
+      styleElement.textContent = value.generated_content.content_css
       document.head.appendChild(styleElement)
       styleRef.current = styleElement
 
-      console.log('Injected CSS styles:', combinedCSS)
+      console.log('Injected CSS styles:', value.generated_content.content_css)
     }
   }
 
