@@ -7,10 +7,8 @@ import ArtifactEditor from '../artifact/artificatEditor/ArtifactEditor'
 import styles from './ChatMessages.module.scss'
 import { useMessagesStore } from './store/store'
 // Removed fetchAssignmentDetails import - no longer needed
-import { useSocketStore } from '@/app/socket'
-import { useSearchParams } from 'next/navigation'
 const ChatMessages: React.FC = () => {
-  const { value, update } = useMessagesStore()
+  const { value } = useMessagesStore()
   const [editingArtifact, setEditingArtifact] = useState<Artifact | null>(null)
   const [isClient, setIsClient] = useState(false)
   // Removed socket and params - no longer needed for fetching
@@ -125,7 +123,7 @@ const ChatMessages: React.FC = () => {
       {editingArtifact && (
         <ArtifactEditor
           artifact={editingArtifact}
-          onClose={() => { }}
+          onClose={() => setEditingArtifact(null)}
           onSave={() => { }}
           onDownload={() => handleDownloadArtifact(editingArtifact)}
         />

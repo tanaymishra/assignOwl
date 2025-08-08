@@ -8,10 +8,10 @@
   background: var(--color-background-secondary);
   padding: 2rem 1rem;
   position: relative;
-  
+
   // Ensure smooth theme transitions
   transition: background-color 0.3s ease;
-  
+
   // Clean editor environment - remove any chat-like styling
   min-height: 100%;
 }
@@ -31,7 +31,7 @@
   max-width: 8.5in; // Fallback for screens that don't support mm
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-primary);
-  box-shadow: 
+  box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06),
     0 0 0 1px var(--color-border-secondary);
@@ -44,10 +44,10 @@
 
   // Modern document styling
   backdrop-filter: blur(10px);
-  
+
   // Theme-aware shadow
   [data-theme="dark"] & {
-    box-shadow: 
+    box-shadow:
       0 10px 25px -5px rgba(0, 0, 0, 0.3),
       0 4px 6px -2px rgba(0, 0, 0, 0.2),
       0 0 0 1px var(--color-border-secondary);
@@ -76,7 +76,7 @@
   border: none;
   background: transparent;
   color: var(--color-text-primary); // Theme-aware text color
-  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif; // Modern font stack
+  font-family: "Inter", "Segoe UI", "Roboto", "Helvetica Neue", sans-serif; // Modern font stack
   font-size: 11pt; // Standard document font size
   line-height: 1.6; // Better readability
   outline: none;
@@ -93,7 +93,7 @@
   // Prevent weird spacing issues with contentEditable
   &[contenteditable] {
     &:empty:before {
-      content: 'Start typing your document...';
+      content: "Start typing your document...";
       color: var(--color-text-secondary);
       font-style: italic;
     }
@@ -174,7 +174,7 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     color: var(--color-text-primary);
-    
+
     &:empty {
       min-height: 1.2em;
     }
@@ -186,7 +186,8 @@
   }
 
   // Lists - modern document style
-  ul, ol {
+  ul,
+  ol {
     margin: 12pt 0;
     padding-left: 24pt;
     color: var(--color-text-primary);
@@ -198,18 +199,21 @@
     }
 
     // Nested lists
-    ul, ol {
+    ul,
+    ol {
       margin: 6pt 0;
     }
   }
 
   // Text formatting - modern document style
-  strong, b {
+  strong,
+  b {
     font-weight: 700;
     color: var(--color-text-primary);
   }
 
-  em, i {
+  em,
+  i {
     font-style: italic;
     color: var(--color-text-primary);
   }
@@ -242,7 +246,7 @@
     background: var(--color-background-tertiary);
     border: 1px solid var(--color-border-primary);
     border-radius: 8px;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-family: "JetBrains Mono", "Fira Code", "Monaco", "Consolas", monospace;
     font-size: 10pt;
     line-height: 1.4;
     overflow-x: auto;
@@ -254,7 +258,7 @@
     background: var(--color-background-tertiary);
     padding: 2pt 4pt;
     border-radius: 4px;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-family: "JetBrains Mono", "Fira Code", "Monaco", "Consolas", monospace;
     font-size: 10pt;
     color: var(--color-text-primary);
   }
@@ -304,7 +308,7 @@
   .richEditor {
     font-size: 10pt; // Smaller font for mobile
     line-height: 1.4;
-    
+
     h1 {
       font-size: 16pt;
       margin: 18pt 0 10pt 0;
@@ -320,7 +324,8 @@
       margin: 12pt 0 6pt 0;
     }
 
-    p, div {
+    p,
+    div {
       margin: 0 0 10pt 0;
     }
   }
